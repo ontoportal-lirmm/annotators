@@ -6,9 +6,9 @@ import org.json.simple.JSONObject;
 
 public class Score {
     public ArrayList<String> TermesAnnotes;
-    public  int score;
-    public  double scoreF;
-    public  double scoreF2;
+    public int score;
+    public double scoreF;
+    public double scoreF2;
     public JSONObject annotatedClass;
     public Boolean trie; 
     public Boolean trieF;

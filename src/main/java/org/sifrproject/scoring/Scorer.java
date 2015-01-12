@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,14 +14,25 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class Scorer {
-  public static Data d;
-  public static int ClassementMax = 0;
-  public static int ClassementMaxF = 0;
-  public static int ClassementMaxF2 = 0;
 
+public class Scorer {
+    public Map<String, Score> dictScoreConcept  = new HashMap<>();
+    public Map<String, Score> dictScoreConcept2 = new HashMap<>();
+    public ArrayList <String> conceptTries      = new ArrayList<>();
+    public ArrayList <String> conceptTriesF     = new ArrayList<>();
+    public ArrayList <String> conceptTriesF2    = new ArrayList<>();
+    public Map<String, CvalueTerme> dictCvalue  = new HashMap<>();
+
+    public int classementMax = 0;
+    public int classementMaxF = 0;
+    public int classementMaxF2 = 0;
+
+    public Scorer(String filePath1, String filePath2){
+        scoreWithoutContext(filePath1, filePath2);
+    }
+    
   // Aggregated scores
-  public static void CalculeScorewithoutcontext(String FilePath){
+  public void calculeScoreWithoutContext(String FilePath){
       //TODO useless?  d.Dictscoreconcept = new HashMap<String, Score>();
       JSONParser parser = new JSONParser();
       try {
@@ -32,6 +42,7 @@ public class Scorer {
           String id = "";
           for (Object o : a){
               JSONObject annotation = (JSONObject) o;
+              
               // Compute direct annotation score
               annotatedClass = (JSONObject) annotation.get("annotatedClass");
               
@@ -47,28 +58,22 @@ public class Scorer {
                   JSONObject uneannotation = (JSONObject) c;
                   String matchType = (String) uneannotation.get("matchType");
                   String text = (String) uneannotation.get("text");
-                  if (!termeAnnote.contains(text)) {
+                  if (!termeAnnote.contains(text))
                       termeAnnote.add(text);
-                  }
 
-                  if (matchType.equals("PREF")) {
-                      score += 10;
-                  } else {
-                      if (matchType.equals("SYN")) {
-                          score += 8;
-                      }
-                  }
+                  if (matchType.equals("PREF"))     score += 10;
+                  else if (matchType.equals("SYN")) score += 8;
                   nbannotation++;
               }
               
               // Check if the concept id exist in the dictionary
-              if (d.Dictscoreconcept.get(id) == null) {
+              if (dictScoreConcept.get(id) == null) {
                   Score nouvellestr = new Score(termeAnnote,
                           score, 0, 0, annotatedClass, false, false, false,
                           false, 0, 0, 0);
-                  d.Dictscoreconcept.put(id, nouvellestr);
+                  dictScoreConcept.put(id, nouvellestr);
               } else {
-                  Score nouvellestr = d.Dictscoreconcept.get(id);
+                  Score nouvellestr = dictScoreConcept.get(id);
                   nouvellestr.score += score;
                   for (int i = 0; i < termeAnnote.size(); i++) {
                       if (!nouvellestr.TermesAnnotes.contains(termeAnnote.get(i))) 
@@ -76,20 +81,18 @@ public class Scorer {
                           nouvellestr.TermesAnnotes.add(termeAnnote.get(i));
                       }
                   }
-                  d.Dictscoreconcept.remove(id);
-                  d.Dictscoreconcept.put(id, nouvellestr);
+                  dictScoreConcept.remove(id);
+                  dictScoreConcept.put(id, nouvellestr);
               }
-              // Calcluer le score de l'annotation directe
-              // R�cup�rer les annotation hierarchiques et leur distances dans
-              // la hierarchie
+              
+              // retrieve hierarchical annotation and their distances in the hierarchy
               JSONArray hierarchy = (JSONArray) annotation.get("hierarchy");
 
               for (Object h : hierarchy) {
                   JSONObject unehierarchie = (JSONObject) h;
-                  // Calcluer le score de l'annotation directe
-                  annotatedClass = (JSONObject) unehierarchie
-                          .get("annotatedClass");
-                  // R�cup�rer l'id de concept de l'annotation directe
+                  annotatedClass = (JSONObject) unehierarchie.get("annotatedClass");
+                  
+                  // Retrieve the concept id of the direct annotation
                   id = (String) annotatedClass.get("@id");
               Long dista = (Long) unehierarchie.get("distance");
 
@@ -100,18 +103,17 @@ public class Scorer {
                       score = (int) res;
                       score = score * nbannotation;
                   }
-                  // V�rifier c'est le id de concept existe d�ja dans le
-                  // dictionnaire ou pas
-                  if (d.Dictscoreconcept.get(id) == null) 
-                  {
+                  
+                  // Check the concept id already exist in the dictionary
+                  if (dictScoreConcept.get(id) == null){
                       Score nouvellestr = new Score(termeAnnote,
                               score, 0, 0, annotatedClass, false, false,
                               false, true, 0, 0, 0);
-                      d.Dictscoreconcept.put(id, nouvellestr);
+                      dictScoreConcept.put(id, nouvellestr);
                   } 
                   else 
                   {
-                      Score nouvellestr = d.Dictscoreconcept.get(id);
+                      Score nouvellestr = dictScoreConcept.get(id);
                       nouvellestr.score = nouvellestr.score + score;
                       nouvellestr.annotatedClass = nouvellestr.annotatedClass;
                       for (int i = 0; i < termeAnnote.size(); i++) {
@@ -120,8 +122,8 @@ public class Scorer {
                               nouvellestr.TermesAnnotes.add(termeAnnote.get(i));
                           }
                       }
-                      d.Dictscoreconcept.remove(id);
-                      d.Dictscoreconcept.put(id, nouvellestr);
+                      dictScoreConcept.remove(id);
+                      dictScoreConcept.put(id, nouvellestr);
                   }
               }
 
@@ -139,24 +141,24 @@ public class Scorer {
       }
   }
 
-  public static void Scorewithoutcontext(String FilePath, String FilePath2) {
-      CalculeScorewithoutcontext(FilePath2);
-      JSONObject annotationscore = new JSONObject();
-      System.out.println("Debut de calcule de score fffffffffffffffff");
-      OrdonnerDict(d.Dictscoreconcept, "score");
-      // Sauvgaregr le score dans un nouveau fichier
+  public void scoreWithoutContext(String FilePath, String FilePath2) {
+      calculeScoreWithoutContext(FilePath2);
+      JSONObject annotationScore = new JSONObject();
+
+      ordonnerDict(dictScoreConcept, "score");
+      // Save score in new file
       try {
           FileWriter filer = new FileWriter(FilePath);
-          Iterator i = d.ConceptTries.iterator();
+          Iterator<String> i = conceptTries.iterator();
           while (i.hasNext()) {
               String K = (String) i.next();
-              Score elementdic = d.Dictscoreconcept.get(K);
-              annotationscore.put("score", elementdic.score);
-              annotationscore.put("@id", K);
-              annotationscore.put("Termes", elementdic.TermesAnnotes);
-              annotationscore.put("Classement", elementdic.ClassementScore+ "/" + ClassementMax);
+              Score elementdic = dictScoreConcept.get(K);
+              annotationScore.put("score", elementdic.score);
+              annotationScore.put("@id", K);
+              annotationScore.put("Termes", elementdic.TermesAnnotes);
+              annotationScore.put("Classement", elementdic.ClassementScore+ "/" + classementMax);
               try {
-                  filer.write(annotationscore.toString());
+                  filer.write(annotationScore.toString());
                   filer.flush();
 
               } catch (IOException e) {
@@ -164,34 +166,34 @@ public class Scorer {
               }
           }
           filer.close();
-              System.out.println("Fin score");
+
       } catch (IOException e) {
           e.printStackTrace();
       }
   }
  
-  public static void OrdonnerDict(Map<String, Score> dic,    String TypeScore) {
-      d.ConceptTries = new ArrayList<String>();
-      d.ConceptTriesF = new ArrayList<String>();
-      d.ConceptTriesF2 = new ArrayList<String>();
+  public void ordonnerDict(Map<String, Score> dict,    String TypeScore) {
+      conceptTries   = new ArrayList<String>();
+      conceptTriesF  = new ArrayList<String>();
+      conceptTriesF2 = new ArrayList<String>();
+      
       int classement = 0;
       int classementegale = 1;
-      ArrayList<Integer>   Listeclassement = new ArrayList<>();
-      Map<String, Integer> DictClasssement = new HashMap<>();
-      ArrayList<Double> ListeclassementF = new ArrayList<>();
+      
+      ArrayList<Integer>   listeClassement  = new ArrayList<>();
+      ArrayList<Double>    listeClassementF = new ArrayList<>();
 
-      Map<String, Score> Dictordonne = new HashMap<>();
-      Dictordonne = dic;
+      Map<String, Score> dictOrdonne = dict;
       int i = 0;
-      while (i < Dictordonne.size()) {
-          String max = MaxDic(Dictordonne, TypeScore);
-          Score nouvellestr = Dictordonne.get(max);
+      while (i < dictOrdonne.size()) {
+          String max = maxDict(dictOrdonne, TypeScore);
+          Score nouvellestr = dictOrdonne.get(max);
           if (nouvellestr != null) {
               if (TypeScore == "score") {
                   nouvellestr.trie = true;
-                  if (!Listeclassement.contains(nouvellestr.score)) {
+                  if (!listeClassement.contains(nouvellestr.score)) {
                       classement=classement+classementegale;
-                      Listeclassement.add(nouvellestr.score);
+                      listeClassement.add(nouvellestr.score);
                       classementegale=1;
                   }
                   else
@@ -199,13 +201,13 @@ public class Scorer {
                       classementegale++;
                   }
                   nouvellestr.ClassementScore = classement;
-                  d.ConceptTries.add(max);
+                  conceptTries.add(max);
               } else {
                   if (TypeScore == "scoreF") {
                       nouvellestr.trieF = true;
-                      if (!ListeclassementF.contains(nouvellestr.scoreF)) {
+                      if (!listeClassementF.contains(nouvellestr.scoreF)) {
                           classement=classement+classementegale;
-                          ListeclassementF.add(nouvellestr.scoreF);
+                          listeClassementF.add(nouvellestr.scoreF);
                           classementegale=1;
                       }
                       else
@@ -213,12 +215,12 @@ public class Scorer {
                           classementegale++;
                       }
                       nouvellestr.ClassementScoreF = classement;
-                      d.ConceptTriesF.add(max);
+                      conceptTriesF.add(max);
                   } else {
                       nouvellestr.trieF2 = true;
-                      if (!ListeclassementF.contains(nouvellestr.scoreF2)) {
+                      if (!listeClassementF.contains(nouvellestr.scoreF2)) {
                           classement=classement+classementegale;
-                          ListeclassementF.add(nouvellestr.scoreF2);
+                          listeClassementF.add(nouvellestr.scoreF2);
                           classementegale=1;
                       }
                       else
@@ -227,59 +229,51 @@ public class Scorer {
                       }
                       nouvellestr.ClassementScoreF2 = classement;
                   }
-                  d.ConceptTriesF2.add(max);
+                  conceptTriesF2.add(max);
               }
-              Dictordonne.remove(max);
-              Dictordonne.put(max, nouvellestr);
-          //  System.out.println("Max est :"+max);
+              dictOrdonne.remove(max);
+              dictOrdonne.put(max, nouvellestr);
 
           }
           i++;
       }
       if (TypeScore == "score") {
-          ClassementMax = classement;
+          classementMax = classement;
       } else {
           if (TypeScore == "scoreF") {
-              ClassementMaxF = classement;
+              classementMaxF = classement;
           } else {
-              ClassementMaxF2 = classement;
+              classementMaxF2 = classement;
           }
       }
   }
 
-  public static String MaxDic(Map<String, Score> dic, String TypeScore) {
-      Iterator<String> key = dic.keySet().iterator();
-      String Conceptsauv = "";
-      double Scoresauv = 0;
-      Score elementdic;
+  public static String maxDict(Map<String, Score> dict, String scoreType) {
+      String maxKey = "";
+      double maxValue = 0;
 
-      while (key.hasNext()) {
-          String k = key.next();
-          elementdic = dic.get(k);
-          double Score = 0;
-          boolean trier = false;
-          if (TypeScore == "score") {
-              Score = elementdic.score;
-              trier = elementdic.trie;
-          } else {
-              if (TypeScore == "scoreF") {
-                  Score = elementdic.scoreF;
-                  trier = elementdic.trieF;
-              } else {
-                  Score = elementdic.scoreF2;
-                  trier = elementdic.trieF2;
-              }
+      for(String key : dict.keySet()){
+          Score score = dict.get(key);
+          double value = 0;
+          boolean trie = false;
+          
+          if (scoreType == "score"){
+              value = score.score;
+              trie = score.trie;
+          }else if (scoreType == "scoreF"){
+              value = score.scoreF;
+              trie = score.trieF;
+          }else{
+              value = score.scoreF2;
+              trie = score.trieF2;
           }
-          if (Conceptsauv == "" && Scoresauv == 0 && trier == false) {
-              Conceptsauv = k;
-              Scoresauv = Score;
-          }
-          if (Score > Scoresauv && trier == false) {
-              Conceptsauv = k;
-              Scoresauv = Score;
+          
+          if (trie==false && ((maxKey=="" && maxValue==0) || (value>maxValue))) {
+              maxKey = key;
+              maxValue = value;
           }
       }
-      return Conceptsauv;
+      return maxKey;
   }
 
   /*
