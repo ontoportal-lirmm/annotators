@@ -135,9 +135,6 @@ public class Scorer {
           e.printStackTrace();
       } catch (ParseException e) {
           e.printStackTrace();
-      } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
       }
   }
 
@@ -195,40 +192,38 @@ public class Scorer {
                       classement=classement+classementegale;
                       listeClassement.add(nouvellestr.score);
                       classementegale=1;
+                      
+                  }else{
+                      classementegale++;
+                  }
+                  nouvellestr.ClassementScore = classement;
+                  conceptTries.add(max);
+                  
+              } else if (TypeScore == "scoreF") {
+                  nouvellestr.trieF = true;
+                  if (!listeClassementF.contains(nouvellestr.scoreF)) {
+                      classement=classement+classementegale;
+                      listeClassementF.add(nouvellestr.scoreF);
+                      classementegale=1;
                   }
                   else
                   {
                       classementegale++;
                   }
-                  nouvellestr.ClassementScore = classement;
-                  conceptTries.add(max);
+                  nouvellestr.ClassementScoreF = classement;
+                  conceptTriesF.add(max);
               } else {
-                  if (TypeScore == "scoreF") {
-                      nouvellestr.trieF = true;
-                      if (!listeClassementF.contains(nouvellestr.scoreF)) {
-                          classement=classement+classementegale;
-                          listeClassementF.add(nouvellestr.scoreF);
-                          classementegale=1;
-                      }
-                      else
-                      {
-                          classementegale++;
-                      }
-                      nouvellestr.ClassementScoreF = classement;
-                      conceptTriesF.add(max);
-                  } else {
-                      nouvellestr.trieF2 = true;
-                      if (!listeClassementF.contains(nouvellestr.scoreF2)) {
-                          classement=classement+classementegale;
-                          listeClassementF.add(nouvellestr.scoreF2);
-                          classementegale=1;
-                      }
-                      else
-                      {
-                          classementegale++;
-                      }
-                      nouvellestr.ClassementScoreF2 = classement;
+                  nouvellestr.trieF2 = true;
+                  if (!listeClassementF.contains(nouvellestr.scoreF2)) {
+                      classement=classement+classementegale;
+                      listeClassementF.add(nouvellestr.scoreF2);
+                      classementegale=1;
                   }
+                  else
+                  {
+                      classementegale++;
+                  }
+                  nouvellestr.ClassementScoreF2 = classement;
                   conceptTriesF2.add(max);
               }
               dictOrdonne.remove(max);
@@ -237,15 +232,10 @@ public class Scorer {
           }
           i++;
       }
-      if (TypeScore == "score") {
-          classementMax = classement;
-      } else {
-          if (TypeScore == "scoreF") {
-              classementMaxF = classement;
-          } else {
-              classementMaxF2 = classement;
-          }
-      }
+      
+      if (TypeScore == "score")       classementMax   = classement;
+      else if (TypeScore == "scoreF") classementMaxF  = classement;
+      else                            classementMaxF2 = classement;
   }
 
   public static String maxDict(Map<String, Score> dict, String scoreType) {
