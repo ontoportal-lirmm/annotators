@@ -1,24 +1,19 @@
 package org.sifrproject.annotators;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+
+import org.sifrproject.util.JSON;
+import org.sifrproject.util.UrlParameters;
 
 /**
  * Implements the core functionalities of the AnnotatorPlus web services:
@@ -47,7 +42,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // parse parameters
-        LinkedHashMap<String, String[]> parameters = UrlUtils.getParameters(request);
+        UrlParameters parameters = new UrlParameters(request);
         
         String score  = getFirst(parameters.remove("score"), "false").toLowerCase();
         String format = getFirst(parameters.get("format"),   "json" ).toLowerCase();
@@ -56,19 +51,25 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
             parameters.put("format", new String[]{"json"});
         
         // query annotator
-        List<String> annotations = queryAnnotator(parameters);
+        JSON annotations = queryAnnotator(parameters);
         
-        // TODO: score
-        
-        // TODO: format RBF
+        if(annotations.isArrayType()){
+            // TODO: score
+            if(score!="false"){
+                annotations = new JSON(new UnsupportedOperationException("Score is not implemented"));
+            }
+            
+            // TODO: format RBF
+            if(format=="rbf"){
+                annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+            }
+        }
         
         // process response
         PrintWriter out = response.getWriter();
         response.setContentType("application/json;charset=UTF-8");
-        for(String line : annotations)
-            out.println(line);
+        out.println(annotations.toString());
         out.flush();
-        
     }
 
     private static String getFirst(String[] values, String defaultValue){
@@ -78,37 +79,37 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         return value;
     }
     
-    private List<String> queryAnnotator(LinkedHashMap<String, String[]> parameters){
+    private JSON queryAnnotator(UrlParameters parameters){
         // make query URL
-        String url = getAnnotatorBaseURL();
-        UrlUtils.appendParameters(url, parameters);
+        String url = parameters.makeUrl(getAnnotatorBaseURL());
                 
         // query annotator
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = null;
-        try{  httpResponse = client.execute(new HttpGet(url));    }
-        catch (ClientProtocolException e){  e.printStackTrace();  }
-        catch (IOException e){              e.printStackTrace();  }
+        try{  
+            httpResponse = client.execute(new HttpGet(url));
+        }catch(IOException e){
+            return new JSON(e);
+        }
 
         
         // process response
-        ArrayList<String> response = new ArrayList<>();
-        
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-            String line;
-            while ((line = reader.readLine()) != null)
-                response.add(line);
-        } 
-        catch (IllegalStateException e){    e.printStackTrace();  }
-        catch (IOException e){              e.printStackTrace();  }
-        
+        JSON annotations;
+        try{
+            annotations = new JSON(httpResponse.getEntity().getContent());
+        }catch (IOException e){
+            annotations = new JSON(e);  
+        }
+
         
         // close http client
-        try{                   client.close();        }
-        catch(IOException e1){ e1.printStackTrace();  }
+        try{
+            client.close();        
+        }catch(IOException e1){
+            e1.printStackTrace();  
+        }
 
-        return response;
+        return annotations;
     }
 }

@@ -6,7 +6,7 @@
   <packaging>war</packaging>
   <version>0.1-SNAPSHOT</version>
   <name>AnnotatorPlus</name>
-  <url>https://github.com/sifrproject</url>
+  <url>https://github.com/sifrproject/AnnotatorPlus</url>
   <build>
     <finalName>AnnotatorPlus</finalName>
     <plugins>
@@ -58,6 +58,11 @@
     	<groupId>org.commonjava.googlecode.markdown4j</groupId>
     	<artifactId>markdown4j</artifactId>
     	<version>2.2-cj-1.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.sifrproject.dep</groupId>
+    	<artifactId>protege</artifactId>
+    	<version>3.5</version>
     </dependency>
   </dependencies>
 </project>

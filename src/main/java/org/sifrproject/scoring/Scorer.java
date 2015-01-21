@@ -32,49 +32,90 @@ public class Scorer {
     }
     
   // Aggregated scores
-  public void calculeScoreWithoutContext(String FilePath){
-      //TODO useless?  d.Dictscoreconcept = new HashMap<String, Score>();
-      JSONParser parser = new JSONParser();
-      try {
-          JSONArray a = (JSONArray) parser.parse(new FileReader(FilePath));
+  public void calculeScoreWithoutContext(JSONArray array){
+      //int score = 0;
+      //JSONObject annotatedClass;
+      //String id = "";
+      
+      for (Object obj : array){
+          JSONObject annotation = (JSONObject) obj;
+          
+          // Retrieve required items:
+          //   direct annotation and its matchType
+          //   the concept id (of direct annotation)
+          //   hierarchical annotation
+          JSONArray annotations = (JSONArray) annotation.get("annotations");
+          JSONObject annotatedClass = (JSONObject) annotation.get("annotatedClass");
+          String id = (String) annotatedClass.get("@id");
+          JSONArray hierarchy = (JSONArray) annotation.get("hierarchy");
+          
+          // Compute direct annotation score
+          int nbannotation = 0;
           int score = 0;
-          JSONObject annotatedClass;
-          String id = "";
-          for (Object o : a){
-              JSONObject annotation = (JSONObject) o;
-              
-              // Compute direct annotation score
-              annotatedClass = (JSONObject) annotation.get("annotatedClass");
-              
-              // Retrieve the concept id of direct annotation
-              id = (String) annotatedClass.get("@id");
-              
-              // Retrieve direct annotation and its matchType
-              JSONArray annotations = (JSONArray) annotation.get("annotations");
-              int nbannotation = 0;
-              score = 0;
-              ArrayList<String> termeAnnote = new ArrayList<>();
-              for (Object c : annotations){
-                  JSONObject uneannotation = (JSONObject) c;
-                  String matchType = (String) uneannotation.get("matchType");
-                  String text = (String) uneannotation.get("text");
-                  if (!termeAnnote.contains(text))
-                      termeAnnote.add(text);
+          ArrayList<String> termeAnnote = new ArrayList<>();
+          for (Object c : annotations){
+              JSONObject uneannotation = (JSONObject) c;
+              String matchType = (String) uneannotation.get("matchType");
+              String text = (String) uneannotation.get("text");
+              if (!termeAnnote.contains(text))
+                  termeAnnote.add(text);
 
-                  if (matchType.equals("PREF"))     score += 10;
-                  else if (matchType.equals("SYN")) score += 8;
-                  nbannotation++;
+              if (matchType.equals("PREF"))     score += 10;
+              else if (matchType.equals("SYN")) score += 8;
+              nbannotation++;
+          }
+          
+          // add concept to dictionary, or update its respective entry
+          if (dictScoreConcept.get(id) == null) {
+              Score nouvellestr = new Score(termeAnnote,
+                      score, 0, 0, annotatedClass, false, false, false,
+                      false, 0, 0, 0);
+              dictScoreConcept.put(id, nouvellestr);
+          } else {
+              Score nouvellestr = dictScoreConcept.get(id);
+              nouvellestr.score += score;
+              for (int i = 0; i < termeAnnote.size(); i++) {
+                  if (!nouvellestr.TermesAnnotes.contains(termeAnnote.get(i))) 
+                  {
+                      nouvellestr.TermesAnnotes.add(termeAnnote.get(i));
+                  }
+              }
+              dictScoreConcept.remove(id);
+              dictScoreConcept.put(id, nouvellestr);
+          }
+          
+          
+          
+          // process hierarchical score weighting
+          // retrieve hierarchical annotation and their distances in the hierarchy
+          for (Object h : hierarchy) {
+              JSONObject unehierarchie = (JSONObject) h;
+              annotatedClass = (JSONObject) unehierarchie.get("annotatedClass");
+              
+              // Retrieve the concept id of the direct annotation
+              id = (String) annotatedClass.get("@id");
+              Long dista = (Long) unehierarchie.get("distance");
+
+              if (dista > 12) {
+                  score = 1 * nbannotation;
+              } else {
+                  double res = 1 + 10 * Math.exp(-0.2 * dista);
+                  score = (int) res;
+                  score = score * nbannotation;
               }
               
-              // Check if the concept id exist in the dictionary
-              if (dictScoreConcept.get(id) == null) {
+              // Check the concept id already exist in the dictionary
+              if (dictScoreConcept.get(id) == null){
                   Score nouvellestr = new Score(termeAnnote,
-                          score, 0, 0, annotatedClass, false, false, false,
-                          false, 0, 0, 0);
+                          score, 0, 0, annotatedClass, false, false,
+                          false, true, 0, 0, 0);
                   dictScoreConcept.put(id, nouvellestr);
-              } else {
+              } 
+              else 
+              {
                   Score nouvellestr = dictScoreConcept.get(id);
-                  nouvellestr.score += score;
+                  nouvellestr.score = nouvellestr.score + score;
+                  nouvellestr.annotatedClass = nouvellestr.annotatedClass;
                   for (int i = 0; i < termeAnnote.size(); i++) {
                       if (!nouvellestr.TermesAnnotes.contains(termeAnnote.get(i))) 
                       {
@@ -84,62 +125,13 @@ public class Scorer {
                   dictScoreConcept.remove(id);
                   dictScoreConcept.put(id, nouvellestr);
               }
-              
-              // retrieve hierarchical annotation and their distances in the hierarchy
-              JSONArray hierarchy = (JSONArray) annotation.get("hierarchy");
-
-              for (Object h : hierarchy) {
-                  JSONObject unehierarchie = (JSONObject) h;
-                  annotatedClass = (JSONObject) unehierarchie.get("annotatedClass");
-                  
-                  // Retrieve the concept id of the direct annotation
-                  id = (String) annotatedClass.get("@id");
-              Long dista = (Long) unehierarchie.get("distance");
-
-                  if (dista > 12) {
-                      score = 1 * nbannotation;
-                  } else {
-                      double res = 1 + 10 * Math.exp(-0.2 * dista);
-                      score = (int) res;
-                      score = score * nbannotation;
-                  }
-                  
-                  // Check the concept id already exist in the dictionary
-                  if (dictScoreConcept.get(id) == null){
-                      Score nouvellestr = new Score(termeAnnote,
-                              score, 0, 0, annotatedClass, false, false,
-                              false, true, 0, 0, 0);
-                      dictScoreConcept.put(id, nouvellestr);
-                  } 
-                  else 
-                  {
-                      Score nouvellestr = dictScoreConcept.get(id);
-                      nouvellestr.score = nouvellestr.score + score;
-                      nouvellestr.annotatedClass = nouvellestr.annotatedClass;
-                      for (int i = 0; i < termeAnnote.size(); i++) {
-                          if (!nouvellestr.TermesAnnotes.contains(termeAnnote.get(i))) 
-                          {
-                              nouvellestr.TermesAnnotes.add(termeAnnote.get(i));
-                          }
-                      }
-                      dictScoreConcept.remove(id);
-                      dictScoreConcept.put(id, nouvellestr);
-                  }
-              }
-
           }
-          
-      } catch (FileNotFoundException e) {
-          e.printStackTrace();
-      } catch (IOException e) {
-          e.printStackTrace();
-      } catch (ParseException e) {
-          e.printStackTrace();
+
       }
   }
 
   public void scoreWithoutContext(String FilePath, String FilePath2) {
-      calculeScoreWithoutContext(FilePath2);
+      //TODO calculeScoreWithoutContext(FilePath2);
       JSONObject annotationScore = new JSONObject();
 
       ordonnerDict(dictScoreConcept, "score");
