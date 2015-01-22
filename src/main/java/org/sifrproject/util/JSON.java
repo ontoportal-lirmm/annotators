@@ -17,7 +17,7 @@ import org.json.simple.parser.ParseException;
  * @author Julien Diener
  */
 public class JSON{
-    protected JSONObject map;
+    protected JSONObject object;
     protected JSONArray  array;
     
     public JSON(String json){
@@ -36,23 +36,29 @@ public class JSON{
             makeError(e);
         }
     }
+    /** Construct a {@link JSON} instance wrapping a JSONObject or JSONArray */
+    public JSON(Object obj){
+        if (obj instanceof JSONObject)
+            object = (JSONObject) obj;
+        else if(obj instanceof JSONArray)
+            array = (JSONArray) obj;
+        else
+            throw new ClassCastException("JSON(Object) constructor is for JSONObject or JSONArray only");
+    }
 
-    /**
-     * Make a standardize {@cite JsonObject} referencing the given error
-     */
+    /** Make a standardize object-type {@link JSON} referencing the given error */
     public JSON(Exception e){
-        map = new JSONObject();
         makeError(e);
     }
     
     private void make(String json){
-        map = null;
+        object = null;
         array = null;
         try{
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(json);
             if (obj instanceof JSONObject) {
-                map = (JSONObject) obj;
+                object = (JSONObject) obj;
             } else {
                 array = (JSONArray) obj;
             }
@@ -65,42 +71,83 @@ public class JSON{
     private void makeError(Exception e){
         StackTraceElement[] exceptionStack = e.getStackTrace();
         ArrayList<String> stack = new ArrayList<>(exceptionStack.length);
-        for(StackTraceElement s : exceptionStack)
-            stack.add(s.toString());
+        
+        boolean lastOk = true;
+        for(StackTraceElement s : exceptionStack){
+            String line = s.toString();
+            if(!line.startsWith("org.sifrproject")){
+                if(!lastOk)
+                    continue;
+                else{
+                    line="...";
+                    lastOk = false;
+                }
+            }else
+                lastOk = true;
+            
+            stack.add(line);
+        }
         
         JSONObject error = new JSONObject();
         error.put("message",e.getMessage());
         error.put("stack", stack);
         
-        map = new JSONObject();
-        map.put("error", error);
+        object = new JSONObject();
+        object.put("error", error);
     }
     
+    // test JSON type
+    // --------------
     public boolean isObjectType(){
-        return map!=null;
+        return object!=null;
     }
     public boolean isArrayType(){
         return array!=null;
     }
     
+    // Accessors
+    // ---------
     /**
-     * Append the given item to this {@cite JSON} instance:
-     *   if it is a dictionary type: add key,value item
-     *   if is it an array type: add a JSONObject entry with given key,value item
+     * Append the given item to an object-type {@link JSON} instance
+     * Throw an error if this instance is an array-type JSON
      */
     @SuppressWarnings("unchecked")
     public void put(String key, String value){
-        if(isObjectType()) map.put(key, value);
-        else{
-            // throw new ClassClastException("Use 'put' method on a JSON instance of array type");
-            JSONObject item = new JSONObject();
-            item.put(key,value);
-            array.add(item);
-        }
+        if(isObjectType()) 
+            object.put(key, value);
+        else
+            throw new ClassCastException("Method 'put' cannot be applied on a JSON instance of array-type");
     }
     
+    @SuppressWarnings("unchecked")
+    public void add(Object object){
+        if(isObjectType()) 
+            throw new ClassCastException("Method 'add' cannot be applied on a JSON instance of object-type");
+        else
+            array.add(object);
+    }
+    
+    /** Return the JSONArray stored by this {@link JSON} instance */
+    public JSONArray getArray(){
+        if(isArrayType()) 
+            return array;
+        else
+            throw new ClassCastException("'getArray' method is not valid for JSON instance of object-type");
+    }
+    
+    /** Return the JSONObject stored by this {@link JSON} instance */
+    public JSONObject getObject(){
+        if(isObjectType()) 
+            return object;
+        else
+            throw new ClassCastException("'getObject' method is not valid for JSON instance of array-type");
+    }
+    
+    /**
+     * return a json string 
+     */
     public String toString(){
-        if(isObjectType()) return map.toJSONString();
+        if(isObjectType()) return object.toJSONString();
         if(isArrayType())  return array.toJSONString();
         return "{}";
     }

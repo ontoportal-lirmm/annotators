@@ -8,7 +8,7 @@
   <name>AnnotatorPlus</name>
   <url>https://github.com/sifrproject/AnnotatorPlus</url>
   <build>
-    <finalName>AnnotatorPlus</finalName>
+    <finalName>annotators</finalName>
     <plugins>
 		<plugin>
 	        <!-- Jetty < 9 is in org.mortbay.jetty groupId -->
@@ -20,6 +20,15 @@
 	        <!-- <version>9.x.y.z</version> -->
 	        <artifactId>jetty-maven-plugin</artifactId>
 		</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -64,5 +73,15 @@
     	<artifactId>protege</artifactId>
     	<version>3.5</version>
     </dependency>
+    <dependency>
+    	<groupId>org.sifrproject.dep</groupId>
+    	<artifactId>protege-owl</artifactId>
+    	<version>3.5</version>
+    </dependency>
+    <dependency>
+		<groupId>com.hp.hpl.jena</groupId>
+		<artifactId>jena</artifactId>
+		<version>2.6.4</version>
+	</dependency>
   </dependencies>
 </project>

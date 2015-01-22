@@ -2,6 +2,10 @@ package org.sifrproject.annotators;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import org.sifrproject.scoring.Scorer;
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.UrlParameters;
 
@@ -31,6 +36,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
 
     
     protected abstract String getAnnotatorBaseURL();
+    protected abstract String getAPIkey();
 
     // redirect GET to POST
     @Override
@@ -50,18 +56,38 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         if(format=="rbf") 
             parameters.put("format", new String[]{"json"});
         
-        // query annotator
-        JSON annotations = queryAnnotator(parameters);
+        if(!parameters.containsKey("apikey"))
+            parameters.put("apikey", new String[]{getAPIkey()});
         
-        if(annotations.isArrayType()){
-            // TODO: score
-            if(score!="false"){
-                annotations = new JSON(new UnsupportedOperationException("Score is not implemented"));
-            }
-            
-            // TODO: format RBF
-            if(format=="rbf"){
-                annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+        // process query
+        JSON annotations;
+        
+            // test for call to not implemented functionalities
+        if(!score.equals("false") && !score.equals("old")){
+            annotations = new JSON(new UnsupportedOperationException("score="+score+" is not implemented"));
+        }else if(!score.equals("false") && !format.equals("json")){
+            annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json"));
+        }else if(format.equals("rbf")){
+            annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+
+        }else{
+            // query annotator
+            annotations = queryAnnotator(parameters);
+        
+            // additional functionalities
+            if(annotations.isArrayType()){
+                
+                if(score.equals("old")){
+                        Scorer scorer = new Scorer(annotations.getArray());
+                        Map<String, Double> scores = scorer.computeOldScore();
+                        annotations = scorer.getSortedAnnotation(scores);
+                }
+                // TODO: score=cvalue & cvalueh
+                
+                // TODO: format RBF
+                if(format.equals("rbf")){
+                    annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+                }
             }
         }
         
@@ -87,8 +113,13 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         CloseableHttpClient client = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = null;
-        try{  
-            httpResponse = client.execute(new HttpGet(url));
+        try{
+            URI uri = new URI(url.replace(" ", "%20"));  
+            httpResponse = client.execute(new HttpGet(uri));
+            
+        } catch (URISyntaxException e) {
+            return new JSON(e);
+            
         }catch(IOException e){
             return new JSON(e);
         }

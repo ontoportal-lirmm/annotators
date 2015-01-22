@@ -6,7 +6,9 @@ public class IBCAnnotatorServlet extends AbstractAnnotatorServlet {
     @Override
     protected String getAnnotatorBaseURL() {
         return   AnnotatorUtils.getBioPortalUri() + "/annotator?" 
-               + "apikey=fc4abd1d-ca3e-4e21-96f0-15a16e030889&"
                + AnnotatorUtils.getBioPortalOntologiesURLParameter("IBC") +"&";
+    }
+    protected String getAPIkey(){
+        return "fc4abd1d-ca3e-4e21-96f0-15a16e030889";
     }
 }

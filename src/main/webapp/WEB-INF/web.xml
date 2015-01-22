@@ -7,9 +7,9 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	<servlet>
 		<description>
 		</description>
-		<display-name>NcboAnnotatorServlet</display-name>
-		<servlet-name>NcboAnnotatorServlet</servlet-name>
-		<servlet-class>org.sifrproject.annotators.NcboAnnotatorServlet</servlet-class>
+		<display-name>NCBOAnnotatorServlet</display-name>
+		<servlet-name>NCBOAnnotatorServlet</servlet-name>
+		<servlet-class>org.sifrproject.annotators.NCBOAnnotatorServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<description>
@@ -26,16 +26,16 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		<servlet-class>org.sifrproject.annotators.SIFRAnnotatorServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>NcboAnnotatorServlet</servlet-name>
-		<url-pattern>/NcboAnnotator</url-pattern>
+		<servlet-name>NCBOAnnotatorServlet</servlet-name>
+		<url-pattern>/ncbo_annotator_plus</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>IBCAnnotatorServlet</servlet-name>
-		<url-pattern>/IBCAnnotator</url-pattern>
+		<url-pattern>/ibc_annotator</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>SIFRAnnotatorServlet</servlet-name>
-		<url-pattern>/SIFRAnnotator</url-pattern>
+		<url-pattern>/sifr_annotator</url-pattern>
 	</servlet-mapping>
  <!-- your web.xml content here -->
 </web-app>
