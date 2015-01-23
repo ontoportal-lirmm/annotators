@@ -13,7 +13,6 @@ import org.sifrproject.util.JSON;
 public class Scorer {
 
     protected Map<String,Annotation> annotations;
-    public Map<String, Score> scoreDict;
 
     /*
     public Map<String, Score> dictScoreConcept2 = new HashMap<>();
@@ -32,6 +31,7 @@ public class Scorer {
         for(Object obj : annotationArray){
             Annotation annotation = new Annotation((JSONObject) obj);
             annotations.put(annotation.getId(), annotation);
+            annotation.extractHierarchy(annotations);
         }
     }
 
@@ -54,9 +54,9 @@ public class Scorer {
 
 
             // add score to hierarchical concepts
-            Map<String, Integer> hierarchy = annotation.getHierarchy();
+            Map<String, Long> hierarchy = annotation.getHierarchy();
             for (String hid : hierarchy.keySet()){
-                Integer distance = hierarchy.get(hid);
+                Long distance = hierarchy.get(hid);
 
                 double factor = 1;
                 if (distance <= 12) 
@@ -65,12 +65,16 @@ public class Scorer {
                 addScore(scores, hid, factor*annotatedMatches.size());
             }
         }
+        printIds("scored");
         return scores;
     }
 
     private static void addScore(Map<String, Double> scores, String id, double value){
         Double score = scores.get(id);
-        if (score==null) score  = value;
+        if (score==null) {
+            score  = value;
+            System.out.println("add score id:"+String.valueOf(id));
+        }
         else             score += value;
         scores.put(id, score);
     }
@@ -80,6 +84,7 @@ public class Scorer {
      * Also add/Override a 'score' entry with respective score value  to each annotation item
      */
     public JSON getSortedAnnotation(Map<String, Double> scores){
+        printIds("sort  ");
         // sort scores
         TreeMap<String, Double> sortedScores = new TreeMap<>();
         sortedScores.putAll(scores);
@@ -87,12 +92,21 @@ public class Scorer {
         // make sorted JSONArray
         JSON sortedAnnotations = new JSON(new JSONArray());
         for(String id : sortedScores.keySet()){
-            JSON annotation = new JSON(annotations.get(id).object);
-            annotation.put("score", sortedScores.get(id).toString());
-            sortedAnnotations.add(annotation.getObject());
+            Annotation a = annotations.get(id);
+            if(a==null){
+                System.out.println("!! missing annotation id:"+String.valueOf(id));
+            }else{
+                JSON annotation = a.getObject();
+                annotation.put("score", sortedScores.get(id).toString());
+                sortedAnnotations.add(annotation.getObject());
+            }
         }
 
         return sortedAnnotations;
+    }
+    public void printIds(String prefix){
+        for(String key : annotations.keySet())
+            System.out.println(prefix+": "+key);
     }
 
     /*

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,7 +22,7 @@ public class JSON{
     protected JSONArray  array;
     
     public JSON(String json){
-        make(json);
+        parseString(json);
     }
     public JSON(InputStream stream){
         StringBuilder builder = new StringBuilder();
@@ -30,7 +31,7 @@ public class JSON{
         String line;
         try {
             while((line=reader.readLine()) != null) builder.append(line);
-            make(builder.toString());
+            parseString(builder.toString());
             
         } catch (IOException e) {
             makeError(e);
@@ -42,8 +43,10 @@ public class JSON{
             object = (JSONObject) obj;
         else if(obj instanceof JSONArray)
             array = (JSONArray) obj;
+        else if(obj==null)
+            throw new IllegalArgumentException("JSON(Object) constructor is for JSONObject or JSONArray, not null");
         else
-            throw new ClassCastException("JSON(Object) constructor is for JSONObject or JSONArray only");
+            throw new IllegalArgumentException("JSON(Object) constructor is for JSONObject or JSONArray, not:"+obj.getClass());
     }
 
     /** Make a standardize object-type {@link JSON} referencing the given error */
@@ -51,7 +54,7 @@ public class JSON{
         makeError(e);
     }
     
-    private void make(String json){
+    private void parseString(String json){
         object = null;
         array = null;
         try{
@@ -104,48 +107,77 @@ public class JSON{
     public boolean isArrayType(){
         return array!=null;
     }
+    private void assertObject(String methodName){
+        if(!isObjectType()) 
+            throw new ClassCastException("Method '"+methodName+"' cannot be applied on a JSON instance of array-type");
+    }
+    private void assertArray(String methodName){
+        if(!isArrayType()) 
+            throw new ClassCastException("Method '"+methodName+"' cannot be applied on a JSON instance of object-type");
+    }
     
     // Accessors
     // ---------
+    /** Return the JSONArray stored by this {@link JSON} instance */
+    public JSONArray getArray(){
+        assertArray("getArray");
+        return array;
+    }
+    
+    /** Return the JSONObject stored by this {@link JSON} instance */
+    public JSONObject getObject(){
+        assertObject("getObject");
+        return object;
+    }
+
+    // accessors for object-type
     /**
      * Append the given item to an object-type {@link JSON} instance
      * Throw an error if this instance is an array-type JSON
      */
     @SuppressWarnings("unchecked")
     public void put(String key, String value){
-        if(isObjectType()) 
-            object.put(key, value);
-        else
-            throw new ClassCastException("Method 'put' cannot be applied on a JSON instance of array-type");
+        assertObject("put");
+        object.put(key, value);
     }
+    @SuppressWarnings("unchecked")
+    public void put(String key, JSON value){
+        assertObject("put");
+        object.put(key, value.isObjectType() ? value.getObject() : value.getArray());
+    }
+
+    /** Retrieve element for given {@code key} of this object-type {@link JSON} instance */
+    public JSON get(String key){
+        assertObject("get");
+        return new JSON(object.get(key));
+    }
+
+    /** Retrieve element for given {@code key}and cast it using {@code cls} (for object-type {@link JSON} only) */
+    public <T> T get(String key, Class<T> cls){
+        assertObject("get");
+        return cls.cast(object.get(key));
+    }
+
     
+    // accessors for array-type
     @SuppressWarnings("unchecked")
     public void add(Object object){
-        if(isObjectType()) 
-            throw new ClassCastException("Method 'add' cannot be applied on a JSON instance of object-type");
-        else
-            array.add(object);
+        assertArray("add");
+        array.add(object);
     }
     
-    /** Return the JSONArray stored by this {@link JSON} instance */
-    public JSONArray getArray(){
-        if(isArrayType()) 
-            return array;
-        else
-            throw new ClassCastException("'getArray' method is not valid for JSON instance of object-type");
+    /** Return all JSON contained in this array-type {@link JSON} instance */
+    public List<JSON> iterObject(){
+        assertArray("iterObject");
+        List<JSON> content = new ArrayList<>();
+        for(Object obj : array)
+            content.add(new JSON(obj));
+        return content;
     }
+
     
-    /** Return the JSONObject stored by this {@link JSON} instance */
-    public JSONObject getObject(){
-        if(isObjectType()) 
-            return object;
-        else
-            throw new ClassCastException("'getObject' method is not valid for JSON instance of array-type");
-    }
-    
-    /**
-     * return a json string 
-     */
+    // conversion
+    // ----------
     public String toString(){
         if(isObjectType()) return object.toJSONString();
         if(isArrayType())  return array.toJSONString();
