@@ -2,11 +2,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sifrproject</groupId>
-  <artifactId>annotatorplus</artifactId>
+  <artifactId>annotators</artifactId>
   <packaging>war</packaging>
   <version>0.1-SNAPSHOT</version>
-  <name>AnnotatorPlus</name>
-  <url>https://github.com/sifrproject/AnnotatorPlus</url>
+  <name>annotators</name>
+  <url>https://github.com/sifrproject/annotators</url>
   <build>
     <finalName>annotators</finalName>
     <plugins>
