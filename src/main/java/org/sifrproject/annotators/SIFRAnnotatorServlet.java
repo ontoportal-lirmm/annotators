@@ -8,7 +8,4 @@ public class SIFRAnnotatorServlet extends AbstractAnnotatorServlet {
         return   AnnotatorUtils.getBioPortalUri() + "/annotator?" 
                + AnnotatorUtils.getBioPortalOntologiesURLParameter("SIFR") +"&";
     }
-    protected String getAPIkey(){
-        return "fc4abd1d-ca3e-4e21-96f0-15a16e030889";
-    }
 }

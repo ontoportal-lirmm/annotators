@@ -36,7 +36,6 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
 
     
     protected abstract String getAnnotatorBaseURL();
-    protected abstract String getAPIkey();
 
     // redirect GET to POST
     @Override
@@ -55,9 +54,6 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         
         if(format=="rbf") 
             parameters.put("format", new String[]{"json"});
-        
-        if(!parameters.containsKey("apikey"))
-            parameters.put("apikey", new String[]{getAPIkey()});
         
         // process query
         JSON annotations;
