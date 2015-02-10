@@ -28,14 +28,14 @@ public class Annotation {
         
         // extract id of this Annotation
         JSON annotatedClass = object.get("annotatedClass");
-        id = annotatedClass.get("@id",String.class);
+        id = annotatedClass.getString("@id");
         
         // extract list of matched terms
         JSON matchObject = object.get("annotations");
         if(matchObject!=null && matchObject.getType()==JSONType.ARRAY){
             for (JSON match : matchObject.arrayContent()){
-                String type = match.get("matchType", String.class);
-                String term = match.get("text", String.class);
+                String type = match.getString("matchType");
+                String term = match.getString("text");
                 matches.add(new Match(term, type));
             }
         }
@@ -59,8 +59,8 @@ public class Annotation {
             JSON annotatedCls = hierarchyElement.get("annotatedClass");
             
             // add entry to hierarchy
-            String hid  = annotatedCls.get("@id",String.class);
-            Long   dist = hierarchyElement.get("distance", Long.class);
+            String hid  = annotatedCls.getString("@id");
+            Long   dist = hierarchyElement.getLong("distance");
             hierarchy.put(hid, dist);
             
             // simplify (replace) hierarchy JSONObject

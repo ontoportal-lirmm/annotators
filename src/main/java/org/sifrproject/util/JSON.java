@@ -6,14 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-//import com.eclipsesource.json.JsonObject;
-//import com.eclipsesource.json.JsonArray;
+*/
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Provide practical interface to JSONObject **AND** JSONArray
@@ -21,8 +22,8 @@ import org.json.simple.parser.ParseException;
  * @author Julien Diener
  */
 public class JSON{
-    protected JSONObject object;
-    protected JSONArray  array;
+    protected JsonObject object;
+    protected JsonArray  array;
     
     public JSON(String json){
         parseString(json);
@@ -42,17 +43,17 @@ public class JSON{
     }
     public JSON(JSONType type){
         switch(type){
-        case OBJECT: object = new JSONObject();  break;
-        case ARRAY:  array  = new JSONArray();   break;
+        case OBJECT: object = new JsonObject();  break;
+        case ARRAY:  array  = new JsonArray();   break;
         }
     }
     
     /** Construct a {@link JSON} instance wrapping a JSONObject or JSONArray */
     private JSON(Object obj){
-        if (obj instanceof JSONObject)
-            object = (JSONObject) obj;
-        else if(obj instanceof JSONArray)
-            array = (JSONArray) obj;
+        if (obj instanceof JsonObject)
+            object = (JsonObject) obj;
+        else if(obj instanceof JsonArray)
+            array = (JsonArray) obj;
         else if(obj==null)
             throw new IllegalArgumentException("JSON(Object) constructor is for JSONObject or JSONArray, not null");
         else
@@ -68,19 +69,14 @@ public class JSON{
         object = null;
         array = null;
         try{
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(json);
-            if (obj instanceof JSONObject) {
-                object = (JSONObject) obj;
-            } else {
-                array = (JSONArray) obj;
-            }
-        }catch(ParseException pe){
-            makeError(pe);
+            JsonValue value = JsonValue.readFrom(json);
+            if (value instanceof JsonObject) object = (JsonObject) value;
+            else                             array  = (JsonArray)  value;
+        }catch(RuntimeException e){
+            makeError(e);
         }
     }
     
-    @SuppressWarnings("unchecked")
     private void makeError(Exception e){
         StackTraceElement[] exceptionStack = e.getStackTrace();
         ArrayList<String> stack = new ArrayList<>(exceptionStack.length);
@@ -101,12 +97,12 @@ public class JSON{
             stack.add(line);
         }
         
-        JSONObject error = new JSONObject();
-        error.put("message",e.getMessage());
-        error.put("stack", stack);
+        JsonObject error = new JsonObject();
+        error.add("message",e.getMessage());
+        error.add("stack", stack.toString());
         
-        object = new JSONObject();
-        object.put("error", error);
+        object = new JsonObject();
+        object.add("error", error);
     }
     
     // test JSON type
@@ -133,7 +129,7 @@ public class JSON{
     // Accessors
     // ---------
     /** Return the JSONObject or JSONArray stored by this {@link JSON} instance */
-    private Object getInternal(){
+    private JsonValue getInternal(){
         return isObjectType() ? object : array;
     }
     
@@ -147,15 +143,13 @@ public class JSON{
      * Append the given item to an object-type {@link JSON} instance
      * Throw an error if this instance is an array-type JSON
      */
-    @SuppressWarnings("unchecked")
     public void put(String key, String value){
         assertObject("put");
-        object.put(key, value);
+        object.add(key, value);
     }
-    @SuppressWarnings("unchecked")
     public void put(String key, JSON value){
         assertObject("put");
-        object.put(key, value.getInternal());
+        object.add(key, value.getInternal());
     }
 
     /** Retrieve element for given {@code key} of this object-type {@link JSON} instance */
@@ -164,15 +158,25 @@ public class JSON{
         return new JSON(object.get(key));
     }
 
-    /** Retrieve element for given {@code key}and cast it using {@code cls} (for object-type {@link JSON} only) */
-    public <T> T get(String key, Class<T> cls){
-        assertObject("get");
-        return cls.cast(object.get(key));
+    /** Retrieve String for given {@code key} */
+    public String getString(String key){
+        return object.get(key).asString();
+    }
+    /** Retrieve Integer for given {@code key} */
+    public Integer getInt(String key){
+        return object.get(key).asInt();
+    }
+    /** Retrieve Double for given {@code key} */
+    public Double getDouble(String key){
+        return object.get(key).asDouble();
+    }
+    /** Retrieve Long for given {@code key} */
+    public Long getLong(String key){
+        return object.get(key).asLong();
     }
 
     
     // accessors for array-type
-    @SuppressWarnings("unchecked")
     public void add(JSON json){
         assertArray("add");
         array.add(json.getInternal());
@@ -191,8 +195,8 @@ public class JSON{
     // conversion
     // ----------
     public String toString(){
-        if(isObjectType()) return object.toJSONString();
-        if(isArrayType())  return array.toJSONString();
+        if(isObjectType()) return object.toString();
+        if(isArrayType())  return array.toString();
         return "{}";
     }
 }

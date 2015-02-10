@@ -12,19 +12,22 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+//import com.eclipsesource.json.JsonObject;
+//import com.eclipsesource.json.JsonArray;
+
 /**
  * Provide practical interface to JSONObject **AND** JSONArray
  * 
  * @author Julien Diener
  */
-public class JSON_v1{
+public class JSON_jsonsimple{
     protected JSONObject object;
     protected JSONArray  array;
     
-    public JSON_v1(String json){
+    public JSON_jsonsimple(String json){
         parseString(json);
     }
-    public JSON_v1(InputStream stream){
+    public JSON_jsonsimple(InputStream stream){
         StringBuilder builder = new StringBuilder();
         
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -37,8 +40,15 @@ public class JSON_v1{
             makeError(e);
         }
     }
-    /** Construct a {@link JSON_v1} instance wrapping a JSONObject or JSONArray */
-    public JSON_v1(Object obj){
+    public JSON_jsonsimple(JSONType type){
+        switch(type){
+        case OBJECT: object = new JSONObject();  break;
+        case ARRAY:  array  = new JSONArray();   break;
+        }
+    }
+    
+    /** Construct a {@link JSON_jsonsimple} instance wrapping a JSONObject or JSONArray */
+    private JSON_jsonsimple(Object obj){
         if (obj instanceof JSONObject)
             object = (JSONObject) obj;
         else if(obj instanceof JSONArray)
@@ -46,11 +56,11 @@ public class JSON_v1{
         else if(obj==null)
             throw new IllegalArgumentException("JSON(Object) constructor is for JSONObject or JSONArray, not null");
         else
-            throw new IllegalArgumentException("JSON(Object) constructor is for JSONObject or JSONArray, not:"+obj.getClass());
+            throw new IllegalArgumentException("JSON(Object) constructor is for JSONObject or JSONArray, not: "+obj.getClass());
     }
 
-    /** Make a standardize object-type {@link JSON_v1} referencing the given error */
-    public JSON_v1(Exception e){
+    /** Make a standardize object-type {@link JSON_jsonsimple} referencing the given error */
+    public JSON_jsonsimple(Exception e){
         makeError(e);
     }
     
@@ -101,10 +111,14 @@ public class JSON_v1{
     
     // test JSON type
     // --------------
-    public boolean isObjectType(){
+    public JSONType getType(){
+        return object!=null ? JSONType.OBJECT : JSONType.ARRAY;
+    }
+    
+    private final boolean isObjectType(){
         return object!=null;
     }
-    public boolean isArrayType(){
+    private final boolean isArrayType(){
         return array!=null;
     }
     private void assertObject(String methodName){
@@ -118,21 +132,19 @@ public class JSON_v1{
     
     // Accessors
     // ---------
-    /** Return the JSONArray stored by this {@link JSON_v1} instance */
-    public JSONArray getArray(){
-        assertArray("getArray");
-        return array;
+    /** Return the JSONObject or JSONArray stored by this {@link JSON_jsonsimple} instance */
+    private Object getInternal(){
+        return isObjectType() ? object : array;
     }
     
-    /** Return the JSONObject stored by this {@link JSON_v1} instance */
-    public JSONObject getObject(){
-        assertObject("getObject");
-        return object;
+    public int size(){
+        if(isObjectType()) return object.size();
+        else               return array.size();
     }
 
     // accessors for object-type
     /**
-     * Append the given item to an object-type {@link JSON_v1} instance
+     * Append the given item to an object-type {@link JSON_jsonsimple} instance
      * Throw an error if this instance is an array-type JSON
      */
     @SuppressWarnings("unchecked")
@@ -141,18 +153,18 @@ public class JSON_v1{
         object.put(key, value);
     }
     @SuppressWarnings("unchecked")
-    public void put(String key, JSON_v1 value){
+    public void put(String key, JSON_jsonsimple value){
         assertObject("put");
-        object.put(key, value.isObjectType() ? value.getObject() : value.getArray());
+        object.put(key, value.getInternal());
     }
 
-    /** Retrieve element for given {@code key} of this object-type {@link JSON_v1} instance */
-    public JSON_v1 get(String key){
+    /** Retrieve element for given {@code key} of this object-type {@link JSON_jsonsimple} instance */
+    public JSON_jsonsimple get(String key){
         assertObject("get");
-        return new JSON_v1(object.get(key));
+        return new JSON_jsonsimple(object.get(key));
     }
 
-    /** Retrieve element for given {@code key}and cast it using {@code cls} (for object-type {@link JSON_v1} only) */
+    /** Retrieve element for given {@code key}and cast it using {@code cls} (for object-type {@link JSON_jsonsimple} only) */
     public <T> T get(String key, Class<T> cls){
         assertObject("get");
         return cls.cast(object.get(key));
@@ -161,17 +173,17 @@ public class JSON_v1{
     
     // accessors for array-type
     @SuppressWarnings("unchecked")
-    public void add(Object object){
+    public void add(JSON_jsonsimple json){
         assertArray("add");
-        array.add(object);
+        array.add(json.getInternal());
     }
     
-    /** Return all JSON contained in this array-type {@link JSON_v1} instance */
-    public List<JSON_v1> iterObject(){
+    /** Return all JSON contained in this array-type {@link JSON_jsonsimple} instance */
+    public List<JSON_jsonsimple> arrayContent(){
         assertArray("iterObject");
-        List<JSON_v1> content = new ArrayList<>();
+        List<JSON_jsonsimple> content = new ArrayList<>();
         for(Object obj : array)
-            content.add(new JSON_v1(obj));
+            content.add(new JSON_jsonsimple(obj));
         return content;
     }
 
