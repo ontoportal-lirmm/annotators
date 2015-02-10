@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.sifrproject.util.JSON;
+import org.sifrproject.util.JSONType;
 
 /**
  * Represent one annotation as process by annotators
@@ -21,23 +20,22 @@ public class Annotation {
     protected ArrayList<Match> matches;
     protected HashMap<String, Long>   hierarchy;
     
-    public Annotation(JSONObject object){
+    public Annotation(JSON object){
         // keep reference to the JSONObject
-        this.object = new JSON(object);
+        this.object = object;
         matches = new ArrayList<>();
         hierarchy = new HashMap<>();
         
         // extract id of this Annotation
-        JSONObject annotatedClass = (JSONObject) object.get("annotatedClass");
-        id = (String) annotatedClass.get("@id");
+        JSON annotatedClass = object.get("annotatedClass");
+        id = annotatedClass.get("@id",String.class);
         
         // extract list of matched terms
-        Object matchObject = object.get("annotations");
-        if(matchObject!=null){
-            for (Object obj : (JSONArray) matchObject){
-                JSONObject match = (JSONObject) obj;
-                String type = (String) match.get("matchType");
-                String term = (String) match.get("text");
+        JSON matchObject = object.get("annotations");
+        if(matchObject!=null && matchObject.getType()==JSONType.ARRAY){
+            for (JSON match : matchObject.arrayContent()){
+                String type = match.get("matchType", String.class);
+                String term = match.get("text", String.class);
                 matches.add(new Match(term, type));
             }
         }
@@ -52,10 +50,10 @@ public class Annotation {
         // extract related (hierarchical) annotation
         
         JSON hierarchySet = object.get("hierarchy");
-        JSON simplifiedSet = new JSON(new JSONArray());
-        for (JSON hierarchyElement : hierarchySet.iterObject()) {
+        JSON simplifiedSet = new JSON(JSONType.ARRAY);
+        for (JSON hierarchyElement : hierarchySet.arrayContent()) {
             
-            if(!hierarchyElement.isObjectType())
+            if(hierarchyElement.getType()!=JSONType.OBJECT)
                 continue;  // TODO: throw some exception
             
             JSON annotatedCls = hierarchyElement.get("annotatedClass");
@@ -66,13 +64,13 @@ public class Annotation {
             hierarchy.put(hid, dist);
             
             // simplify (replace) hierarchy JSONObject
-            JSON simplifiedElement = new JSON(new JSONObject());
+            JSON simplifiedElement = new JSON(JSONType.OBJECT);
             simplifiedElement.put("@id", hid);
             simplifiedElement.put("distance", String.valueOf(dist));
             simplifiedSet.add(simplifiedElement);
             
             // create and add an Annotation to given annotations
-            annotations.put(hid,new Annotation(hierarchyElement.getObject()));
+            annotations.put(hid,new Annotation(hierarchyElement));
         }
         object.put("hierarchy", simplifiedSet);
     }

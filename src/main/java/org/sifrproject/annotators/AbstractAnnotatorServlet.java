@@ -18,6 +18,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import org.sifrproject.scoring.Scorer;
 import org.sifrproject.util.JSON;
+import org.sifrproject.util.JSONType;
 import org.sifrproject.util.UrlParameters;
 
 /**
@@ -71,10 +72,10 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
             annotations = queryAnnotator(parameters);
         
             // additional functionalities
-            if(annotations.isArrayType()){
+            if(annotations.getType()==JSONType.ARRAY){
                 
                 if(score.equals("old")){
-                        Scorer scorer = new Scorer(annotations.getArray());
+                        Scorer scorer = new Scorer(annotations);
                         Map<String, Double> scores = scorer.computeOldScore();
                         annotations = scorer.getSortedAnnotation(scores);
                 }

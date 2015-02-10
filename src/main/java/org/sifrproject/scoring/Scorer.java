@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.sifrproject.util.JSON;
+import org.sifrproject.util.JSONType;
 
 
 public class Scorer {
@@ -26,10 +25,10 @@ public class Scorer {
     public int classementMaxF2 = 0;
      */
 
-    public Scorer(JSONArray annotationArray){
+    public Scorer(JSON annotationArray){
         annotations = new HashMap<>(annotationArray.size());
-        for(Object obj : annotationArray){
-            Annotation annotation = new Annotation((JSONObject) obj);
+        for(JSON obj : annotationArray.arrayContent()){
+            Annotation annotation = new Annotation(obj);
             annotations.put(annotation.getId(), annotation);
             annotation.extractHierarchy(annotations);
         }
@@ -90,7 +89,7 @@ public class Scorer {
         sortedScores.putAll(scores);
 
         // make sorted JSONArray
-        JSON sortedAnnotations = new JSON(new JSONArray());
+        JSON sortedAnnotations = new JSON(JSONType.ARRAY);
         for(String id : sortedScores.keySet()){
             Annotation a = annotations.get(id);
             if(a==null){
@@ -98,7 +97,7 @@ public class Scorer {
             }else{
                 JSON annotation = a.getObject();
                 annotation.put("score", sortedScores.get(id).toString());
-                sortedAnnotations.add(annotation.getObject());
+                sortedAnnotations.add(annotation);
             }
         }
 
