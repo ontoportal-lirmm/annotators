@@ -132,19 +132,8 @@ public class JSON{
     
     // Accessors
     // ---------
-    /** Return the JSONArray stored by this {@link JSON} instance 
-    public JSONArray getArray(){
-        assertArray("getArray");
-        return array;
-    }*/
-    
-    /** Return the JSONObject stored by this {@link JSON} instance 
-    public JSONObject getObject(){
-        assertObject("getObject");
-        return object;
-    }*/
+    /** Return the JSONObject or JSONArray stored by this {@link JSON} instance */
     private Object getInternal(){
-        assertObject("getObject");
         return isObjectType() ? object : array;
     }
     
@@ -172,7 +161,7 @@ public class JSON{
     /** Retrieve element for given {@code key} of this object-type {@link JSON} instance */
     public JSON get(String key){
         assertObject("get");
-        return new JSON((JSONObject) object.get(key));
+        return new JSON(object.get(key));
     }
 
     /** Retrieve element for given {@code key}and cast it using {@code cls} (for object-type {@link JSON} only) */
