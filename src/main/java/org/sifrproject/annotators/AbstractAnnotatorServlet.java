@@ -25,7 +25,7 @@ import org.sifrproject.util.UrlParameters;
  * Implements the core functionalities of the AnnotatorPlus web services:
  *   - It queries the suitable bioportal annotation server (w.r.t implementing subclasses)
  *   - add a "score" functionality that sort output following a scoring method
- *   - add a "format=rbf" to the current possible output formats of bioportal (json, xml, ...)
+ *   - add a "format=rdf" to the current possible output formats of bioportal (json, xml, ...)
  * 
  * All Implementations of AnnotatorPlus services should inherit from this class 
  * and implements the  abstract method {@link getAnnotatorBaseUrl}
@@ -53,7 +53,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         String score  = getFirst(parameters.remove("score"), "false").toLowerCase();
         String format = getFirst(parameters.get("format"),   "json" ).toLowerCase();
         
-        if(format=="rbf") 
+        if(format=="rdf") 
             parameters.put("format", new String[]{"json"});
         
         // process query
@@ -64,8 +64,8 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
             annotations = new JSON(new UnsupportedOperationException("score="+score+" is not implemented"));
         }else if(!score.equals("false") && !format.equals("json")){
             annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json"));
-        }else if(format.equals("rbf")){
-            annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+        }else if(format.equals("rdf")){
+            annotations = new JSON(new UnsupportedOperationException("format=rdf is not implemented"));
 
         }else{
             // query annotator
@@ -81,9 +81,9 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 }
                 // TODO: score=cvalue & cvalueh
                 
-                // TODO: format RBF
-                if(format.equals("rbf")){
-                    annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+                // TODO: format RDF
+                if(format.equals("rdf")){
+                    annotations = new JSON(new UnsupportedOperationException("format=rdf is not implemented"));
                 }
             }
         }
