@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-        id="WebApp_ID" version="3.0">
-	<servlet>
-		<description>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <servlet>
+    <description>
 		</description>
-		<display-name>NCBOAnnotatorServlet</display-name>
-		<servlet-name>NCBOAnnotatorServlet</servlet-name>
-		<servlet-class>org.sifrproject.annotators.NCBOAnnotatorServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<description>
+    <display-name>NCBOAnnotatorServlet</display-name>
+    <servlet-name>NCBOAnnotatorServlet</servlet-name>
+    <servlet-class>org.sifrproject.annotators.NCBOAnnotatorServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>
 		</description>
-		<display-name>IBCAnnotatorServlet</display-name>
-		<servlet-name>IBCAnnotatorServlet</servlet-name>
-		<servlet-class>org.sifrproject.annotators.IBCAnnotatorServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<description>
+    <display-name>IBCAnnotatorServlet</display-name>
+    <servlet-name>IBCAnnotatorServlet</servlet-name>
+    <servlet-class>org.sifrproject.annotators.IBCAnnotatorServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>
 		</description>
-		<display-name>SIFRAnnotatorServlet</display-name>
-		<servlet-name>SIFRAnnotatorServlet</servlet-name>
-		<servlet-class>org.sifrproject.annotators.SIFRAnnotatorServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>NCBOAnnotatorServlet</servlet-name>
-		<url-pattern>/ncbo_annotator_plus</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>IBCAnnotatorServlet</servlet-name>
-		<url-pattern>/ibc_annotator</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>SIFRAnnotatorServlet</servlet-name>
-		<url-pattern>/sifr_annotator</url-pattern>
-	</servlet-mapping>
- <!-- your web.xml content here -->
+    <display-name>SIFRAnnotatorServlet</display-name>
+    <servlet-name>SIFRAnnotatorServlet</servlet-name>
+    <servlet-class>org.sifrproject.annotators.SIFRAnnotatorServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NCBOAnnotatorServlet</servlet-name>
+    <url-pattern>/ncbo_annotator_plus</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IBCAnnotatorServlet</servlet-name>
+    <url-pattern>/ibc_annotator</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SIFRAnnotatorServlet</servlet-name>
+    <url-pattern>/sifr_annotator</url-pattern>
+  </servlet-mapping>
 </web-app>
