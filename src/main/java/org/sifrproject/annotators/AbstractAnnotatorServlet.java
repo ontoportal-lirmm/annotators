@@ -15,17 +15,21 @@ import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-
 import org.sifrproject.scoring.Scorer;
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
 import org.sifrproject.util.UrlParameters;
+import org.sifrproject.format.JsonToRdf;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 
 /**
  * Implements the core functionalities of the AnnotatorPlus web services:
  *   - It queries the suitable bioportal annotation server (w.r.t implementing subclasses)
  *   - add a "score" functionality that sort output following a scoring method
- *   - add a "format=rbf" to the current possible output formats of bioportal (json, xml, ...)
+ *   - add a "format=rdf" to the current possible output formats of bioportal (json, xml, ...)
  * 
  * All Implementations of AnnotatorPlus services should inherit from this class 
  * and implements the  abstract method {@link getAnnotatorBaseUrl}
@@ -53,20 +57,19 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         String score  = getFirst(parameters.remove("score"), "false").toLowerCase();
         String format = getFirst(parameters.get("format"),   "json" ).toLowerCase();
         
-        if(format=="rbf") 
+        if(format=="rdf") 
+        	parameters.remove("format");
             parameters.put("format", new String[]{"json"});
         
         // process query
         JSON annotations;
+        String annotationsRdfOutput = "";
         
             // test for call to not implemented functionalities
         if(!score.equals("false") && !score.equals("old")){
             annotations = new JSON(new UnsupportedOperationException("score="+score+" is not implemented"));
         }else if(!score.equals("false") && !format.equals("json")){
             annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json"));
-        }else if(format.equals("rbf")){
-            annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
-
         }else{
             // query annotator
             annotations = queryAnnotator(parameters);
@@ -81,18 +84,37 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 }
                 // TODO: score=cvalue & cvalueh
                 
-                // TODO: format RBF
-                if(format.equals("rbf")){
-                    annotations = new JSON(new UnsupportedOperationException("format=rbf is not implemented"));
+                // TODO: format RDF
+                if(format.equals("rdf")){
+                	// If format is RDF then use of Soumia's class to convert JSON to RDF
+                	// First conversion from JSON (used by Julien) to JSONArray (used by Soumia) 
+                    //annotations = new JSON(new UnsupportedOperationException("format=rdf is not implemented"));
+                    String annotationsStr = annotations.getArray().toString();
+                    JSONParser parser = new JSONParser();
+            		JSONArray annotationsJSONArray;
+					try {
+						annotationsJSONArray = (JSONArray) parser.parse(annotationsStr);
+						annotationsRdfOutput = JsonToRdf.FromJsonToRDF(annotationsJSONArray);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
                 }
             }
         }
         
         // process response
         PrintWriter out = response.getWriter();
-        response.setContentType("application/json;charset=UTF-8");
-        out.println(annotations.toString());
-        out.flush();
+        
+        if (format.equals("rdf")) {
+        	response.setContentType("application/rdf+xml;charset=UTF-8");
+	        out.println(annotationsRdfOutput);
+	        out.flush();
+        } else {
+	        response.setContentType("application/json;charset=UTF-8");
+	        out.println(annotations.toString());
+	        out.flush();
+        }
     }
 
     private static String getFirst(String[] values, String defaultValue){

@@ -25,7 +25,10 @@ public class JSON{
     protected JsonObject object;
     protected JsonArray  array;
     
-    public JSON(String json){
+    public JsonArray getArray() {
+		return array;
+	}
+	public JSON(String json){
         parseString(json);
     }
     public JSON(InputStream stream){

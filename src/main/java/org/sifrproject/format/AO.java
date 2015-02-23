@@ -199,7 +199,7 @@ public class AO {
         Jena.dumpRDF(owlModel.getOntModel());
     }
 
-    public static  void test(){
+    public static void test(){
 
         Model m = ModelFactory.createDefaultModel();
         String aofPrefix = "http://purl.org/ao/foaf/";
@@ -240,7 +240,6 @@ public class AO {
         m.setNsPrefix( "rd", rdfPrefix );
         m.write( System.out );
         System.out.println(new java.util.Date().getTime());
-
     }
 
     public static  void test2()
