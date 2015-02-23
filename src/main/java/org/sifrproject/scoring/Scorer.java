@@ -13,24 +13,11 @@ public class Scorer {
 
     protected Map<String,Annotation> annotations;
 
-    /*
-    public Map<String, Score> dictScoreConcept2 = new HashMap<>();
-    public ArrayList <String> conceptTries      = new ArrayList<>();
-    public ArrayList <String> conceptTriesF     = new ArrayList<>();
-    public ArrayList <String> conceptTriesF2    = new ArrayList<>();
-    public Map<String, CvalueTerme> dictCvalue  = new HashMap<>();
-
-    public int classementMax = 0;
-    public int classementMaxF = 0;
-    public int classementMaxF2 = 0;
-     */
-
     public Scorer(JSON annotationArray){
         annotations = new HashMap<>(annotationArray.size());
         for(JSON obj : annotationArray.arrayContent()){
             Annotation annotation = new Annotation(obj);
             annotations.put(annotation.getId(), annotation);
-            annotation.extractHierarchy(annotations);
         }
     }
 
@@ -70,19 +57,17 @@ public class Scorer {
 
     private static void addScore(Map<String, Double> scores, String id, double value){
         Double score = scores.get(id);
-        if (score==null) {
-            score  = value;
-            System.out.println("add score id:"+String.valueOf(id));
-        }
+        if (score==null) score  = value;
         else             score += value;
         scores.put(id, score);
     }
 
     /**
-     * Create a JSON (array) with annotation items sorted by {@code scores}
-     * Also add/Override a 'score' entry with respective score value  to each annotation item
+     * Create a JSON array with annotation items 
+     *   a 'score' entry with respective score value is added to each annotatedClasses
+     *   items are sorted by {@code scores}
      */
-    public JSON getSortedAnnotation(Map<String, Double> scores){
+    public JSON getScoredAnnotations(Map<String, Double> scores){
         printIds("sort  ");
         // sort scores
         TreeMap<String, Double> sortedScores = new TreeMap<>();
@@ -92,10 +77,15 @@ public class Scorer {
         JSON sortedAnnotations = new JSON(JSONType.ARRAY);
         for(String id : sortedScores.keySet()){
             Annotation a = annotations.get(id);
-            if(a==null){
-                System.out.println("!! missing annotation id:"+String.valueOf(id));
-            }else{
+            if(a!=null){
+                // a null are annotations which are in hierarchy and/or mapping but not at the roots
                 JSON annotation = a.getObject();
+                
+                // TODO: score hierarchy 
+                
+                // TODO: score mapping
+                
+                // score annotation object
                 annotation.put("score", sortedScores.get(id).toString());
                 sortedAnnotations.add(annotation);
             }

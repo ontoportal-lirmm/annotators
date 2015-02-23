@@ -157,6 +157,10 @@ public class JSON{
         assertObject("get");
         return new JSON(object.get(key));
     }
+    public boolean containsKey(String key){
+        assertObject("containsKey");
+        return object.names().contains(key);
+    }
 
     /** Retrieve String for given {@code key} */
     public String getString(String key){

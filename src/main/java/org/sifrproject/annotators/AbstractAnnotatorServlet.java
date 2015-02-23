@@ -77,7 +77,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 if(score.equals("old")){
                         Scorer scorer = new Scorer(annotations);
                         Map<String, Double> scores = scorer.computeOldScore();
-                        annotations = scorer.getSortedAnnotation(scores);
+                        annotations = scorer.getScoredAnnotations(scores);
                 }
                 // TODO: score=cvalue & cvalueh
                 
