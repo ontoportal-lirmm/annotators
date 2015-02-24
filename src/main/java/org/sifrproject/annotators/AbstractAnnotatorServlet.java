@@ -20,9 +20,6 @@ import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
 import org.sifrproject.util.UrlParameters;
 import org.sifrproject.format.JsonToRdf;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 
 /**
@@ -68,8 +65,10 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
             // test for call to not implemented functionalities
         if(!score.equals("false") && !score.equals("old")){
             annotations = new JSON(new UnsupportedOperationException("score="+score+" is not implemented"));
-        }else if(!score.equals("false") && !format.equals("json")){
-            annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json"));
+            
+        }else if(!score.equals("false") && !(format.equals("json") || format.equals("rdf"))){
+            annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json or rdf"));
+            
         }else{
             // query annotator
             annotations = queryAnnotator(parameters);
@@ -85,21 +84,8 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 // TODO: score=cvalue & cvalueh
                 
                 // TODO: format RDF
-                if(format.equals("rdf")){
-                	// If format is RDF then use of Soumia's class to convert JSON to RDF
-                	// First conversion from JSON (used by Julien) to JSONArray (used by Soumia) 
-                    //annotations = new JSON(new UnsupportedOperationException("format=rdf is not implemented"));
-                    String annotationsStr = annotations.getArray().toString();
-                    JSONParser parser = new JSONParser();
-            		JSONArray annotationsJSONArray;
-					try {
-						annotationsJSONArray = (JSONArray) parser.parse(annotationsStr);
-						annotationsRdfOutput = JsonToRdf.FromJsonToRDF(annotationsJSONArray);
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
-                }
+                if(format.equals("rdf"))
+                    annotationsRdfOutput = JsonToRdf.convert(annotations);
             }
         }
         

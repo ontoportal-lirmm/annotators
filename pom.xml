@@ -74,6 +74,11 @@
     	<version>2.2-cj-1.0</version>
     </dependency>
     <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+	    <version>4.12</version>
+    </dependency>
+    <dependency>
     	<groupId>org.sifrproject.dep</groupId>
     	<artifactId>protege</artifactId>
     	<version>3.5</version>
