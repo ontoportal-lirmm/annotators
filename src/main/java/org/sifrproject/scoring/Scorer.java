@@ -96,23 +96,33 @@ public class Scorer {
             JSON hierarchies = annotation.get("hierarchy");
             for(JSON hierarchy : hierarchies.arrayContent()){
                 String hid = hierarchy.get("annotatedClass").getString("@id");
-                hierarchy.put("score", scores.get(hid).toString());
+                putScore(hierarchy, scores, hid);
             }
             
             // TODO: score mapping
-            JSON mappings = annotation.get("hierarchy");
+            JSON mappings = annotation.get("mappings");
             for(JSON mapping : mappings.arrayContent()){
                 String mid = mapping.get("annotatedClass").getString("@id");
-                mapping.put("score", scores.get(mid).toString());
+                putScore(mapping, scores, mid);
             }
             
             // score annotation object
-            annotation.put("score", scores.get(id).toString());
+            putScore(annotation, scores, id);
             sortedAnnotations.add(annotation);
         }
 
         return sortedAnnotations;
     }
+    /**
+     * Add "score" item in {@code entry} with value taken from item {@code id} in {@code scores}
+     * if it is present. If not present, don't add "score" item
+     */
+    private void putScore(JSON entry, Map<String, Double> scores, String id){
+        Double score = scores.get(id);
+        if(score!=null)
+            entry.put("score", score.toString());
+    }
+    
     public void printIds(String prefix){
         for(String key : annotations.keySet())
             System.out.println(prefix+": "+key);
