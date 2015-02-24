@@ -1,6 +1,11 @@
 package org.sifrproject.scoring;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,7 +56,6 @@ public class Scorer {
                 addScore(scores, hid, factor*annotatedMatches.size());
             }
         }
-        printIds("scored");
         return scores;
     }
 
@@ -68,27 +72,46 @@ public class Scorer {
      *   items are sorted by {@code scores}
      */
     public JSON getScoredAnnotations(Map<String, Double> scores){
-        printIds("sort  ");
-        // sort scores
-        TreeMap<String, Double> sortedScores = new TreeMap<>();
-        sortedScores.putAll(scores);
+        // reverse sort scores map by values
+        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String,Double>>(scores.entrySet());
+        
+        Collections.sort( list, new Comparator<Map.Entry<String, Double>>(){
+                public int compare( Map.Entry<String, Double> o1, Map.Entry<String, Double> o2 ){
+                    return (o2.getValue()).compareTo( o1.getValue() );
+                }});
 
+        Map<String,Double> sortedScores = new LinkedHashMap<>();
+        for (Map.Entry<String, Double> entry : list)
+            sortedScores.put( entry.getKey(), entry.getValue() );
+
+        
         // make sorted JSONArray
         JSON sortedAnnotations = new JSON(JSONType.ARRAY);
         for(String id : sortedScores.keySet()){
             Annotation a = annotations.get(id);
-            if(a!=null){
-                // a null are annotations which are in hierarchy and/or mapping but not at the roots
-                JSON annotation = a.getObject();
+
+            // a==null are annotationClass found in hierarchy and/or mapping but not at the roots
+            if(a==null) continue;
                 
-                // TODO: score hierarchy 
-                
-                // TODO: score mapping
-                
-                // score annotation object
-                annotation.put("score", sortedScores.get(id).toString());
-                sortedAnnotations.add(annotation);
+            JSON annotation = a.getObject();
+            
+            // TODO: score hierarchy
+            JSON hierarchies = annotation.get("hierarchy");
+            for(JSON hierarchy : hierarchies.arrayContent()){
+                String hid = hierarchy.get("annotatedClass").getString("@id");
+                hierarchy.put("score", scores.get(hid).toString());
             }
+            
+            // TODO: score mapping
+            JSON mappings = annotation.get("hierarchy");
+            for(JSON mapping : mappings.arrayContent()){
+                String mid = mapping.get("annotatedClass").getString("@id");
+                mapping.put("score", scores.get(mid).toString());
+            }
+            
+            // score annotation object
+            annotation.put("score", scores.get(id).toString());
+            sortedAnnotations.add(annotation);
         }
 
         return sortedAnnotations;
