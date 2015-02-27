@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
 
@@ -52,6 +54,11 @@ public class Scorer {
 
                 addScore(scores, hid, factor*annotatedMatches.size());
             }
+            
+            // add score to mappings
+            Set<String> mappings = annotation.getMappings();
+            for (String mid : mappings)
+                addScore(scores, mid, 7);
         }
         return scores;
     }

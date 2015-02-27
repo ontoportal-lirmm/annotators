@@ -2,6 +2,7 @@ package org.sifrproject.scoring;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.sifrproject.util.JSON;
@@ -18,12 +19,14 @@ public class Annotation {
     protected String id;
     protected ArrayList<Match> matches;
     protected HashMap<String, Long>   hierarchy;
+    protected HashSet<String> mappings;
     
     public Annotation(JSON object){
         // keep reference to the JSONObject
         this.object = object;
         matches = new ArrayList<>();
         hierarchy = new HashMap<>();
+        mappings  = new HashSet<>();
         
         // extract id of this Annotation
         JSON annotatedClass = object.get("annotatedClass");
@@ -56,6 +59,18 @@ public class Annotation {
             String hid  = annotatedCls.getString("@id");
             Long   dist = hierarchyElement.getLong("distance");
             hierarchy.put(hid, dist);
+        }
+        
+        /**
+         * Extract annotation from the mappings component:
+         *   - add an entry to this instance {@link mappings} set
+         */
+        for (JSON mappingsElement : object.get("mappings").arrayContent()) {
+            if(mappingsElement.getType()!=JSONType.OBJECT)
+                continue;  // TODO: throw some exception?
+            JSON annotatedCls = mappingsElement.get("annotatedClass");
+            String mid  = annotatedCls.getString("@id");
+            mappings.add(mid);
         }
     }
     
@@ -113,6 +128,10 @@ public class Annotation {
      */
     public HashMap<String, Long> getHierarchy() {
         return hierarchy;
+    }
+
+    public HashSet<String> getMappings() {
+        return mappings;
     }
     
     
