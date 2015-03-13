@@ -50,16 +50,22 @@ public class CValueScore extends Scorer {
             else
                 cvalues.put(term, candidat.getImportance());                
         }
-                
+        
+        return addAnnotationCValue(cvalues);
+    }
+    protected Map<String, Double> addAnnotationCValue(HashMap<String, Double> cvalues){
         HashMap<String,Double> annotationCValues = new HashMap<>();
         for(String id : annotations.keySet()){
             Annotation annotation = annotations.get(id);
             Double annotationCValue = 0.0;
+            
+            // sum cvalues of all annotated terms
             for(Match match : annotation.getMatches()){
                 String term = match.term;
                 if(cvalues.containsKey(term))
                     annotationCValue += cvalues.get(term);
             }
+            
             if(annotationCValue!=0)
                 annotationCValues.put(id, annotationCValue);
         }

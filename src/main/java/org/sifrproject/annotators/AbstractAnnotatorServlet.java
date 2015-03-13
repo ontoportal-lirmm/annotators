@@ -15,6 +15,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.sifrproject.scoring.CValueHScore;
 import org.sifrproject.scoring.CValueScore;
 import org.sifrproject.scoring.OldScore;
 import org.sifrproject.scoring.Scorer;
@@ -65,8 +66,8 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         String annotationsRdfOutput = "";
         
             // test for call to not implemented functionalities
-        if(!(score.equals("false") || score.equals("old") || score.equals("cvalue"))){
-            annotations = new JSON(new UnsupportedOperationException("score="+score+" is not implemented"));
+        if(!(score.equals("false") || score.equals("old") || score.equals("cvalue") || score.equals("cvalueh"))){
+            annotations = new JSON(new UnsupportedOperationException("unknow score:"+score));
             
         }else if(!score.equals("false") && !(format.equals("json") || format.equals("rdf"))){
             annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json or rdf"));
@@ -80,16 +81,15 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 
                 Scorer scorer = null;
                 switch(score){
-                    case "old":    scorer = new OldScore(annotations);    break;
-                    case "cvalue": scorer = new CValueScore(annotations); break;
-                    // TODO: score=cvalueh
+                    case "old":     scorer = new OldScore(annotations);     break;
+                    case "cvalue":  scorer = new CValueScore(annotations);  break;
+                    case "cvalueh": scorer = new CValueHScore(annotations); break;
                 }
                 if(scorer!=null){
                     Map<String, Double> scores = scorer.compute();
                     annotations = scorer.getScoredAnnotations(scores);
                 }
                 
-                // TODO: format RDF
                 if(format.equals("rdf"))
                     annotationsRdfOutput = JsonToRdf.convert(annotations);
             }

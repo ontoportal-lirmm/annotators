@@ -14,7 +14,7 @@ import org.sifrproject.util.JSONType;
 
 public abstract class Scorer {
 
-    protected Map<String,Annotation> annotations;
+    protected final Map<String,Annotation> annotations;
 
     public Scorer(JSON annotationArray){
         annotations = new HashMap<>(annotationArray.size());
