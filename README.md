@@ -21,11 +21,11 @@ Maven package (for eclipse), dependencies are listed in [pom.xml](pom.xml)
   - org.sifrproject.format contains additional output format, namely RBF
 
 
-*Protege dependencies*
+*Local dependencies*
 
-Old `protege.jar` and `protege-owl.jar` are required, but cannot be found on internet (and even less on maven).
-Those are provided in the [protege-dep](protege-dep) folder. To add them in your local maven repository, 
-execute `maven_install`.
+Local dependencies are required and can be found in the [local-dep](local-dep) folder.
+Before building this project, it should be installed in the local maven repository, 
+which can be done by executing `maven_install`, from the same folder.
 
 Note that, in eclipse, it is necessary to update the project:
 
