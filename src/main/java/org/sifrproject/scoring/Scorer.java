@@ -12,7 +12,7 @@ import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
 
 
-abstract class Scorer {
+public abstract class Scorer {
 
     protected Map<String,Annotation> annotations;
 
@@ -22,6 +22,10 @@ abstract class Scorer {
             Annotation annotation = new Annotation(obj);
             annotations.put(annotation.getId(), annotation);
         }
+    }
+    
+    protected Scorer(Map<String,Annotation> annotations){
+        this.annotations = annotations;
     }
 
 

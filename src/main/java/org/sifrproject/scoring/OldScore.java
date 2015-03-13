@@ -12,6 +12,9 @@ public class OldScore extends Scorer {
     public OldScore(JSON annotationArray){
         super(annotationArray);
     }
+    protected OldScore(Map<String,Annotation> annotations){
+        super(annotations);
+    }
     
     public Map<String,Double> compute(){
         Map<String,Double> scores = new HashMap<>();

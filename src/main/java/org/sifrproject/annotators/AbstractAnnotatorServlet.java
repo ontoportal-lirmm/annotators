@@ -15,7 +15,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.sifrproject.scoring.CValueScore;
 import org.sifrproject.scoring.OldScore;
+import org.sifrproject.scoring.Scorer;
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
 import org.sifrproject.util.UrlParameters;
@@ -63,7 +65,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         String annotationsRdfOutput = "";
         
             // test for call to not implemented functionalities
-        if(!score.equals("false") && !score.equals("old")){
+        if(!(score.equals("false") || score.equals("old") || score.equals("cvalue"))){
             annotations = new JSON(new UnsupportedOperationException("score="+score+" is not implemented"));
             
         }else if(!score.equals("false") && !(format.equals("json") || format.equals("rdf"))){
@@ -76,12 +78,16 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
             // additional functionalities
             if(annotations.getType()==JSONType.ARRAY){
                 
-                if(score.equals("old")){
-                        OldScore scorer = new OldScore(annotations);
-                        Map<String, Double> scores = scorer.compute();
-                        annotations = scorer.getScoredAnnotations(scores);
+                Scorer scorer = null;
+                switch(score){
+                    case "old":    scorer = new OldScore(annotations);    break;
+                    case "cvalue": scorer = new CValueScore(annotations); break;
+                    // TODO: score=cvalueh
                 }
-                // TODO: score=cvalue & cvalueh
+                if(scorer!=null){
+                    Map<String, Double> scores = scorer.compute();
+                    annotations = scorer.getScoredAnnotations(scores);
+                }
                 
                 // TODO: format RDF
                 if(format.equals("rdf"))
