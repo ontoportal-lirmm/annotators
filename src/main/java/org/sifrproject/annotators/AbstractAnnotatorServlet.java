@@ -125,7 +125,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
 
         HttpResponse httpResponse = null;
         try{
-            URI uri = new URI(url.replace(" ", "%20"));  
+            URI uri = new URI(url.replace(" ", "%20").replace("\n", "%0A"));  
             httpResponse = client.execute(new HttpGet(uri));
             
         } catch (URISyntaxException e) {
