@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.sifrproject</groupId>
+  <artifactId>annotators</artifactId>
+  <packaging>war</packaging>
+  <version>0.1-SNAPSHOT</version>
+  <name>annotators</name>
+  <url>https://github.com/sifrproject/annotators</url>
+  <build>
+    <finalName>annotators</finalName>
+    <plugins>
+		<plugin>
+	        <!-- Jetty < 9 is in org.mortbay.jetty groupId -->
+	        <groupId>org.mortbay.jetty</groupId>
+	        <version>8.1.9.v20130131</version>
+	        <!-- Starting from Jetty 9 groupId is org.eclipse.jetty already -->
+	        <!-- <groupId>org.eclipse.jetty</groupId> -->
+	        <!-- Change to latest version available from http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-maven-plugin%22 -->
+	        <!-- <version>9.x.y.z</version> -->
+	        <artifactId>jetty-maven-plugin</artifactId>
+		</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>javax.servlet-api</artifactId>
+  		<version>3.1.0</version>
+  		<scope>provided</scope>
+  	</dependency>
+    <dependency>
+    	<groupId>org.glassfish</groupId>
+    	<artifactId>javax.json</artifactId>
+    	<version>1.0.4</version>
+    </dependency>
+    <dependency>
+        <groupId>javax.json</groupId>
+        <artifactId>javax.json-api</artifactId>
+        <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.eclipsesource.minimal-json</groupId>
+      <artifactId>minimal-json</artifactId>
+      <version>0.9.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.httpcomponents</groupId>
+    	<artifactId>httpclient</artifactId>
+    	<version>4.3.6</version>
+    </dependency>
+    <dependency>
+    	<groupId>commons-httpclient</groupId>
+    	<artifactId>commons-httpclient</artifactId>
+    	<version>3.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.commonjava.googlecode.markdown4j</groupId>
+    	<artifactId>markdown4j</artifactId>
+    	<version>2.2-cj-1.0</version>
+    </dependency>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+	    <version>4.12</version>
+	    <scope>test</scope>
+    </dependency>
+    <dependency>
+		<groupId>com.hp.hpl.jena</groupId>
+		<artifactId>jena</artifactId>
+		<version>2.6.4</version>
+	</dependency>
+   <!-- <dependency>
+    	<groupId>org.sifrproject.dep</groupId>
+    	<artifactId>cvalue</artifactId>
+    	<version>1.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.sifrproject.dep</groupId>
+    	<artifactId>protege</artifactId>
+    	<version>3.5</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.sifrproject.dep</groupId>
+    	<artifactId>protege-owl</artifactId>
+    	<version>3.5</version>
+    </dependency>-->
+  </dependencies>
+</project>
