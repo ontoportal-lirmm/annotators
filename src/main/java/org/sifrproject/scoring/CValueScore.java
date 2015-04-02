@@ -10,9 +10,19 @@ import Measure.C_Value.C_value;
 import Object.CandidatTerm;
 
 public class CValueScore extends Scorer {
+    final boolean propagate;
 
-    public CValueScore(JSON annotationArray){
+    /**
+     * Make a {@link Scorer} that compute cvalue or cvalueH
+     * 
+     * @param propagated
+     *      If true, term cvalue are also used (i.e. propagated) for concepts
+     *         found in hierarchy and mappings, this is the default cvalue score.
+     *      If false, this Scorer compute the cvalueH score
+     */
+    public CValueScore(JSON annotationArray, boolean propagate){
         super(annotationArray);
+        this.propagate = propagate; // false => cvalueH
     }
     
     @Override
@@ -21,20 +31,26 @@ public class CValueScore extends Scorer {
         Map<String, Double> oldScore = new OldScore(annotations).compute();
 
         // compute cvalue
-        Map<String, Double> cvalues = computeAnnotationCValue();
+        Map<String, Double> termCValues = computeTermCValues();
+        Map<String, Double> annoCValues = computeAnnotationCValues(termCValues);
         
         // compute cvalue score
         HashMap<String, Double> scores = new HashMap<>();
         for(String id : oldScore.keySet()){
             Double score = Math.log(oldScore.get(id));
-            if(cvalues.containsKey(id)) score *= cvalues.get(id);
+            
+            if(annoCValues.containsKey(id))
+                score *= annoCValues.get(id);
             scores.put(id, score);
         }
                 
         return scores;
     }
 
-    private Map<String, Double> computeAnnotationCValue(){
+    /**
+     * Compute cvalue of all terms annotated in all annotation concepts
+     */
+    private Map<String, Double> computeTermCValues(){
         // Retrieve all annotated terms
         ArrayList<String> terms = new ArrayList<>();
         for(Annotation annotation : annotations.values())
@@ -43,33 +59,48 @@ public class CValueScore extends Scorer {
         
         // compute cvalues scores, for each term
         HashMap<String, Double> cvalues = new HashMap<>();
-        for(CandidatTerm candidat : C_value.computePossibleTerms(terms)){
-            String term = candidat.getTerm();
-            if(cvalues.containsKey(term))
-                cvalues.put(term, candidat.getImportance()+cvalues.get(term));
-            else
-                cvalues.put(term, candidat.getImportance());                
-        }
+        for(CandidatTerm candidat : C_value.computePossibleTerms(terms))
+            addValue(cvalues,candidat.getTerm(), candidat.getImportance());
         
-        return addAnnotationCValue(cvalues);
+        return cvalues;
     }
-    protected Map<String, Double> addAnnotationCValue(HashMap<String, Double> cvalues){
+    
+    /**
+     * Compute cvalues of annotation concept using {@code cvalues} of terms
+     */
+    protected Map<String, Double> computeAnnotationCValues(Map<String, Double> cvalues){
         HashMap<String,Double> annotationCValues = new HashMap<>();
+
         for(String id : annotations.keySet()){
             Annotation annotation = annotations.get(id);
             Double annotationCValue = 0.0;
             
             // sum cvalues of all annotated terms
             for(Match match : annotation.getMatches()){
-                String term = match.term;
+                String term = match.term.toLowerCase();    // todo: cvalue computation has lowered given term, is that all?
                 if(cvalues.containsKey(term))
                     annotationCValue += cvalues.get(term);
             }
             
-            if(annotationCValue!=0)
-                annotationCValues.put(id, annotationCValue);
+            if(annotationCValue!=0){
+                addValue(annotationCValues,id, annotationCValue);
+
+                if(propagate){
+                    // propagate to all hierarchy
+                    for(String hid: annotation.getHierarchy().keySet())
+                        addValue(annotationCValues,hid, annotationCValue);
+                    
+                    // propagate to all mapping
+                    for(String mid: annotation.getMappings())
+                        addValue(annotationCValues,mid, annotationCValue);
+                }
+            }
         }
-        
+
         return annotationCValues;
+    }
+    protected final void addValue(Map<String, Double> cvalues, String id, Double value){
+        if(cvalues.containsKey(id)) cvalues.put(id, cvalues.get(id)+value);
+        else                        cvalues.put(id, value);
     }
 }
