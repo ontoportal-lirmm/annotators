@@ -37,8 +37,9 @@ public class CValueScore extends Scorer {
         
         // compute cvalue score
         HashMap<String, Double> scores = new HashMap<>();
+        double log2 = Math.log(2);
         for(String id : oldScore.keySet()){
-            Double score = Math.log(oldScore.get(id));
+            Double score = Math.log(oldScore.get(id))/log2;
             
             if(annoCValues.containsKey(id))
                 score *= annoCValues.get(id);
