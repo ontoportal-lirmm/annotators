@@ -84,7 +84,7 @@ public class CValueScore extends Scorer {
             
             // sum cvalues of all annotated terms
             for(Match match : annotation.getMatches()){
-                String term = match.term.toLowerCase();    // todo: cvalue computation has lowered given term, is that all?
+                String term = CValueEvaluator.normalizeTerm(match.term);
                 if(cvalues.containsKey(term))
                     annotationCValue += cvalues.get(term);
             }

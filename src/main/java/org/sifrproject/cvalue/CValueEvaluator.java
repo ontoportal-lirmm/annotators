@@ -14,7 +14,7 @@ public class CValueEvaluator {
 
         // fill this.terms
         for (String term : terms) {
-            String normalizeTerm = term.trim().toLowerCase();
+            String normalizeTerm = normalizeTerm(term);
 
             // add the term if not already in the list,
             // otherwise increase its frequency
@@ -34,6 +34,10 @@ public class CValueEvaluator {
 
 
         this.compute();
+    }
+    
+    public static String normalizeTerm(String term){
+    	return term.trim().toLowerCase();
     }
 
 
