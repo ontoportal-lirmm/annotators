@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sifrproject.cvalue.CValueEvaluator;
+import org.sifrproject.cvalue.CValueTerm;
+import org.sifrproject.util.Debug;
 import org.sifrproject.util.JSON;
 
-import Measure.C_Value.C_value;
-import Object.CandidatTerm;
 
 public class CValueScore extends Scorer {
     final boolean propagate;
@@ -59,9 +60,14 @@ public class CValueScore extends Scorer {
         
         // compute cvalues scores, for each term
         HashMap<String, Double> cvalues = new HashMap<>();
-        for(CandidatTerm candidat : C_value.computePossibleTerms(terms))
-            addValue(cvalues,candidat.getTerm(), candidat.getImportance());
+        for(CValueTerm candidat : new CValueEvaluator(terms).getTerms(true))
+            addValue(cvalues,candidat.getTerm(), candidat.getCValue());
         
+        // add to Debug
+        for(String term : cvalues.keySet()){
+            Debug.put("CVALUE(term="+term+")", cvalues.get(term));
+            System.out.println("term="+term+" cvalue="+cvalues.get(term));
+        }
         return cvalues;
     }
     

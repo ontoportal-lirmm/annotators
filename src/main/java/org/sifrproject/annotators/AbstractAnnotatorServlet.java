@@ -64,6 +64,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         // process query
         JSON annotations;
         String annotationsRdfOutput = "";
+        Debug.clear();
         
             // test for call to not implemented functionalities
         if(!(score.equals("false") || score.equals("old") || score.equals("cvalue") || score.equals("cvalueh"))){

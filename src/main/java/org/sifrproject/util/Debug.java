@@ -1,6 +1,17 @@
 package org.sifrproject.util;
 
+import java.util.HashMap;
+
 public class Debug {
+    
+    private static HashMap<String, String> debugInfo = new HashMap<>();
+    
+    public static void clear(){
+        debugInfo.clear();
+    }
+    public static void put(String key, Object value){
+        debugInfo.put(key, value.toString());
+    }
     
     public static JSON makeDebugAnnotations(JSON annotations){
         JSON debugOutput = new JSON(JSONType.ARRAY);
@@ -37,8 +48,14 @@ public class Debug {
                 debugAnnotation.put("score", annotation.getString("score"));
             
             debugOutput.add(debugAnnotation);
-            
         }
+        
+        // add debug info
+        JSON debug = new JSON(JSONType.OBJECT);
+        for(String key : debugInfo.keySet())
+            debug.put(key, debugInfo.get(key));
+        debugOutput.add(debug);
+        
         return debugOutput;
     }
 

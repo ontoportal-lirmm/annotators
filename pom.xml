@@ -81,11 +81,6 @@
 	</dependency>
     <dependency>
     	<groupId>org.sifrproject.dep</groupId>
-    	<artifactId>cvalue</artifactId>
-    	<version>1.0</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.sifrproject.dep</groupId>
     	<artifactId>protege</artifactId>
     	<version>3.5</version>
     </dependency>
