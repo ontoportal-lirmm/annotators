@@ -2,6 +2,7 @@ package org.sifrproject.scoring;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.sifrproject.cvalue.CValueEvaluator;
@@ -83,11 +84,14 @@ public class CValueScore extends Scorer {
             Double annotationCValue = 0.0;
             
             // sum cvalues of all annotated terms
-            for(Match match : annotation.getMatches()){
-                String term = CValueEvaluator.normalizeTerm(match.term);
+            HashSet<String> matchedTerm = new HashSet<>();
+            for(Match match : annotation.getMatches())
+            	matchedTerm.add(CValueEvaluator.normalizeTerm(match.term));
+            for(String term : matchedTerm)
                 if(cvalues.containsKey(term))
                     annotationCValue += cvalues.get(term);
-            }
+                else
+                	Debug.put("missing term in cvalue", term);
             
             if(annotationCValue!=0){
                 addValue(annotationCValues,id, annotationCValue);
