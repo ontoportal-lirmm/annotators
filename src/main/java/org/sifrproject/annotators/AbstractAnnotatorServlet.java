@@ -15,12 +15,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.sifrproject.scoring.CValueHScore;
 import org.sifrproject.scoring.CValueScore;
 import org.sifrproject.scoring.OldScore;
 import org.sifrproject.scoring.Scorer;
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
+import org.sifrproject.util.Debug;
 import org.sifrproject.util.UrlParameters;
 import org.sifrproject.format.JsonToRdf;
 
@@ -64,12 +64,13 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         // process query
         JSON annotations;
         String annotationsRdfOutput = "";
+        Debug.clear();
         
             // test for call to not implemented functionalities
         if(!(score.equals("false") || score.equals("old") || score.equals("cvalue") || score.equals("cvalueh"))){
             annotations = new JSON(new UnsupportedOperationException("unknow score:"+score));
             
-        }else if(!score.equals("false") && !(format.equals("json") || format.equals("rdf"))){
+        }else if(!score.equals("false") && !(format.equals("json") || format.equals("rdf") || format.equals("debug"))){
             annotations = new JSON(new UnsupportedOperationException("score parameter cannot be used if format is not json or rdf"));
             
         }else{
@@ -81,9 +82,9 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 
                 Scorer scorer = null;
                 switch(score){
-                    case "old":     scorer = new OldScore(annotations);     break;
-                    case "cvalue":  scorer = new CValueScore(annotations);  break;
-                    case "cvalueh": scorer = new CValueHScore(annotations); break;
+                    case "old":     scorer = new OldScore(annotations);           break;
+                    case "cvalue":  scorer = new CValueScore(annotations, true);  break;
+                    case "cvalueh": scorer = new CValueScore(annotations, false); break;
                 }
                 if(scorer!=null){
                     Map<String, Double> scores = scorer.compute();
@@ -92,6 +93,8 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 
                 if(format.equals("rdf"))
                     annotationsRdfOutput = JsonToRdf.convert(annotations);
+                else if(format.equals("debug"))
+                    annotations = Debug.makeDebugAnnotations(annotations);
             }
         }
         
@@ -125,7 +128,6 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
 
         HttpResponse httpResponse = null;
         try{
-            URI uri = new URI(url.replace(" ", "%20").replace("\n", "%0A")); 
             httpResponse = client.execute(new HttpGet(uri));
             
         } catch (URISyntaxException e) {
