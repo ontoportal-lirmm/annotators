@@ -79,7 +79,7 @@
 		<artifactId>jena</artifactId>
 		<version>2.6.4</version>
 	</dependency>
-    <dependency>
+    <!-- <dependency>
     	<groupId>org.sifrproject.dep</groupId>
     	<artifactId>protege</artifactId>
     	<version>3.5</version>
@@ -88,6 +88,6 @@
     	<groupId>org.sifrproject.dep</groupId>
     	<artifactId>protege-owl</artifactId>
     	<version>3.5</version>
-    </dependency>
+    </dependency> -->
   </dependencies>
 </project>
