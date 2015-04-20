@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.sifrproject.util.JSON;
 
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -36,6 +37,7 @@ public class JsonToRdf {
         int uid = (new Random()).nextInt(10000);
         int count = 0;
  
+        
         for (JSON annotation : jsonAnnotation.arrayContent()) {
             
             // convert this annotatedClass
@@ -94,14 +96,14 @@ public class JsonToRdf {
             Resource createdByResource = m.createResource(createdByURL);
             
             Date today = new Date();
-            SimpleDateFormat formater  = new SimpleDateFormat("dd-MM-yy");
+            SimpleDateFormat formater  = new SimpleDateFormat("yy-MM-dd");
             
             Resource root2 = m.createResource(root2URL + uid + "/" + count);
             
             // Annotation Selector
-            Property exact  = m.createProperty(aoPrefix + "exact");
-            Property offset = m.createProperty(aoPrefix + "offset");
-            Property range  = m.createProperty(aoPrefix + "range");
+            Property exact  = m.createProperty(aosPrefix + "exact");
+            Property offset = m.createProperty(aosPrefix + "offset");
+            Property range  = m.createProperty(aosPrefix + "range");
             
             // Document provenance
             Property onDocument = m.createProperty(aofPrefix + "onDocument");
@@ -116,14 +118,14 @@ public class JsonToRdf {
             Resource r7 = m.createResource(aosPrefix + "OffsetRangeSelector");
             
             m.add(root2, onDocument, onDocumentResource)
-                    .add(root2, range, taill.toString())
+                    .add(root2, range, m.createTypedLiteral(taill.toString(), XSDDatatype.XSDinteger))
                     .add(root2, exact, text)
-                    .add(root2, offset, from.toString())
+                    .add(root2, offset, m.createTypedLiteral(from.toString(), XSDDatatype.XSDinteger))
                     .add(root2, RDF.type, r7).add(root2, RDF.type, r6)
                     .add(root2, RDF.type, r5);
             
             m.add(root, createdBy, createdByResource)
-                    .add(root, createdOn, formater.format(today))
+            		.add(root, createdOn, m.createTypedLiteral(formater.format(today), XSDDatatype.XSDdate))
                     .add(root, hasTopic, hasTopicResource)
                     .add(root, context, root2)
                     .add(root, annotatesDocument, annotatesDocumentResource)
