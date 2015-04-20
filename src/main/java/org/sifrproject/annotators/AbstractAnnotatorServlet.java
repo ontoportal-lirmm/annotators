@@ -38,10 +38,10 @@ import org.sifrproject.format.JsonToRdf;
  */
 public abstract class AbstractAnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
-
     
     protected abstract String getAnnotatorBaseURL();
-
+    protected String annotatorURI;
+    
     // redirect GET to POST
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -92,7 +92,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 }
                 
                 if(format.equals("rdf"))
-                    annotationsRdfOutput = JsonToRdf.convert(annotations);
+                    annotationsRdfOutput = JsonToRdf.convert(annotations, annotatorURI);
                 else if(format.equals("debug"))
                     annotations = Debug.makeDebugAnnotations(annotations);
             }

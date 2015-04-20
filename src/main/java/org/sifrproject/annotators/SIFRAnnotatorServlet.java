@@ -5,6 +5,7 @@ public class SIFRAnnotatorServlet extends AbstractAnnotatorServlet {
 
     @Override
     protected String getAnnotatorBaseURL() {
+    	annotatorURI = "http://bioportal.lirmm.fr/sifr_annotator";
         return   AnnotatorUtils.getBioPortalUri() + "/annotator?" 
                + AnnotatorUtils.getBioPortalOntologiesURLParameter("SIFR") +"&";
     }

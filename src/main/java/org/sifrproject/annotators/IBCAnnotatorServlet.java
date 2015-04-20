@@ -5,6 +5,7 @@ public class IBCAnnotatorServlet extends AbstractAnnotatorServlet {
 
     @Override
     protected String getAnnotatorBaseURL() {
+    	annotatorURI = "http://bioportal.lirmm.fr/ibc_annotator";
         return   AnnotatorUtils.getBioPortalUri() + "/annotator?" 
                + AnnotatorUtils.getBioPortalOntologiesURLParameter("IBC") +"&";
     }

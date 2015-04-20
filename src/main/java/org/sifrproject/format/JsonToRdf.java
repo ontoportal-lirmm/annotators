@@ -24,19 +24,50 @@ public class JsonToRdf {
     public static final String annPrefix = "http://www.w3.org/2000/10/annotation-ns#";
     public static final String aosPrefix = "http://purl.org/ao/selectors/";
     public static final String aot = "http://purl.org/ao/types/";
+    public static final String foafPrefix = "http://xmlns.com/foaf/0.1/";
     // URLs
     public static final String createdByURL = "http://bioportal.bioontology.org/annotator";
     public static final String contextURL = "http://my.example.org/se/10300";
     public static final String rootURL = "http://bioportal.bioontology.org/annotator/ann/";
     public static final String root2URL = "http://bioportal.bioontology.org/annotator/sel/";
     public static final String onDocumentURL = "http://data.bioontology.org/annotator?";
+    //public static String annotatorURI = "";
     
     
-    public static String convert(JSON jsonAnnotation) {
+    public static String convert(JSON jsonAnnotation, String annotatorURI) {
         Model m = ModelFactory.createDefaultModel();
         int uid = (new Random()).nextInt(10000);
         int count = 0;
  
+        //Describing the annotator used
+        Resource annotatorResource = m.createResource(annotatorURI);
+        Resource annotatorType1 = m.createResource("http://www.w3.org/ns/prov#SoftwareAgent");
+        Resource annotatorType2 = m.createResource("http://bioontology.org/ontologies/BiomedicalResourceOntology.owl#Data_Computation_Service");
+        Resource annotatorType3 = m.createResource("http://dbpedia.org/resource/Software");
+        
+        Property foafNameProp = m.createProperty(foafPrefix + "name");
+        Property foafDescriptionProp = m.createProperty(foafPrefix + "description");
+        
+        String annotatorFoafName;
+        String annotatorFoafDescription;
+        
+        if (annotatorURI.equals("http://bioportal.lirmm.fr/sifr_annotator")) {
+        	annotatorFoafName = "SIFR Annotator";
+        	annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+        } else if (annotatorURI.equals("http://bioportal.lirmm.fr/ibc_annotator")) {
+        	annotatorFoafName = "IBC Annotator";
+        	annotatorFoafDescription = "The IBC Annotator is a specific version of the NCBO Annotator but for plant related ontologies. You shall use it to annotate plant related text data with ontology concepts.";
+        } else {
+        	annotatorFoafName = "NCBO Annotator";
+        	annotatorFoafDescription = "The NCBO BioPortal Annotator processes text submitted by users, recognizes relevant ontology terms in the text and returns the annotations to the user.";
+        }
+        
+        m.add(annotatorResource, RDF.type, annotatorType1)
+        		.add(annotatorResource, RDF.type, annotatorType2)
+        		.add(annotatorResource, RDF.type, annotatorType3)
+        		.add(annotatorResource, foafNameProp, annotatorFoafName)
+        		.add(annotatorResource, foafDescriptionProp, annotatorFoafDescription);
+        
         
         for (JSON annotation : jsonAnnotation.arrayContent()) {
             
@@ -64,6 +95,8 @@ public class JsonToRdf {
         m.setNsPrefix("ao",  aoPrefix);
         m.setNsPrefix("pav", pavPrefix);
         m.setNsPrefix("aos", aosPrefix);
+        m.setNsPrefix("foaf", foafPrefix);
+        
 
         StringWriter rdfOutput = new StringWriter();
         m.write(rdfOutput, "RDF/XML");

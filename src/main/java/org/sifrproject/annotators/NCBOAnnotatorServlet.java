@@ -5,6 +5,7 @@ public class NCBOAnnotatorServlet extends AbstractAnnotatorServlet {
 
     @Override
     protected String getAnnotatorBaseURL() {
+    	annotatorURI = "http://data.bioontology.org/annotator";
         return "http://data.bioontology.org/annotator?";
     }
 }
