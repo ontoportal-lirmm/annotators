@@ -7,6 +7,7 @@ import java.util.Random;
 import org.sifrproject.util.JSON;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -110,6 +111,7 @@ public class JsonToRdf {
             String text = uneannotation.getString("text");
             Long from   = uneannotation.getLong("from");
             Long to     = uneannotation.getLong("to");
+            //int to = uneannotation.getInt("to");
             Long taill  = to - from + 1;
             
             Resource root = m.createResource(rootURL + uid + "/" + count);
@@ -131,7 +133,6 @@ public class JsonToRdf {
             Date today = new Date();
             SimpleDateFormat formater  = new SimpleDateFormat("yy-MM-dd");
             
-            Resource root2 = m.createResource(root2URL + uid + "/" + count);
             
             // Annotation Selector
             Property exact  = m.createProperty(aosPrefix + "exact");
@@ -150,12 +151,20 @@ public class JsonToRdf {
             Resource r6 = m.createResource(aosPrefix + "TextSelector");
             Resource r7 = m.createResource(aosPrefix + "OffsetRangeSelector");
             
-            m.add(root2, onDocument, onDocumentResource)
-                    .add(root2, range, m.createTypedLiteral(taill.toString(), XSDDatatype.XSDinteger))
-                    .add(root2, exact, text)
-                    .add(root2, offset, m.createTypedLiteral(from.toString(), XSDDatatype.XSDinteger))
-                    .add(root2, RDF.type, r7).add(root2, RDF.type, r6)
-                    .add(root2, RDF.type, r5);
+            String selectorURI = getSelectorURI(from, taill, m);
+            Resource root2;
+            
+            if (selectorURI.equals("")) {
+            	root2 = m.createResource(root2URL + uid + "/" + count);
+	            m.add(root2, onDocument, onDocumentResource)
+	                    .add(root2, range, m.createTypedLiteral(taill.toString(), XSDDatatype.XSDinteger))
+	                    .add(root2, exact, text)
+	                    .add(root2, offset, m.createTypedLiteral(from.toString(), XSDDatatype.XSDinteger))
+	                    .add(root2, RDF.type, r7).add(root2, RDF.type, r6)
+	                    .add(root2, RDF.type, r5);
+	        } else {
+	        	root2 = m.createResource(selectorURI);
+	        }
             
             m.add(root, createdBy, createdByResource)
             		.add(root, createdOn, m.createTypedLiteral(formater.format(today), XSDDatatype.XSDdate))
@@ -169,6 +178,28 @@ public class JsonToRdf {
         }
         
         return count;
+    }
+    
+    private static String getSelectorURI (Long from, Long size, Model m) {
+    	String queryString = "select distinct ?sel where {?sel <" + aosPrefix + "range> ?range ; <" + aosPrefix + "offset> ?offset . FILTER (?range = " + size.toString() + " && ?offset = " + from.toString() + ") } LIMIT 10";
+    	
+        Query query = QueryFactory.create(queryString) ;
+        QueryExecution qexec = QueryExecutionFactory.create(query, m);
+	    ResultSet results = qexec.execSelect() ;
+	    Resource r = null;
+	    for ( ; results.hasNext() ; )
+	    {
+	    	QuerySolution soln = results.nextSolution() ;
+  	    	r = soln.getResource("sel") ;
+	    }
+	    qexec.close() ;
+        
+        String selectorURI = "";
+        if (r != null) {
+        	selectorURI = r.getURI();
+        }
+
+    	return selectorURI;
     }
     
 }

@@ -17,6 +17,7 @@ public class FormatTest {
         
         // TODO: test RDF output
         Assert.assertNotNull("returned rdf is null", rdfOutput);
+        //System.out.println(rdfOutput);
     }
 
 }
