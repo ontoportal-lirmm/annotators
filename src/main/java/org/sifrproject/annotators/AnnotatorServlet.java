@@ -38,10 +38,9 @@ import org.sifrproject.format.JsonToRdf;
  * 
  * @authors Julien Diener, Emmanuel Castanier
  */
-public abstract class AbstractAnnotatorServlet extends HttpServlet {
+public class AnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
-    
-    protected abstract String getAnnotatorBaseURL();
+
     protected String annotatorURI;
     
     // redirect GET to POST
