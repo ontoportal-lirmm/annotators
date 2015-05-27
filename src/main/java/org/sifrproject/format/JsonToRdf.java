@@ -51,16 +51,19 @@ public class JsonToRdf {
         
         String annotatorFoafName;
         String annotatorFoafDescription;
-        
-        if (annotatorURI.equals("http://bioportal.lirmm.fr/sifr_annotator")) {
-        	annotatorFoafName = "SIFR Annotator";
-        	annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
-        } else if (annotatorURI.equals("http://bioportal.lirmm.fr/ibc_annotator")) {
-        	annotatorFoafName = "IBC Annotator";
-        	annotatorFoafDescription = "The IBC Annotator is a specific version of the NCBO Annotator but for plant related ontologies. You shall use it to annotate plant related text data with ontology concepts.";
+
+        if (annotatorURI.equals("http://vm-bioportal-vincent:8080/annotator?")) {
+            annotatorFoafName = "SIFR Annotator";
+            annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+        } else if (annotatorURI.equals("http://bioportal.lirmm.fr:8080/annotator?")) {
+            annotatorFoafName = "SIFR Annotator";
+            annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+        } else if (annotatorURI.equals("http://agroportal.lirmm.fr:8080/annotator?")) {
+            annotatorFoafName = "IBC Annotator";
+            annotatorFoafDescription = "The IBC Annotator is a specific version of the NCBO Annotator but for plant related ontologies. You shall use it to annotate plant related text data with ontology concepts.";
         } else {
-        	annotatorFoafName = "NCBO Annotator";
-        	annotatorFoafDescription = "The NCBO BioPortal Annotator processes text submitted by users, recognizes relevant ontology terms in the text and returns the annotations to the user.";
+            annotatorFoafName = "NCBO Annotator";
+            annotatorFoafDescription = "The NCBO BioPortal Annotator processes text submitted by users, recognizes relevant ontology terms in the text and returns the annotations to the user.";
         }
         
         m.add(annotatorResource, RDF.type, annotatorType1)
