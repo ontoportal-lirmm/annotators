@@ -4,13 +4,13 @@
   <servlet>
     <description>
     </description>
-    <display-name>AnnotatorPlusServlet</display-name>
-    <servlet-name>AnnotatorPlusServlet</servlet-name>
-    <servlet-class>org.sifrproject.annotators.AnnotatorPlusServlet</servlet-class>
+    <display-name>AnnotatorServlet</display-name>
+    <servlet-name>AnnotatorServlet</servlet-name>
+    <servlet-class>org.sifrproject.annotators.AnnotatorServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>AnnotatorPlusServlet</servlet-name>
+    <servlet-name>AnnotatorServlet</servlet-name>
     <url-pattern>/annotator</url-pattern>
   </servlet-mapping>
 
