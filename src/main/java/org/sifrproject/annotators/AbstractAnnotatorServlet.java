@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -65,6 +67,23 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         JSON annotations;
         String annotationsRdfOutput = "";
         Debug.clear();
+
+
+        // Extract the base url of the tomcat server and generate the annotator URL from it (the servlet have to be
+        // deployed on the same server as the annotator used)
+        Pattern pattern = Pattern.compile("^((?:https?:\\/\\/)?[^:]+)");
+        Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+        if (matcher.find())
+        {
+            annotatorURI = matcher.group(1) + ":8080/annotator?";
+        } else {
+            annotatorURI = null;
+        }
+
+        // annotatorURI = "http://data.bioontology.org/annotator?";
+        // to query the NCBO annotator
+
+
         
             // test for call to not implemented functionalities
         if(!(score.equals("false") || score.equals("old") || score.equals("cvalue") || score.equals("cvalueh"))){
@@ -121,7 +140,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
     
     private JSON queryAnnotator(UrlParameters parameters){
         // make query URL
-        String url = parameters.makeUrl(getAnnotatorBaseURL());
+        String url = parameters.makeUrl(annotatorURI);
                 
         // query annotator
         CloseableHttpClient client = HttpClientBuilder.create().build();
