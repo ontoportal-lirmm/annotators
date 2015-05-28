@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.sifrproject.scoring.CValueScore;
 import org.sifrproject.scoring.OldScore;
 import org.sifrproject.scoring.Scorer;
@@ -82,7 +84,6 @@ public class AnnotatorServlet extends HttpServlet {
         // annotatorURI = "http://data.bioontology.org/annotator?";
         // to query the NCBO annotator
 
-
         
             // test for call to not implemented functionalities
         if(!(score.equals("false") || score.equals("old") || score.equals("cvalue") || score.equals("cvalueh"))){
@@ -117,6 +118,7 @@ public class AnnotatorServlet extends HttpServlet {
         }
         
         // process response
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         
         if (format.equals("rdf")) {
@@ -124,7 +126,7 @@ public class AnnotatorServlet extends HttpServlet {
 	        out.println(annotationsRdfOutput);
 	        out.flush();
         } else {
-	        response.setContentType("application/json;charset=UTF-8");
+            response.setContentType("application/json; charset=UTF-8");
 	        out.println(annotations.toString());
 	        out.flush();
         }
