@@ -21,7 +21,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 public class AnnotatorUtils {
 
-    private static String bioPortalUri = "http://bioportal.lirmm.fr:8082";
+    private static String bioPortalUri = "http://oldbioportal.lirmm.fr:8082";
     private static String apiKey = "aa5b0e2c-5a2e-4a01-b3a2-32cf024f3f27";
 
     public static String getBioPortalOntologiesURLParameter(String group) {
