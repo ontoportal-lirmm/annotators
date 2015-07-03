@@ -1,12 +1,6 @@
 package org.sifrproject.scoring;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
@@ -42,14 +36,11 @@ public abstract class Scorer {
     }
 
     /**
-     * Create a JSON array with annotation items 
-     *   a 'score' entry with respective score value is added to each annotatedClasses
-     *   items are sorted by {@code scores}
+     * Take the whole unchanged JSON annotations array and add a 'score' entry for each annotatedClass
+     * Then the annotatedClass are sorted according to their {@code scores}
      */
     public JSON getScoredAnnotations(Map<String, Double> scores){
-
         JSON sortedAnnotations = new JSON(JSONType.ARRAY);
-
 
         for(JSON annotation : annotationsJSON.arrayContent()){
 
@@ -72,6 +63,8 @@ public abstract class Scorer {
             sortedAnnotations.add(annotation);
         }
 
+        // Call the method to sort the JSON annotations according to their score
+        sortedAnnotations = sortAnnotations(sortedAnnotations);
 
         return sortedAnnotations;
     }
@@ -88,5 +81,46 @@ public abstract class Scorer {
     public void printIds(String prefix){
         for(String key : annotations.keySet())
             System.out.println(prefix+": "+key);
+    }
+
+    /**
+     * Sort the annotations JSON depending on the score of the main annotatedClass
+     *
+     */
+    private JSON sortAnnotations(JSON unsortedJSON){
+        ArrayList<JSON> sortedArray = new ArrayList<JSON>();
+        int arrayIndex;
+        boolean isAnnoAdded;
+        double arrayScore;
+        double annotationScore;
+
+        for(JSON annotation : unsortedJSON.arrayContent()){
+            if (sortedArray.isEmpty()){
+                sortedArray.add(annotation);
+            } else {
+                arrayIndex = 0;
+                isAnnoAdded = false;
+                annotationScore = Double.parseDouble(annotation.getString("score"));
+                for(JSON arrayAnno : sortedArray){
+                    arrayScore = Double.parseDouble(arrayAnno.getString("score"));
+                    if (annotationScore > arrayScore){
+                        sortedArray.add(arrayIndex, annotation);
+                        isAnnoAdded = true;
+                        break;
+                    }
+                    arrayIndex += 1;
+                }
+                if (isAnnoAdded == false){
+                    sortedArray.add(annotation);
+                }
+            }
+        }
+
+        JSON sortedAnnotations = new JSON(JSONType.ARRAY);
+        for(JSON anno : sortedArray){
+            sortedAnnotations.add(anno);
+        }
+
+        return sortedAnnotations;
     }
 }
