@@ -16,7 +16,10 @@ public abstract class Scorer {
 
     protected final Map<String,Annotation> annotations;
 
+    protected JSON annotationsJSON;
+
     public Scorer(JSON annotationArray){
+        annotationsJSON = annotationArray;
         annotations = new HashMap<>(annotationArray.size());
         for(JSON obj : annotationArray.arrayContent()){
             Annotation annotation = new Annotation(obj);
@@ -44,47 +47,31 @@ public abstract class Scorer {
      *   items are sorted by {@code scores}
      */
     public JSON getScoredAnnotations(Map<String, Double> scores){
-        // reverse sort scores map by values
-        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String,Double>>(scores.entrySet());
-        
-        Collections.sort( list, new Comparator<Map.Entry<String, Double>>(){
-                public int compare( Map.Entry<String, Double> o1, Map.Entry<String, Double> o2 ){
-                    return (o2.getValue()).compareTo( o1.getValue() );
-                }});
 
-        Map<String,Double> sortedScores = new LinkedHashMap<>();
-        for (Map.Entry<String, Double> entry : list)
-            sortedScores.put( entry.getKey(), entry.getValue() );
-
-        
-        // make sorted JSONArray
         JSON sortedAnnotations = new JSON(JSONType.ARRAY);
-        for(String id : sortedScores.keySet()){
-            Annotation a = annotations.get(id);
 
-            // a==null are annotationClass found in hierarchy and/or mapping but not at the roots
-            if(a==null) continue;
-                
-            JSON annotation = a.getObject();
-            
+
+        for(JSON annotation : annotationsJSON.arrayContent()){
+
             // score hierarchy
             JSON hierarchies = annotation.get("hierarchy");
             for(JSON hierarchy : hierarchies.arrayContent()){
                 String hid = hierarchy.get("annotatedClass").getString("@id");
                 putScore(hierarchy, scores, hid);
             }
-            
+
             // score mapping
             JSON mappings = annotation.get("mappings");
             for(JSON mapping : mappings.arrayContent()){
                 String mid = mapping.get("annotatedClass").getString("@id");
                 putScore(mapping, scores, mid);
             }
-            
+
             // score annotation object
-            putScore(annotation, scores, id);
+            putScore(annotation, scores, annotation.get("annotatedClass").getString("@id").toString());
             sortedAnnotations.add(annotation);
         }
+
 
         return sortedAnnotations;
     }
