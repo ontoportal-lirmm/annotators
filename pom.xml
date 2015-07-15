@@ -2,13 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sifrproject</groupId>
-  <artifactId>annotators</artifactId>
+  <artifactId>annotator</artifactId>
   <packaging>war</packaging>
   <version>0.1-SNAPSHOT</version>
   <name>annotators</name>
   <url>https://github.com/sifrproject/annotators</url>
   <build>
-    <finalName>annotators</finalName>
+    <finalName>annotator</finalName>
     <plugins>
 		<plugin>
 	        <!-- Jetty < 9 is in org.mortbay.jetty groupId -->
@@ -79,7 +79,12 @@
 		<artifactId>jena</artifactId>
 		<version>2.6.4</version>
 	</dependency>
-    <dependency>
+	<dependency>
+		<groupId>com.hp.hpl.jena</groupId>
+		<artifactId>arq</artifactId>
+		<version>2.8.8</version>
+	</dependency>
+    <!-- <dependency>
     	<groupId>org.sifrproject.dep</groupId>
     	<artifactId>protege</artifactId>
     	<version>3.5</version>
@@ -88,6 +93,6 @@
     	<groupId>org.sifrproject.dep</groupId>
     	<artifactId>protege-owl</artifactId>
     	<version>3.5</version>
-    </dependency>
+    </dependency> -->
   </dependencies>
 </project>

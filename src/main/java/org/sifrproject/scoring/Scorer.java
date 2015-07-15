@@ -1,12 +1,6 @@
 package org.sifrproject.scoring;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
@@ -16,7 +10,10 @@ public abstract class Scorer {
 
     protected final Map<String,Annotation> annotations;
 
+    protected JSON annotationsJSON;
+
     public Scorer(JSON annotationArray){
+        annotationsJSON = annotationArray;
         annotations = new HashMap<>(annotationArray.size());
         for(JSON obj : annotationArray.arrayContent()){
             Annotation annotation = new Annotation(obj);
@@ -39,52 +36,35 @@ public abstract class Scorer {
     }
 
     /**
-     * Create a JSON array with annotation items 
-     *   a 'score' entry with respective score value is added to each annotatedClasses
-     *   items are sorted by {@code scores}
+     * Take the whole unchanged JSON annotations array and add a 'score' entry for each annotatedClass
+     * Then the annotatedClass are sorted according to their {@code scores}
      */
     public JSON getScoredAnnotations(Map<String, Double> scores){
-        // reverse sort scores map by values
-        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String,Double>>(scores.entrySet());
-        
-        Collections.sort( list, new Comparator<Map.Entry<String, Double>>(){
-                public int compare( Map.Entry<String, Double> o1, Map.Entry<String, Double> o2 ){
-                    return (o2.getValue()).compareTo( o1.getValue() );
-                }});
-
-        Map<String,Double> sortedScores = new LinkedHashMap<>();
-        for (Map.Entry<String, Double> entry : list)
-            sortedScores.put( entry.getKey(), entry.getValue() );
-
-        
-        // make sorted JSONArray
         JSON sortedAnnotations = new JSON(JSONType.ARRAY);
-        for(String id : sortedScores.keySet()){
-            Annotation a = annotations.get(id);
 
-            // a==null are annotationClass found in hierarchy and/or mapping but not at the roots
-            if(a==null) continue;
-                
-            JSON annotation = a.getObject();
-            
+        for(JSON annotation : annotationsJSON.arrayContent()){
+
             // score hierarchy
             JSON hierarchies = annotation.get("hierarchy");
             for(JSON hierarchy : hierarchies.arrayContent()){
                 String hid = hierarchy.get("annotatedClass").getString("@id");
                 putScore(hierarchy, scores, hid);
             }
-            
+
             // score mapping
             JSON mappings = annotation.get("mappings");
             for(JSON mapping : mappings.arrayContent()){
                 String mid = mapping.get("annotatedClass").getString("@id");
                 putScore(mapping, scores, mid);
             }
-            
+
             // score annotation object
-            putScore(annotation, scores, id);
+            putScore(annotation, scores, annotation.get("annotatedClass").getString("@id").toString());
             sortedAnnotations.add(annotation);
         }
+
+        // Call the method to sort the JSON annotations according to their score
+        sortedAnnotations = sortAnnotations(sortedAnnotations);
 
         return sortedAnnotations;
     }
@@ -101,5 +81,46 @@ public abstract class Scorer {
     public void printIds(String prefix){
         for(String key : annotations.keySet())
             System.out.println(prefix+": "+key);
+    }
+
+    /**
+     * Sort the annotations JSON depending on the score of the main annotatedClass
+     *
+     */
+    private JSON sortAnnotations(JSON unsortedJSON){
+        ArrayList<JSON> sortedArray = new ArrayList<JSON>();
+        int arrayIndex;
+        boolean isAnnoAdded;
+        double arrayScore;
+        double annotationScore;
+
+        for(JSON annotation : unsortedJSON.arrayContent()){
+            if (sortedArray.isEmpty()){
+                sortedArray.add(annotation);
+            } else {
+                arrayIndex = 0;
+                isAnnoAdded = false;
+                annotationScore = Double.parseDouble(annotation.getString("score"));
+                for(JSON arrayAnno : sortedArray){
+                    arrayScore = Double.parseDouble(arrayAnno.getString("score"));
+                    if (annotationScore > arrayScore){
+                        sortedArray.add(arrayIndex, annotation);
+                        isAnnoAdded = true;
+                        break;
+                    }
+                    arrayIndex += 1;
+                }
+                if (isAnnoAdded == false){
+                    sortedArray.add(annotation);
+                }
+            }
+        }
+
+        JSON sortedAnnotations = new JSON(JSONType.ARRAY);
+        for(JSON anno : sortedArray){
+            sortedAnnotations.add(anno);
+        }
+
+        return sortedAnnotations;
     }
 }

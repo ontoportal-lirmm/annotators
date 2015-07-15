@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+
   <servlet>
     <description>
-		</description>
-    <display-name>NCBOAnnotatorServlet</display-name>
-    <servlet-name>NCBOAnnotatorServlet</servlet-name>
-    <servlet-class>org.sifrproject.annotators.NCBOAnnotatorServlet</servlet-class>
+    </description>
+    <display-name>AnnotatorServlet</display-name>
+    <servlet-name>AnnotatorServlet</servlet-name>
+    <servlet-class>org.sifrproject.annotators.AnnotatorServlet</servlet-class>
   </servlet>
-  <servlet>
-    <description>
-		</description>
-    <display-name>IBCAnnotatorServlet</display-name>
-    <servlet-name>IBCAnnotatorServlet</servlet-name>
-    <servlet-class>org.sifrproject.annotators.IBCAnnotatorServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>
-		</description>
-    <display-name>SIFRAnnotatorServlet</display-name>
-    <servlet-name>SIFRAnnotatorServlet</servlet-name>
-    <servlet-class>org.sifrproject.annotators.SIFRAnnotatorServlet</servlet-class>
-  </servlet>
+
   <servlet-mapping>
-    <servlet-name>NCBOAnnotatorServlet</servlet-name>
-    <url-pattern>/ncbo_annotator_plus</url-pattern>
+    <servlet-name>AnnotatorServlet</servlet-name>
+    <url-pattern>/annotator</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>IBCAnnotatorServlet</servlet-name>
-    <url-pattern>/ibc_annotator</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SIFRAnnotatorServlet</servlet-name>
-    <url-pattern>/sifr_annotator</url-pattern>
-  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>annotator</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
 </web-app>

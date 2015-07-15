@@ -5,16 +5,20 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.sifrproject.scoring.CValueScore;
 import org.sifrproject.scoring.OldScore;
 import org.sifrproject.scoring.Scorer;
@@ -36,12 +40,11 @@ import org.sifrproject.format.JsonToRdf;
  * 
  * @authors Julien Diener, Emmanuel Castanier
  */
-public abstract class AbstractAnnotatorServlet extends HttpServlet {
+public class AnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
 
+    protected String annotatorURI;
     
-    protected abstract String getAnnotatorBaseURL();
-
     // redirect GET to POST
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -65,6 +68,22 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
         JSON annotations;
         String annotationsRdfOutput = "";
         Debug.clear();
+
+
+        // Extract the base url of the tomcat server and generate the annotator URL from it (the servlet have to be
+        // deployed on the same server as the annotator used)
+        Pattern pattern = Pattern.compile("^((?:https?:\\/\\/)?[^:]+)");
+        Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+        if (matcher.find())
+        {
+            annotatorURI = matcher.group(1) + ":8080/annotator?";
+        } else {
+            annotatorURI = null;
+        }
+
+        // annotatorURI = "http://data.bioontology.org/annotator?";
+        // to query the NCBO annotator
+
         
             // test for call to not implemented functionalities
         if(!(score.equals("false") || score.equals("old") || score.equals("cvalue") || score.equals("cvalueh"))){
@@ -92,13 +111,14 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
                 }
                 
                 if(format.equals("rdf"))
-                    annotationsRdfOutput = JsonToRdf.convert(annotations);
+                    annotationsRdfOutput = JsonToRdf.convert(annotations, annotatorURI);
                 else if(format.equals("debug"))
                     annotations = Debug.makeDebugAnnotations(annotations);
             }
         }
         
         // process response
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         
         if (format.equals("rdf")) {
@@ -106,7 +126,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
 	        out.println(annotationsRdfOutput);
 	        out.flush();
         } else {
-	        response.setContentType("application/json;charset=UTF-8");
+            response.setContentType("application/json; charset=UTF-8");
 	        out.println(annotations.toString());
 	        out.flush();
         }
@@ -121,7 +141,7 @@ public abstract class AbstractAnnotatorServlet extends HttpServlet {
     
     private JSON queryAnnotator(UrlParameters parameters){
         // make query URL
-        String url = parameters.makeUrl(getAnnotatorBaseURL());
+        String url = parameters.makeUrl(annotatorURI);
                 
         // query annotator
         CloseableHttpClient client = HttpClientBuilder.create().build();
