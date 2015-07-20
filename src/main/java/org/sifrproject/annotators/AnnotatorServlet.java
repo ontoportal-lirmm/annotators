@@ -148,7 +148,7 @@ public class AnnotatorServlet extends HttpServlet {
 
         HttpResponse httpResponse = null;
         try{
-            URI uri = new URI(url.replace(" ", "%20").replace("\n", "%0A"));  
+            URI uri = new URI(url);
             httpResponse = client.execute(new HttpGet(uri));
             
         } catch (URISyntaxException e) {
