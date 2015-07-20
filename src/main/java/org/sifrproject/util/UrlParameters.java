@@ -3,6 +3,7 @@
  */
 package org.sifrproject.util;
 
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 
@@ -31,10 +32,24 @@ public class UrlParameters extends LinkedHashMap<String,String[]>{
         for(String paramName : this.keySet()) {
             String[] paramValues = this.get(paramName);
 
-            url += paramName + "=" + paramValues[0];
-            for(int i=1; i<paramValues.length; i++)
-                url += "," + paramValues[i];
+            if (paramName.equals("text")) {
+                // Encode the text to be annotated (avoid error with % and others)
+                try {
+                    url += paramName + "=" + URLEncoder.encode(paramValues[0], "UTF-8");
+                    for(int i=1; i<paramValues.length; i++)
+                        url += "," + URLEncoder.encode(paramValues[i], "UTF-8");
+                } catch (Exception e){
+                    url += paramName + "=" + paramValues[0];
+                    for(int i=1; i<paramValues.length; i++)
+                        url += "," + paramValues[i];
+                }
+            } else {
+                url += paramName + "=" + paramValues[0];
+                for(int i=1; i<paramValues.length; i++)
+                    url += "," + paramValues[i];
+            }
             url += "&";
+
         }
         return url;
     }
