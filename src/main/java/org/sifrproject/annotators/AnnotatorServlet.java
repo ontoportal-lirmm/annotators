@@ -70,18 +70,7 @@ public class AnnotatorServlet extends HttpServlet {
         Debug.clear();
 
 
-        // Extract the base url of the tomcat server and generate the annotator URL from it (the servlet have to be
-        // deployed on the same server as the annotator used)
-        Pattern pattern = Pattern.compile("^((?:https?:\\/\\/)?[^:]+)");
-        Matcher matcher = pattern.matcher(request.getRequestURL().toString());
-        if (matcher.find())
-        {
-            annotatorURI = matcher.group(1) + ":8080/annotator?";
-        } else {
-            annotatorURI = null;
-        }
-
-        // annotatorURI = "http://data.bioontology.org/annotator?";
+        annotatorURI = "http://data.bioontology.org/annotator?";
         // to query the NCBO annotator
 
         

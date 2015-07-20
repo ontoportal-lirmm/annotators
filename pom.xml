@@ -8,7 +8,7 @@
   <name>annotators</name>
   <url>https://github.com/sifrproject/annotators</url>
   <build>
-    <finalName>annotator</finalName>
+    <finalName>ncbo_annotatorplus</finalName>
     <plugins>
 		<plugin>
 	        <!-- Jetty < 9 is in org.mortbay.jetty groupId -->
