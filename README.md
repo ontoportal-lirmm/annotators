@@ -9,6 +9,14 @@ Project heads: [Clement Jonquet](https://github.com/jonquet) and [Pierre Larmand
 Include work of: Soumia Melzi and Emmanuel Castanier
 
 
+Deploy
+---------
+
+* branch `master` to deploy the `/annotator` that is scoring the output from the BioPortal annotator on the same server
+
+* branch `ncbo_annotator` to deploy the `/ncbo_annotatorplus` that is scoring the output from the NCBO BioPortal Annotator
+
+
 Development
 -----------
 
