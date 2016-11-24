@@ -1,12 +1,9 @@
 package org.sifrproject.scoring;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
+
+import java.util.*;
 
 /**
  * Represent one annotation as process by annotators
@@ -44,7 +41,7 @@ public class Annotation {
             }
         }
         
-        /**
+        /*
          * Extract annotation from the hierarchy component:
          *   - add an entry to this instance {@link hierarchy} field
          *   - Simplify the JSONObject keeping only @id and distance fields
@@ -61,7 +58,7 @@ public class Annotation {
             hierarchy.put(hid, dist);
         }
         
-        /**
+        /*
          * Extract annotation from the mappings component:
          *   - add an entry to this instance {@link mappings} set
          */

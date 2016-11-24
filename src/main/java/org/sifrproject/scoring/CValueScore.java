@@ -1,23 +1,23 @@
 package org.sifrproject.scoring;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
 import org.sifrproject.cvalue.CValueEvaluator;
 import org.sifrproject.cvalue.CValueTerm;
 import org.sifrproject.util.Debug;
 import org.sifrproject.util.JSON;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 
 public class CValueScore extends Scorer {
-    final boolean propagate;
+    private final boolean propagate;
 
     /**
      * Make a {@link Scorer} that compute cvalue or cvalueH
-     * 
-     * @param propagated
+     * @param annotationArray Array containing the initial bioportal annotations
+     * @param propagate
      *      If true, term cvalue are also used (i.e. propagated) for concepts
      *         found in hierarchy and mappings, this is the default cvalue score.
      *      If false, this Scorer compute the cvalueH score

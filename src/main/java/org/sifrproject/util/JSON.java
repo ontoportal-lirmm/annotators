@@ -1,5 +1,9 @@
 package org.sifrproject.util;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,19 +11,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonValue;
-
 /**
  * Provide practical interface to JSONObject **AND** JSONArray
  * 
  * @author Julien Diener
  */
 public class JSON{
-    protected JsonObject object;
-    protected JsonArray  array;
+    private JsonObject object;
+    private JsonArray array;
     
     public JsonArray getArray() {
 		return array;
@@ -109,11 +108,12 @@ public class JSON{
     public JSONType getType(){
         return object!=null ? JSONType.OBJECT : JSONType.ARRAY;
     }
-    
-    private final boolean isObjectType(){
+
+    private boolean isObjectType() {
         return object!=null;
     }
-    private final boolean isArrayType(){
+
+    private boolean isArrayType() {
         return array!=null;
     }
     private void assertObject(String methodName){

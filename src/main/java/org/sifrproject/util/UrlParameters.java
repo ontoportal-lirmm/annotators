@@ -1,13 +1,9 @@
-/**
- * 
- */
 package org.sifrproject.util;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Provides static methods to process url used by annotator servlets 

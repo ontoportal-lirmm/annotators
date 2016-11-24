@@ -1,9 +1,11 @@
 package org.sifrproject.scoring;
 
-import java.util.*;
-
 import org.sifrproject.util.JSON;
 import org.sifrproject.util.JSONType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public abstract class Scorer {
@@ -59,7 +61,7 @@ public abstract class Scorer {
             }
 
             // score annotation object
-            putScore(annotation, scores, annotation.get("annotatedClass").getString("@id").toString());
+            putScore(annotation, scores, annotation.get("annotatedClass").getString("@id"));
             sortedAnnotations.add(annotation);
         }
 
@@ -110,7 +112,7 @@ public abstract class Scorer {
                     }
                     arrayIndex += 1;
                 }
-                if (isAnnoAdded == false){
+                if (!isAnnoAdded) {
                     sortedArray.add(annotation);
                 }
             }

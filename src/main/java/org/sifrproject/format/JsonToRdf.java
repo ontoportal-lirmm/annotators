@@ -1,11 +1,5 @@
 package org.sifrproject.format;
 
-import java.io.StringWriter;
-import java.util.Date;
-import java.util.Random;
-
-import org.sifrproject.util.JSON;
-
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -14,24 +8,29 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.ibm.icu.text.SimpleDateFormat;
+import org.sifrproject.util.JSON;
+
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.Random;
 
 public class JsonToRdf {
     
     // Prefix
-    public static final String aofPrefix = "http://purl.org/ao/foaf/";
-    public static final String aoPrefix = "http://purl.org/ao/";
-    public static final String aotrPrefix = "http://purl.org/ao/types/";
-    public static final String pavPrefix = "http://purl.org/pav/2.0/";
-    public static final String annPrefix = "http://www.w3.org/2000/10/annotation-ns#";
-    public static final String aosPrefix = "http://purl.org/ao/selectors/";
-    public static final String aot = "http://purl.org/ao/types/";
-    public static final String foafPrefix = "http://xmlns.com/foaf/0.1/";
+    private static final String aofPrefix = "http://purl.org/ao/foaf/";
+    private static final String aoPrefix = "http://purl.org/ao/";
+    private static final String aotrPrefix = "http://purl.org/ao/types/";
+    private static final String pavPrefix = "http://purl.org/pav/2.0/";
+    private static final String annPrefix = "http://www.w3.org/2000/10/annotation-ns#";
+    private static final String aosPrefix = "http://purl.org/ao/selectors/";
+    private static final String aot = "http://purl.org/ao/types/";
+    private static final String foafPrefix = "http://xmlns.com/foaf/0.1/";
     // URLs
-    public static final String createdByURL = "http://bioportal.bioontology.org/annotator";
-    public static final String contextURL = "http://my.example.org/se/10300";
-    public static final String rootURL = "http://bioportal.bioontology.org/annotator/ann/";
-    public static final String root2URL = "http://bioportal.bioontology.org/annotator/sel/";
-    public static final String onDocumentURL = "http://data.bioontology.org/annotator?";
+    private static final String createdByURL = "http://bioportal.bioontology.org/annotator";
+    private static final String contextURL = "http://my.example.org/se/10300";
+    private static final String rootURL = "http://bioportal.bioontology.org/annotator/ann/";
+    private static final String root2URL = "http://bioportal.bioontology.org/annotator/sel/";
+    private static final String onDocumentURL = "http://data.bioontology.org/annotator?";
     //public static String annotatorURI = "";
     
     
@@ -52,18 +51,23 @@ public class JsonToRdf {
         String annotatorFoafName;
         String annotatorFoafDescription;
 
-        if (annotatorURI.equals("http://vm-bioportal-vincent:8080/annotator?")) {
-            annotatorFoafName = "SIFR Annotator";
-            annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
-        } else if (annotatorURI.equals("http://bioportal.lirmm.fr:8080/annotator?")) {
-            annotatorFoafName = "SIFR Annotator";
-            annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
-        } else if (annotatorURI.equals("http://agroportal.lirmm.fr:8080/annotator?")) {
-            annotatorFoafName = "IBC Annotator";
-            annotatorFoafDescription = "The IBC Annotator is a specific version of the NCBO Annotator but for plant related ontologies. You shall use it to annotate plant related text data with ontology concepts.";
-        } else {
-            annotatorFoafName = "NCBO Annotator";
-            annotatorFoafDescription = "The NCBO BioPortal Annotator processes text submitted by users, recognizes relevant ontology terms in the text and returns the annotations to the user.";
+        switch (annotatorURI) {
+            case "http://vm-bioportal-vincent:8080/annotator?":
+                annotatorFoafName = "SIFR Annotator";
+                annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+                break;
+            case "http://bioportal.lirmm.fr:8080/annotator?":
+                annotatorFoafName = "SIFR Annotator";
+                annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+                break;
+            case "http://agroportal.lirmm.fr:8080/annotator?":
+                annotatorFoafName = "IBC Annotator";
+                annotatorFoafDescription = "The IBC Annotator is a specific version of the NCBO Annotator but for plant related ontologies. You shall use it to annotate plant related text data with ontology concepts.";
+                break;
+            default:
+                annotatorFoafName = "NCBO Annotator";
+                annotatorFoafDescription = "The NCBO BioPortal Annotator processes text submitted by users, recognizes relevant ontology terms in the text and returns the annotations to the user.";
+                break;
         }
         
         m.add(annotatorResource, RDF.type, annotatorType1)

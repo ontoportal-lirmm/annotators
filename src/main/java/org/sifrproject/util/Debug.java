@@ -36,8 +36,8 @@ public class Debug {
                 mappings.put("h"+i, mappedClass.get("annotatedClass").getString("@id"));
                 i++;
             }
-            
-            // add to output
+
+            // add to annotationOutput
             JSON debugAnnotation = new JSON(JSONType.OBJECT);
             debugAnnotation.put("annotatedClass", id);
             debugAnnotation.put("terms", terms);

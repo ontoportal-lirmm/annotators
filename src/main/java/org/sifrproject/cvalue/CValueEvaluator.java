@@ -6,7 +6,7 @@ import java.util.*;
 public class CValueEvaluator {
 
     private ArrayList<CValueTerm> terms;
-    static int minFrequency = 1;
+    private static final int MIN_FREQUENCY = 1;
 
     public CValueEvaluator(List<String> terms){
         this.terms = new ArrayList<>(terms.size());
@@ -29,7 +29,7 @@ public class CValueEvaluator {
 
         // filter EvaluatedTerm with too low frequency
         for (Iterator<CValueTerm> it=this.terms.iterator(); it.hasNext();)
-            if (it.next().getFrequency() < minFrequency)
+            if (it.next().getFrequency() < MIN_FREQUENCY)
                 it.remove();
 
 
