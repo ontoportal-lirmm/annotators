@@ -15,7 +15,7 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />
     <orderEntry type="library" name="Maven: com.ibm.icu:icu4j:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: io.github.twktheainur:sparqy-core:1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.getalp:sparqy-api:1.0" level="project" />
+    <orderEntry type="library" name="Maven: io.github.twktheainur:sparqy-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.jena:jena-arq:2.13.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.jena:jena-core:2.13.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.jena:jena-iri:1.1.2" level="project" />

@@ -1,0 +1,307 @@
+import io.github.twktheainur.sparqy.graph.storage.JenaRemoteSPARQLStore;
+import io.github.twktheainur.sparqy.graph.storage.StoreHandler;
+import io.github.twktheainur.sparqy.graph.store.Store;
+import org.junit.Test;
+import org.sifrproject.annotations.api.input.AnnotationParser;
+import org.sifrproject.annotations.api.model.Annotation;
+import org.sifrproject.annotations.api.model.lazy.LazyAnnotationFactory;
+import org.sifrproject.annotations.api.umls.PropertyRetriever;
+import org.sifrproject.annotations.input.BioPortalLazyJSONAnnotationParser;
+import org.sifrproject.annotations.model.lazy.BioPortalLazyAnnotationFactory;
+import org.sifrproject.annotations.umls.CUIPropertyRetriever;
+import org.sifrproject.annotations.umls.SemanticTypePropertyRetriever;
+import org.sifrproject.annotations.umls.groups.UMLSGroupIndex;
+import org.sifrproject.annotations.umls.groups.UMLSSemanticGroupsLoader;
+
+import java.util.List;
+
+public class TestLazyModel {
+    @org.junit.Before
+    public void setUp() throws Exception {
+        Store store = new JenaRemoteSPARQLStore("http://sparql.bioportal.lirmm.fr/sparql/");
+        StoreHandler.registerStoreInstance(store);
+    }
+
+    @Test
+    public void testModelConstruction() throws Exception {
+        String jsonOutput = "[{\n" +
+                "    \"annotatedClass\": {\n" +
+                "      \"@id\": \"http://chu-rouen.fr/cismef/SNOMED_int.#M-80003\",\n" +
+                "      \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "      \"links\": {\n" +
+                "        \"self\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003\",\n" +
+                "        \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE\",\n" +
+                "        \"children\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/children\",\n" +
+                "        \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/parents\",\n" +
+                "        \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/descendants\",\n" +
+                "        \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/ancestors\",\n" +
+                "        \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/instances\",\n" +
+                "        \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/tree\",\n" +
+                "        \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/notes\",\n" +
+                "        \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003/mappings\",\n" +
+                "        \"ui\": \"http://bioportal.lirmm.fr/ontologies/SNMIFRE?p=classes&conceptid=http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80003\",\n" +
+                "        \"@context\": {\n" +
+                "          \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "          \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "          \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "          \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "          \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "        }\n" +
+                "      },\n" +
+                "      \"@context\": {\n" +
+                "        \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    \"hierarchy\": [\n" +
+                "      {\n" +
+                "        \"annotatedClass\": {\n" +
+                "          \"@id\": \"http://chu-rouen.fr/cismef/SNOMED_int.#M-80000_S3\",\n" +
+                "          \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"links\": {\n" +
+                "            \"self\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3\",\n" +
+                "            \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE\",\n" +
+                "            \"children\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/children\",\n" +
+                "            \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/parents\",\n" +
+                "            \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/descendants\",\n" +
+                "            \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/ancestors\",\n" +
+                "            \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/instances\",\n" +
+                "            \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/tree\",\n" +
+                "            \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/notes\",\n" +
+                "            \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3/mappings\",\n" +
+                "            \"ui\": \"http://bioportal.lirmm.fr/ontologies/SNMIFRE?p=classes&conceptid=http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_S3\",\n" +
+                "            \"@context\": {\n" +
+                "              \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "              \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "              \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "              \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "              \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"@context\": {\n" +
+                "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"distance\": 1,\n" +
+                "        \"score\": \"3.199642121456988\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"annotatedClass\": {\n" +
+                "          \"@id\": \"http://chu-rouen.fr/cismef/SNOMED_int.#M-80000_GS\",\n" +
+                "          \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"links\": {\n" +
+                "            \"self\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS\",\n" +
+                "            \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE\",\n" +
+                "            \"children\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/children\",\n" +
+                "            \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/parents\",\n" +
+                "            \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/descendants\",\n" +
+                "            \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/ancestors\",\n" +
+                "            \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/instances\",\n" +
+                "            \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/tree\",\n" +
+                "            \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/notes\",\n" +
+                "            \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS/mappings\",\n" +
+                "            \"ui\": \"http://bioportal.lirmm.fr/ontologies/SNMIFRE?p=classes&conceptid=http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M-80000_GS\",\n" +
+                "            \"@context\": {\n" +
+                "              \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "              \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "              \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "              \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "              \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"@context\": {\n" +
+                "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"distance\": 2,\n" +
+                "        \"score\": \"2.945457969051174\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"annotatedClass\": {\n" +
+                "          \"@id\": \"http://chu-rouen.fr/cismef/SNOMED_int.#M\",\n" +
+                "          \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"links\": {\n" +
+                "            \"self\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M\",\n" +
+                "            \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE\",\n" +
+                "            \"children\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/children\",\n" +
+                "            \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/parents\",\n" +
+                "            \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/descendants\",\n" +
+                "            \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/ancestors\",\n" +
+                "            \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/instances\",\n" +
+                "            \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/tree\",\n" +
+                "            \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/notes\",\n" +
+                "            \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M/mappings\",\n" +
+                "            \"ui\": \"http://bioportal.lirmm.fr/ontologies/SNMIFRE?p=classes&conceptid=http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23M\",\n" +
+                "            \"@context\": {\n" +
+                "              \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "              \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "              \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "              \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "              \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"@context\": {\n" +
+                "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"distance\": 3,\n" +
+                "        \"score\": \"2.697799693760812\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"annotatedClass\": {\n" +
+                "          \"@id\": \"http://chu-rouen.fr/cismef/SNOMED_int.#ARBO\",\n" +
+                "          \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"links\": {\n" +
+                "            \"self\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO\",\n" +
+                "            \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE\",\n" +
+                "            \"children\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/children\",\n" +
+                "            \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/parents\",\n" +
+                "            \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/descendants\",\n" +
+                "            \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/ancestors\",\n" +
+                "            \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/instances\",\n" +
+                "            \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/tree\",\n" +
+                "            \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/notes\",\n" +
+                "            \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/SNMIFRE/classes/http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO/mappings\",\n" +
+                "            \"ui\": \"http://bioportal.lirmm.fr/ontologies/SNMIFRE?p=classes&conceptid=http%3A%2F%2Fchu-rouen.fr%2Fcismef%2FSNOMED_int.%23ARBO\",\n" +
+                "            \"@context\": {\n" +
+                "              \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "              \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "              \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "              \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "              \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"@context\": {\n" +
+                "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"distance\": 4,\n" +
+                "        \"score\": \"3.346543383201999\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"annotations\": [\n" +
+                "      {\n" +
+                "        \"from\": 13,\n" +
+                "        \"to\": 18,\n" +
+                "        \"matchType\": \"SYN\",\n" +
+                "        \"text\": \"CANCER\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"mappings\": [\n" +
+                "      {\n" +
+                "        \"annotatedClass\": {\n" +
+                "          \"@id\": \"http://purl.lirmm.fr/ontology/MuEVo/vpm61\",\n" +
+                "          \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"links\": {\n" +
+                "            \"self\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61\",\n" +
+                "            \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO\",\n" +
+                "            \"children\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/children\",\n" +
+                "            \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/parents\",\n" +
+                "            \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/descendants\",\n" +
+                "            \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/ancestors\",\n" +
+                "            \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/instances\",\n" +
+                "            \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/tree\",\n" +
+                "            \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/notes\",\n" +
+                "            \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/mappings\",\n" +
+                "            \"ui\": \"http://bioportal.lirmm.fr/ontologies/MUEVO?p=classes&conceptid=http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61\",\n" +
+                "            \"@context\": {\n" +
+                "              \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "              \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "              \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "              \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "              \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"@context\": {\n" +
+                "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"score\": \"4.954196310386876\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"annotatedClass\": {\n" +
+                "          \"@id\": \"http://purl.lirmm.fr/ontology/MuEVo/vpm61\",\n" +
+                "          \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "          \"links\": {\n" +
+                "            \"self\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61\",\n" +
+                "            \"ontology\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO\",\n" +
+                "            \"children\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/children\",\n" +
+                "            \"parents\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/parents\",\n" +
+                "            \"descendants\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/descendants\",\n" +
+                "            \"ancestors\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/ancestors\",\n" +
+                "            \"instances\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/instances\",\n" +
+                "            \"tree\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/tree\",\n" +
+                "            \"notes\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/notes\",\n" +
+                "            \"mappings\": \"http://data.bioportal.lirmm.fr/ontologies/MUEVO/classes/http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61/mappings\",\n" +
+                "            \"ui\": \"http://bioportal.lirmm.fr/ontologies/MUEVO?p=classes&conceptid=http%3A%2F%2Fpurl.lirmm.fr%2Fontology%2FMuEVo%2Fvpm61\",\n" +
+                "            \"@context\": {\n" +
+                "              \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+                "              \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"instances\": \"http://data.bioontology.org/metadata/Instance\",\n" +
+                "              \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+                "              \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+                "              \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+                "              \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"@context\": {\n" +
+                "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"score\": \"4.954196310386876\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"score\": \"3.9068905956085187\"\n" +
+                "  }," +
+                "{}," +
+                "{\"annotatedClass\":{\"@id\":\"\", \"@type\":\"\", \"@context\":{\"@vocab\":\"\"},\"links\":{}},\"hierarchy\": [{}]}]";
+        PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
+        PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
+        UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
+        LazyAnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
+
+        AnnotationParser parser = new BioPortalLazyJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
+        parser.parseAnnotations(jsonOutput);
+        List<Annotation> annotationList = parser.annotations();
+        assert !annotationList.isEmpty();
+    }
+}
