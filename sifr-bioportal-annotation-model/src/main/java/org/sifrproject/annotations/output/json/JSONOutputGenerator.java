@@ -2,12 +2,14 @@ package org.sifrproject.annotations.output.json;
 
 
 import org.sifrproject.annotations.api.model.Annotation;
+import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
+import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 
 public class JSONOutputGenerator implements OutputGenerator {
 
     @Override
-    public String generate(Iterable<Annotation> annotations) {
+    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
         StringBuilder result = new StringBuilder();
         result.append("[");
         boolean isFirst = true;
@@ -17,9 +19,9 @@ public class JSONOutputGenerator implements OutputGenerator {
             } else {
                 isFirst = false;
             }
-            annotation.accept(new JSONAnnotationVisitor(result));
+            result.append(annotation.toString());
         }
         result.append("]");
-        return result.toString();
+        return new LIRMMAnnotatorOutput(result.toString(), "application/json");
     }
 }

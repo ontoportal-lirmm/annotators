@@ -1,4 +1,4 @@
-package org.sifrproject.annotations.api.umls;
+package org.sifrproject.annotations.api.model.retrieval;
 
 
 import java.util.List;

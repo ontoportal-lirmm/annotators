@@ -1,8 +1,6 @@
 package org.sifrproject.annotations.api.model;
 
 
-import org.sifrproject.annotations.api.model.visitor.VisitableAnnotationElement;
-
-public interface Links extends LinkMetadata, VisitableAnnotationElement {
+public interface Links extends LinkMetadata {
     LinkMetadata getLinksContextMetadata();
 }

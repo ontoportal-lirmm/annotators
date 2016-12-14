@@ -7,17 +7,16 @@ import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
-import org.sifrproject.annotations.api.output.OutputGenerator;
-import org.sifrproject.annotations.api.umls.PropertyRetriever;
+import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.api.output.AnnotatorOutput;
+import org.sifrproject.annotations.api.output.OutputGeneratorDispatcher;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
-import org.sifrproject.annotations.model.full.BioPortalAnnotationFactory;
+import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
+import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
+import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
 import org.sifrproject.annotations.output.LIRMMOutputGeneratorDispatcher;
-import org.sifrproject.annotations.umls.CUIPropertyRetriever;
-import org.sifrproject.annotations.umls.SemanticTypePropertyRetriever;
-import org.sifrproject.annotations.umls.groups.UMLSGroupIndex;
-import org.sifrproject.annotations.umls.groups.UMLSSemanticGroupsLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.sifrproject.annotations.umls.UMLSGroupIndex;
+import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
  */
 public class JSONGeneratorProfiler {
 
-    private static Logger logger = LoggerFactory.getLogger(JSONGeneratorProfiler.class);
+    //private static Logger logger = LoggerFactory.getLogger(JSONGeneratorProfiler.class);
 
     private static final String jsonOutput = "[\n" +
             "  {\n" +
@@ -498,18 +497,18 @@ public class JSONGeneratorProfiler {
         PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
         PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
         UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
-        AnnotationFactory annotationFactory = new BioPortalAnnotationFactory();
+        AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
 
         AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
-        parser.parseAnnotations(jsonOutput);
-        List<Annotation> annotationList = parser.annotations();
+
+        List<Annotation> annotationList = parser.parseAnnotations(jsonOutput);
         System.out.println(System.currentTimeMillis() - time);
 
         //Profiling/sampling starts here
 
         time = System.currentTimeMillis();
-        OutputGenerator dispatcher = new LIRMMOutputGeneratorDispatcher("application/json", "http://bioportal.lirmm.fr:8080/servlet?");
-        String output = dispatcher.generate(annotationList);
+        OutputGeneratorDispatcher dispatcher = new LIRMMOutputGeneratorDispatcher();
+        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?");
         System.out.println(System.currentTimeMillis() - time);
 
 

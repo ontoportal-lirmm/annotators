@@ -5,20 +5,18 @@ import io.github.twktheainur.sparqy.graph.storage.StoreHandler;
 import io.github.twktheainur.sparqy.graph.store.Store;
 import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
-import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
-import org.sifrproject.annotations.api.umls.PropertyRetriever;
+import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
-import org.sifrproject.annotations.model.full.BioPortalAnnotationFactory;
-import org.sifrproject.annotations.umls.CUIPropertyRetriever;
-import org.sifrproject.annotations.umls.SemanticTypePropertyRetriever;
-import org.sifrproject.annotations.umls.groups.UMLSGroupIndex;
-import org.sifrproject.annotations.umls.groups.UMLSSemanticGroupsLoader;
+import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
+import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
+import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
+import org.sifrproject.annotations.umls.UMLSGroupIndex;
+import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * This is a test class aimed a profiling the parsing of the bioportal output, use with VisualVM
@@ -492,12 +490,11 @@ public class ParserProfiler {
         PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
         PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
         UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
-        AnnotationFactory annotationFactory = new BioPortalAnnotationFactory();
+        AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
 
         AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
         Long time = System.currentTimeMillis();
         parser.parseAnnotations(jsonOutput);
-        List<Annotation> annotationList = parser.annotations();
         System.err.println(System.currentTimeMillis() - time);
 
 

@@ -8,14 +8,15 @@ import java.util.Map;
 
 public class OldScore extends AbstractScorer {
 
-    public OldScore(List<Annotation> annotations) {
-        super(annotations);
+    public OldScore() {
+        super();
     }
 
-    public Map<String, ScoreableElement> compute() {
+    @Override
+    public Map<String, ScoreableElement> compute(List<Annotation> annotations) {
         Map<String, ScoreableElement> scores = new HashMap<>();
 
-        for (Annotation annotation : getAnnotations()) {
+        for (Annotation annotation : annotations) {
             double score = 0;
 
             // add score for all annotatedTerms to this annotation

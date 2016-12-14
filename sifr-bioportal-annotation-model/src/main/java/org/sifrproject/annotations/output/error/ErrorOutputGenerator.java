@@ -6,7 +6,7 @@ import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 
-/*TODO: Adapt this later*/
+
 public class ErrorOutputGenerator implements OutputGenerator {
 
     @Override

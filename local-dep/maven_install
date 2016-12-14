@@ -1,4 +1,0 @@
-mvn install:install-file -Dfile=protege.jar -DgroupId=org.sifrproject.dep -DartifactId=protege -Dversion=3.5 -Dpackaging=jar
-mvn install:install-file -Dfile=protege-owl.jar -DgroupId=org.sifrproject.dep -DartifactId=protege-owl -Dversion=3.5 -Dpackaging=jar
-
-#mvn install:install-file -Dfile=JarCvalue.jar -DgroupId=org.sifrproject.dep -DartifactId=cvalue -Dversion=1.0 -Dpackaging=jar

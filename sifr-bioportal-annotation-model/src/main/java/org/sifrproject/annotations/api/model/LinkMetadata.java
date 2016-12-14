@@ -1,9 +1,7 @@
 package org.sifrproject.annotations.api.model;
 
 
-import org.sifrproject.annotations.api.model.visitor.VisitableAnnotationElement;
-
-public interface LinkMetadata extends VisitableAnnotationElement {
+public interface LinkMetadata {
     String getSelf();
 
     String getOntology();

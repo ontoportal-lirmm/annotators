@@ -1,11 +1,10 @@
-package org.sifrproject.annotations.model.lazy;
+package org.sifrproject.annotations.model;
 
 
 import org.json.simple.JSONObject;
 import org.sifrproject.annotations.api.model.LinkMetadata;
 import org.sifrproject.annotations.api.model.Links;
-import org.sifrproject.annotations.api.model.lazy.LazyModelElement;
-import org.sifrproject.annotations.api.model.visitor.AnnotationVisitor;
+import org.sifrproject.annotations.api.model.LazyModelElement;
 
 public class BioPortalLazyLinks implements Links, LazyModelElement {
 
@@ -108,12 +107,5 @@ public class BioPortalLazyLinks implements Links, LazyModelElement {
     @Override
     public String toString() {
         return jsonObject.toJSONString();
-    }
-
-    @Override
-    public void accept(AnnotationVisitor annotationVisitor) {
-        annotationVisitor.visitBefore(this);
-        linksContextMetadata.accept(annotationVisitor);
-        annotationVisitor.visitAfter(this);
     }
 }

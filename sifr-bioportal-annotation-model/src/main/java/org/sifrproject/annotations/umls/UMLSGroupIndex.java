@@ -1,4 +1,4 @@
-package org.sifrproject.annotations.umls.groups;
+package org.sifrproject.annotations.umls;
 
 
 import org.slf4j.Logger;
