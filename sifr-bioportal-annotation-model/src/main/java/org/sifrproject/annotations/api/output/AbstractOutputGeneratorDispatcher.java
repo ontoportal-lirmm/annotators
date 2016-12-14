@@ -23,17 +23,17 @@ public abstract class AbstractOutputGeneratorDispatcher implements OutputGenerat
     }
 
     @Override
-    public String generate(String generatorTrigger, Iterable<Annotation> annotations) {
+    public AnnotatorOutput generate(String generatorTrigger, Iterable<Annotation> annotations, String annotatorURI) {
         if (isSupported(generatorTrigger)) {
-            return retrieveGenerator(generatorTrigger).generate(annotations);
+            return retrieveGenerator(generatorTrigger).generate(annotations, annotatorURI);
         } else {
-            return generate(annotations);
+            return generate(annotations, annotatorURI);
         }
     }
 
     @Override
-    public String generate(Iterable<Annotation> annotations) {
-        return retrieveGenerator("json").generate(annotations);
+    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
+        return retrieveGenerator("json").generate(annotations, annotatorURI);
     }
 
 }

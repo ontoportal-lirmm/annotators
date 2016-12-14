@@ -4,14 +4,14 @@ import io.github.twktheainur.sparqy.graph.store.Store;
 import org.junit.Test;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
-import org.sifrproject.annotations.api.model.lazy.LazyAnnotationFactory;
-import org.sifrproject.annotations.api.umls.PropertyRetriever;
-import org.sifrproject.annotations.input.BioPortalLazyJSONAnnotationParser;
-import org.sifrproject.annotations.model.lazy.BioPortalLazyAnnotationFactory;
-import org.sifrproject.annotations.umls.CUIPropertyRetriever;
-import org.sifrproject.annotations.umls.SemanticTypePropertyRetriever;
-import org.sifrproject.annotations.umls.groups.UMLSGroupIndex;
-import org.sifrproject.annotations.umls.groups.UMLSSemanticGroupsLoader;
+import org.sifrproject.annotations.api.model.AnnotationFactory;
+import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
+import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
+import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
+import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
+import org.sifrproject.annotations.umls.UMLSGroupIndex;
+import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 
 import java.util.List;
 
@@ -297,11 +297,10 @@ public class TestLazyModel {
         PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
         PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
         UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
-        LazyAnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
+        AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
 
-        AnnotationParser parser = new BioPortalLazyJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
-        parser.parseAnnotations(jsonOutput);
-        List<Annotation> annotationList = parser.annotations();
+        AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
+        List<Annotation> annotationList = parser.parseAnnotations(jsonOutput);
         assert !annotationList.isEmpty();
     }
 }

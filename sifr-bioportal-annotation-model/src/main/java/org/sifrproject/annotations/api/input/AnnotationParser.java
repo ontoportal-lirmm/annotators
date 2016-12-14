@@ -6,9 +6,5 @@ import org.sifrproject.annotations.api.model.Annotation;
 import java.util.List;
 
 public interface AnnotationParser {
-    void parseAnnotations(String queryResponse) throws ParseException;
-
-    List<Annotation> annotations();
-
-    void clear();
+    List<Annotation> parseAnnotations(String queryResponse) throws ParseException;
 }

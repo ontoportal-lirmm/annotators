@@ -10,7 +10,7 @@ public class CValueTerm {
 
     private double cvalue;
 
-    CValueTerm(String term){
+    public CValueTerm(String term) {
         this.term = term;
         this.frequency = 1;
         this.wordNumber = term.split(" ").length;

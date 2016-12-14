@@ -9,7 +9,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.ibm.icu.text.SimpleDateFormat;
 import org.sifrproject.annotations.api.model.*;
+import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
+import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 
 import java.io.StringWriter;
 import java.util.Date;
@@ -18,7 +20,6 @@ import java.util.Random;
 
 public class JenaOutputGenerator implements OutputGenerator {
     private final String outputMimeType;
-    private final String annotatorURI;
 
 
     // Prefix
@@ -44,17 +45,15 @@ public class JenaOutputGenerator implements OutputGenerator {
      * @param jenaOutputFormat The jena output format,
      *                         {@see https://jena.apache.org/documentation/io/rdf-output.html#jena_model_write_formats}
      *                         for a list of all supported formats
-     * @param annotatorURI     The URI of the annotator, used as the base URI for the output
      */
-    public JenaOutputGenerator(String jenaOutputFormat, String annotatorURI) {
+    public JenaOutputGenerator(String jenaOutputFormat) {
         this.outputMimeType = jenaOutputFormat;
-        this.annotatorURI = annotatorURI;
     }
 
     @Override
-    public String generate(Iterable<Annotation> annotations) {
+    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
         Model jenaModel = ModelFactory.createOntologyModel();
-        initializeModel(jenaModel);
+        initializeModel(jenaModel, annotatorURI);
 
         Integer count = 0;
         int uid = (new Random()).nextInt(10000);
@@ -77,10 +76,10 @@ public class JenaOutputGenerator implements OutputGenerator {
 
         StringWriter rdfOutput = new StringWriter();
         jenaModel.write(rdfOutput, outputMimeType.toUpperCase());
-        return rdfOutput.toString();
+        return new LIRMMAnnotatorOutput(rdfOutput.toString(), String.format("text/%s", outputMimeType));
     }
 
-    private void initializeModel(Model model) {
+    private void initializeModel(Model model, String annotatorURI) {
         //Describing the servlet used
         Resource annotatorResource = model.createResource(annotatorURI);
         Resource annotatorType1 = model.createResource("http://www.w3.org/ns/prov#SoftwareAgent");

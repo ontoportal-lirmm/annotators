@@ -1,9 +1,7 @@
 package org.sifrproject.annotations.api.model;
 
 
-import org.sifrproject.annotations.api.model.visitor.VisitableAnnotationElement;
-
-public interface Mapping extends VisitableAnnotationElement, ScoreableElement {
+public interface Mapping extends ScoreableElement {
 
     AnnotatedClass getAnnotatedClass();
 

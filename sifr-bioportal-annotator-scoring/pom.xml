@@ -27,9 +27,9 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.sifrproject</groupId>
-            <artifactId>sifr-bioportal-annotator-scoring</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
         </dependency>
         <!-- <dependency>
             <groupId>org.sifrproject.dep</groupId>

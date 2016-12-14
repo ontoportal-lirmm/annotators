@@ -1,12 +1,11 @@
 package org.sifrproject.annotations.api.model;
 
 
-import org.sifrproject.annotations.api.model.visitor.VisitableAnnotationElement;
-import org.sifrproject.annotations.umls.groups.UMLSGroup;
+import org.sifrproject.annotations.umls.UMLSGroup;
 
 import java.util.Set;
 
-public interface AnnotatedClass extends VisitableAnnotationElement {
+public interface AnnotatedClass {
     String getId();
 
     String getType();

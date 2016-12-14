@@ -25,8 +25,8 @@ public class CValueScore extends AbstractScorer {
     @Override
     public Map<String, ScoreableElement> compute(List<Annotation> annotations) {
         // Compute old score
-        AbstractScorer oldScoreAbstractScorer = new OldScore(annotations);
-        Map<String, ScoreableElement> scoreableElementMap = oldScoreAbstractScorer.compute(annotations);
+        AbstractScorer oldScoreScorer = new OldScore();
+        Map<String, ScoreableElement> scoreableElementMap = oldScoreScorer.compute(annotations);
 
         // compute cvalue
         Map<String, Double> termCValues = computeTermCValues(annotations);

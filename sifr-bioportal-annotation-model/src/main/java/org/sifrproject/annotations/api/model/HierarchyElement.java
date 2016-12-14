@@ -1,9 +1,6 @@
 package org.sifrproject.annotations.api.model;
 
-import org.sifrproject.annotations.api.model.visitor.VisitableAnnotationElement;
-
-
-public interface HierarchyElement extends VisitableAnnotationElement, ScoreableElement {
+public interface HierarchyElement extends ScoreableElement {
     AnnotatedClass getAnnotatedClass();
 
     int getDistance();

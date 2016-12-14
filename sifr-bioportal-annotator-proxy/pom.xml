@@ -87,6 +87,25 @@
             <artifactId>sifr-bioportal-annotator-scoring</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.twktheainur</groupId>
+            <artifactId>sparqy-core</artifactId>
+            <version>1.0</version>
+            <!--scope>system</scope>
+            <systemPath>${project.basedir}/../lib/sparqy-core-1.0-jar-with-dependencies.jar</systemPath-->
+        </dependency>
+        <dependency>
+            <groupId>io.github.twktheainur</groupId>
+            <artifactId>sparqy-api</artifactId>
+            <version>1.0</version>
+            <!--scope>system</scope>
+            <systemPath>${project.basedir}/../lib/sparqy-api-1.0.jar</systemPath-->
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+        </dependency>
         <!-- <dependency>
             <groupId>org.sifrproject.dep</groupId>
             <artifactId>protege</artifactId>
@@ -98,4 +117,16 @@
             <version>3.5</version>
         </dependency> -->
     </dependencies>
+    <repositories>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

@@ -3,8 +3,10 @@ package org.sifrproject.annotations.output.brat;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
+import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
-import org.sifrproject.annotations.umls.groups.UMLSGroup;
+import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
+import org.sifrproject.annotations.umls.UMLSGroup;
 
 import java.util.*;
 
@@ -13,7 +15,7 @@ import java.util.*;
  */
 public class BratOutputGenerator implements OutputGenerator {
     @Override
-    public String generate(Iterable<Annotation> annotations) {
+    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
         Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
         for (Annotation annotation : annotations) {
             for (AnnotationToken annotationToken : annotation.getAnnotations()) {
@@ -55,7 +57,7 @@ public class BratOutputGenerator implements OutputGenerator {
 
         }
 
-        return stringBuilder.toString();
+        return new LIRMMAnnotatorOutput(stringBuilder.toString(), "application/brat");
     }
 
     private String buildCUILIst(Set<String> set) {
