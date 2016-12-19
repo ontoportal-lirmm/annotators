@@ -9,10 +9,11 @@
     <url>https://github.com/sifrproject/annotators</url>
 
     <modules>
-        <module>sifr-bioportal-annotator-proxy</module>
         <module>sifr-bioportal-annotation-model</module>
-        <module>sifr-bioportal-annotator-client</module>
         <module>sifr-bioportal-annotator-scoring</module>
+        <module>sifr-bioportal-annotation-postannotations</module>
+        <module>sifr-bioportal-annotator-client</module>
+        <module>sifr-bioportal-annotator-proxy</module>
     </modules>
 
     <distributionManagement>

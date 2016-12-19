@@ -10,6 +10,7 @@ import org.sifrproject.annotations.api.model.AnnotationFactory;
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGeneratorDispatcher;
+import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
 import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
@@ -485,7 +486,7 @@ public class JSONGeneratorProfiler {
             "    \"score\": \"4.584962500721157\"\n" +
             "  }]";
 
-    public static void main(String... args) throws IOException, ParseException {
+    public static void main(String... args) throws IOException, ParseException, NCBOAnnotatorErrorException {
 
         VisualVMTools.delayUntilReturn();
         long time = System.currentTimeMillis();

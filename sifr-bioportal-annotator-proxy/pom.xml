@@ -84,6 +84,11 @@
         </dependency>
         <dependency>
             <groupId>org.sifrproject</groupId>
+            <artifactId>sifr-bioportal-annotation-postannotations</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sifrproject</groupId>
             <artifactId>sifr-bioportal-annotator-scoring</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>

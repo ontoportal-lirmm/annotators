@@ -6,6 +6,7 @@ import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
 import org.sifrproject.annotations.api.model.ScoreableElement;
+import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
 import org.sifrproject.scoring.CValueScore;
@@ -26,7 +27,7 @@ public class TestScore {
     private final AnnotationParser annotationParser = new BioPortalJSONAnnotationParser(factory);
 
     @Test
-    public void testOldScore() throws ParseException {
+    public void testOldScore() throws ParseException, NCBOAnnotatorErrorException {
         List<Annotation> annotations = annotationParser.parseAnnotations(annotationsText);
         Map<String, ScoreableElement> scores = new OldScore().compute(annotations);
         assertTrue("missing class: " + id1, scores.containsKey(id1));
@@ -36,7 +37,7 @@ public class TestScore {
     }
 
     @Test
-    public void testCValueScore() throws ParseException {
+    public void testCValueScore() throws ParseException, NCBOAnnotatorErrorException {
         annotationParser.parseAnnotations(annotationsText);
         List<Annotation> annotations = annotationParser.parseAnnotations(annotationsText);
         Map<String, ScoreableElement> scores = new CValueScore(true).compute(annotations);

@@ -10,6 +10,7 @@ import org.sifrproject.annotations.api.model.*;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
+import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationTokens;
 import org.sifrproject.annotations.model.BioportalLazyHierarchy;
 import org.sifrproject.annotations.model.BioportalLazyMappings;
@@ -46,7 +47,7 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
     }
 
     @Override
-    public List<Annotation> parseAnnotations(String queryResponse) throws ParseException {
+    public List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException {
 
         List<Annotation> annotations = new ArrayList<>();
         try {
@@ -80,6 +81,9 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
             }
         } catch (ParseException e) {
             logger.error("Invalid JSON syntax:{}", e.getLocalizedMessage());
+        } catch (ClassCastException e) {
+            logger.error(e.getLocalizedMessage());
+            throw new NCBOAnnotatorErrorException(queryResponse);
         }
         return annotations;
     }

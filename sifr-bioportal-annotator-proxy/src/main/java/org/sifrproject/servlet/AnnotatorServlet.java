@@ -9,6 +9,7 @@ import org.sifrproject.annotations.api.model.AnnotationFactory;
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGeneratorDispatcher;
+import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
 import org.sifrproject.annotations.model.BioportalErrorAnnotation;
@@ -48,6 +49,7 @@ import java.util.regex.Pattern;
  * Implements the core features of the AnnotatorPlus web services:
  * - It queries the suitable bioportal annotation server (w.r.t implementing subclasses)
  * - adds several new features
+ *
  * @authors Julien Diener, Emmanuel Castanier
  */
 public class AnnotatorServlet extends HttpServlet {
@@ -167,7 +169,7 @@ public class AnnotatorServlet extends HttpServlet {
             String queryOutput = RestfulQuery.queryAnnotator(parameters, annotatorURI);
             annotations = parser.parseAnnotations(queryOutput);
 
-        } catch (InvalidParameterException | ParseException | IOException e) {
+        } catch (InvalidParameterException | ParseException | IOException | NCBOAnnotatorErrorException e) {
             /*
              * Handling exceptions by activating the 'error' output format and creating a single error annotation that
              * will contain the error message. This requires that the OutputGeneratorDispatcher registers the appropriate
