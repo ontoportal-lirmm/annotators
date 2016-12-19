@@ -15,7 +15,7 @@ public class ContextParameterHandler implements ParameterHandler {
         boolean experiencer = Boolean.valueOf(parameters.getFirst("experiencer", "false"));
 
         if (negation || temporality || experiencer) {
-            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotator(negation, temporality, experiencer));
+            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotator(negation, experiencer, temporality));
         }
     }
 }
