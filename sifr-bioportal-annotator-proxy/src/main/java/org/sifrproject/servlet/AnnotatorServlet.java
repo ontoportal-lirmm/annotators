@@ -167,6 +167,7 @@ public class AnnotatorServlet extends HttpServlet {
             * Querying the bioportal annotator and building the model
             */
             String queryOutput = RestfulQuery.queryAnnotator(parameters, annotatorURI);
+            System.out.println(queryOutput);
             annotations = parser.parseAnnotations(queryOutput);
 
         } catch (InvalidParameterException | ParseException | IOException | NCBOAnnotatorErrorException e) {
