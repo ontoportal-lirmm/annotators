@@ -11,7 +11,6 @@ public interface Annotation extends ScoreableElement {
 
     double getScore();
 
-
     void setScore(double score);
 
     Hierarchy getHierarchy();
