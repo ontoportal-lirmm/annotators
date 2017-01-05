@@ -24,8 +24,8 @@
         <plugins>
             <plugin>
                 <!-- Jetty < 9 is in org.mortbay.jetty groupId -->
-                <groupId>org.mortbay.jetty</groupId>
-                <version>8.1.9.v20130131</version>
+                <groupId>org.eclipse.jetty</groupId>
+                <version>9.3.14.v20161028</version>
                 <!-- Starting from Jetty 9 groupId is org.eclipse.jetty already -->
                 <!-- <groupId>org.eclipse.jetty</groupId> -->
                 <!-- Change to latest version available from http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-maven-plugin%22 -->
