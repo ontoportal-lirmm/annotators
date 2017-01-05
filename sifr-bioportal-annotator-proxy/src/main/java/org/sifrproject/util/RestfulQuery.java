@@ -35,7 +35,7 @@ public final class RestfulQuery {
 
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()))) {
                 Optional<String> fileContents = bufferedReader.lines().reduce(String::concat);
-                return fileContents.orElse("Impossible to read response");
+                return fileContents.orElse("Cannot read response");
             } catch (IOException e) {
                 return e.getLocalizedMessage();
             }
