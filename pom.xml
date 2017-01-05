@@ -133,4 +133,18 @@
             <version>2.6.1</version>
         </dependency>
     </dependencies>
+    <dependency>
+        <groupId>io.github.twktheainur</groupId>
+        <artifactId>sparqy-api</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/sparqy-api-1.0.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>io.github.twktheainur</groupId>
+        <artifactId>sparqy-core</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/sparqy-core-1.0-jar-with-dependencies.jar</systemPath>
+    </dependency>
 </project>
