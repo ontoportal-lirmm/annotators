@@ -6,5 +6,4 @@ target
 *.ipr
 .settings
 local-dep
-annotatorProxy.properti
-es
+annotatorProxy.properties
