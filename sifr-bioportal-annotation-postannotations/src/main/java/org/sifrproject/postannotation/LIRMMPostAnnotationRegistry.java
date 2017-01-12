@@ -18,7 +18,9 @@ public class LIRMMPostAnnotationRegistry implements PostAnnotationRegistry {
 
     @Override
     public void apply(List<Annotation> annotations, String sourceText) {
-        postAnnotators.forEach(postAnnotator -> postAnnotator.postAnnotate(annotations, sourceText));
+        for (PostAnnotator postAnnotator : postAnnotators){
+            postAnnotator.postAnnotate(annotations, sourceText);
+        }
     }
 
     @Override

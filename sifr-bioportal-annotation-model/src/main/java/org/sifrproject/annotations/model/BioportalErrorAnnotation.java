@@ -4,9 +4,7 @@ package org.sifrproject.annotations.model;
 import org.sifrproject.annotations.api.model.*;
 import org.sifrproject.annotations.umls.UMLSGroup;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BioportalErrorAnnotation implements Annotation {
 
@@ -53,10 +51,11 @@ public class BioportalErrorAnnotation implements Annotation {
 
     @Override
     public AnnotationTokens getAnnotations() {
-        return () -> {
-            List<AnnotationToken> dummy;
-            dummy = Collections.emptyList();
-            return dummy.iterator();
+        return new AnnotationTokens() {
+            @Override
+            public Iterator<AnnotationToken> iterator() {
+                return new ArrayList<AnnotationToken>().iterator();
+            }
         };
     }
 
@@ -72,19 +71,21 @@ public class BioportalErrorAnnotation implements Annotation {
 
     @Override
     public Hierarchy getHierarchy() {
-        return () -> {
-            List<HierarchyElement> dummy;
-            dummy = Collections.emptyList();
-            return dummy.iterator();
+        return new Hierarchy() {
+            @Override
+            public Iterator<HierarchyElement> iterator() {
+                return new ArrayList<HierarchyElement>().iterator();
+            }
         };
     }
 
     @Override
     public Mappings getMappings() {
-        return () -> {
-            List<Mapping> dummy;
-            dummy = Collections.emptyList();
-            return dummy.iterator();
+        return new Mappings() {
+            @Override
+            public Iterator<Mapping> iterator() {
+                return new ArrayList<Mapping>().iterator();
+            }
         };
     }
 

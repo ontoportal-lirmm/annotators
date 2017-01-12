@@ -102,8 +102,12 @@ public class BioportalAnnotatorQueryBuilder {
         DefaultBioPortalAnnotatorQuery defaultBioportalAnnotatorQuery = new DefaultBioPortalAnnotatorQuery(text);
         defaultBioportalAnnotatorQuery.setExcludeNumbers(excludeNumbers);
         defaultBioportalAnnotatorQuery.setClassHierarchyMaxLevel(classHierarchyMaxLevel);
-        ontologies.forEach(defaultBioportalAnnotatorQuery::addOntology);
-        semanticTypes.forEach(defaultBioportalAnnotatorQuery::addSemanticType);
+        for(String ontology: ontologies){
+            defaultBioportalAnnotatorQuery.addOntology(ontology);
+        }
+        for(String semanticType: semanticTypes){
+            defaultBioportalAnnotatorQuery.addSemanticType(semanticType);
+        }
         defaultBioportalAnnotatorQuery.setExcludeSynonyms(excludeSynonyms);
         defaultBioportalAnnotatorQuery.setExpandClassHierarchy(expandClassHierarchy);
         defaultBioportalAnnotatorQuery.setExpandMappings(expandMappings);

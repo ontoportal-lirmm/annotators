@@ -25,7 +25,8 @@ public final class UMLSSemanticGroupsLoader {
             logger.error("Invalid stream");
         } else {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-                reader.lines().forEach(line -> {
+                String line = reader.readLine();
+                while(line !=null && !line.isEmpty()){
                     String[] fields = line.split(" ");
                     String name = fields[0];
                     String typeString = fields[1];
@@ -36,7 +37,9 @@ public final class UMLSSemanticGroupsLoader {
                         groupIndex.addGroupByType(type, group);
                     }
                     groupIndex.addGroupByName(group);
-                });
+                    line = reader.readLine();
+                }
+
             } catch (IOException e) {
                 logger.error(e.getLocalizedMessage());
             }

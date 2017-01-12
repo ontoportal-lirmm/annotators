@@ -34,12 +34,16 @@ public final class RestfulQuery {
             // process response
 
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()))) {
-                Optional<String> fileContents = bufferedReader.lines().reduce(String::concat);
-                return fileContents.orElse("Cannot read response");
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = bufferedReader.readLine();
+                while(line!=null && !line.isEmpty()){
+                    stringBuilder.append(line).append("\n");
+                    line = bufferedReader.readLine();
+                }
+                return stringBuilder.toString();
             } catch (IOException e) {
                 return e.getLocalizedMessage();
             }
         }
-
     }
 }

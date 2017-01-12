@@ -46,18 +46,25 @@ public class CValueTerm {
 
     // Comparators
     // -----------
-    public static final Comparator<CValueTerm> wordNumberComparator = (o1, o2) -> {
-        if (o2.getWordNumber() > o1.getWordNumber()) return 1;
-        else if (o2.getWordNumber() < o1.getWordNumber()) return -1;
-        else if (o2.getTerm().compareTo(o1.getTerm()) < 0) return 1;
-        else if (o2.getTerm().compareTo(o1.getTerm()) > 0) return -1;
-        else return 0;
+    public static final Comparator<CValueTerm> wordNumberComparator = new Comparator<CValueTerm>() {
+        @Override
+        public int compare(CValueTerm o1, CValueTerm o2) {
+            if (o2.getWordNumber() > o1.getWordNumber()) return 1;
+            else if (o2.getWordNumber() < o1.getWordNumber()) return -1;
+            else if (o2.getTerm().compareTo(o1.getTerm()) < 0) return 1;
+            else if (o2.getTerm().compareTo(o1.getTerm()) > 0) return -1;
+            else return 0;
+        }
     };
-    public static final Comparator<CValueTerm> importanceComparator = (o1, o2) -> {
-        if (o2.getCValue() > o1.getCValue()) return 1;
-        else if (o2.getCValue() < o1.getCValue()) return -1;
-        else {
-            return 1 - o2.getTerm().compareTo(o1.getTerm());
+
+    public static final Comparator<CValueTerm> importanceComparator = new Comparator<CValueTerm>() {
+        @Override
+        public int compare(CValueTerm o1, CValueTerm o2) {
+            if (o2.getCValue() > o1.getCValue()) return 1;
+            else if (o2.getCValue() < o1.getCValue()) return -1;
+            else {
+                return 1 - o2.getTerm().compareTo(o1.getTerm());
+            }
         }
     };
 

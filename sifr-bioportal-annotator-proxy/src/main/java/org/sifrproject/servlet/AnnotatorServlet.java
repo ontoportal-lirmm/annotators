@@ -1,7 +1,5 @@
 package org.sifrproject.servlet;
 
-import io.github.twktheainur.sparqy.graph.storage.JenaRemoteSPARQLStore;
-import io.github.twktheainur.sparqy.graph.storage.StoreHandler;
 import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
@@ -30,6 +28,8 @@ import org.sifrproject.util.RestfulQuery;
 import org.sifrproject.util.UrlParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
+import org.sparqy.graph.storage.StoreHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

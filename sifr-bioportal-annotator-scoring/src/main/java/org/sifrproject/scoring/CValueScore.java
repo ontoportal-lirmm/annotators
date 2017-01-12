@@ -43,7 +43,12 @@ public class CValueScore extends AbstractScorer {
             scoreableElementMap.get(id).setScore(score);
         }
 
-        annotations.sort(Comparator.comparingDouble(Annotation::getScore));
+        Collections.sort(annotations, new Comparator<Annotation>() {
+            @Override
+            public int compare(Annotation o1, Annotation o2) {
+                return Double.compare(o1.getScore(),o2.getScore());
+            }
+        });
         return scoreableElementMap;
     }
 

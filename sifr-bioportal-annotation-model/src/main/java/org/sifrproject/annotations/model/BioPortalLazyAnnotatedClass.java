@@ -10,11 +10,7 @@ import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroup;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelElement {
     private String id = "";
@@ -47,13 +43,15 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
         this.type = (String) jsonObject.get("@type");
         this.links = links;
         cuis = new TreeSet<>();
-        semanticGroups = Collections.emptySet();
+        semanticGroups = new HashSet<>();
         this.cuiPropertyRetriever = cuiPropertyRetriever;
         this.semanticGroupRetriever = semanticGroupRetriever;
         this.umlsGroupIndex = umlsGroupIndex;
         if (semanticGroupRetriever != null) {
             List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
-            semanticGroups = types.stream().map(umlsGroupIndex::getGroupByType).collect(Collectors.toSet());
+            for(String type: types){
+                semanticGroups.add(umlsGroupIndex.getGroupByType(type));
+            }
 
             if (!semanticGroups.isEmpty()) {
                 StringBuilder value = new StringBuilder();
@@ -114,7 +112,9 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     public Set<UMLSGroup> getSemanticGroups() {
         if (semanticGroups.isEmpty() && semanticGroupRetriever != null) {
             List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
-            semanticGroups = types.stream().map(umlsGroupIndex::getGroupByType).collect(Collectors.toSet());
+            for(String type: types){
+                semanticGroups.add(umlsGroupIndex.getGroupByType(type));
+            }
         }
         return semanticGroups;
     }

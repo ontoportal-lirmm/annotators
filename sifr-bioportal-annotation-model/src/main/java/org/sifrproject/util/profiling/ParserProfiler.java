@@ -1,8 +1,5 @@
 package org.sifrproject.util.profiling;
 
-import io.github.twktheainur.sparqy.graph.storage.JenaRemoteSPARQLStore;
-import io.github.twktheainur.sparqy.graph.storage.StoreHandler;
-import io.github.twktheainur.sparqy.graph.store.Store;
 import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
@@ -16,6 +13,9 @@ import org.sifrproject.annotations.umls.UMLSGroupIndex;
 import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sparqy.api.graph.store.Store;
+import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
+import org.sparqy.graph.storage.StoreHandler;
 
 import java.io.IOException;
 

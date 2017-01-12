@@ -12,7 +12,9 @@ public class ErrorOutputGenerator implements OutputGenerator {
     @Override
     public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
         final StringBuilder stringBuilder = new StringBuilder();
-        annotations.forEach(annotation -> stringBuilder.append(annotation.toString()));
+        for(Annotation annotation: annotations) {
+          stringBuilder.append(annotation.toString());
+        }
         return new LIRMMAnnotatorOutput(stringBuilder.toString(), "application/json");
     }
 }

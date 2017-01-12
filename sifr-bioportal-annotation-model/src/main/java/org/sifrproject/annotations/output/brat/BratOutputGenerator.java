@@ -21,7 +21,7 @@ public class BratOutputGenerator implements OutputGenerator {
             for (AnnotationToken annotationToken : annotation.getAnnotations()) {
                 if (annotationToken != null) {
                     if (!perTokenAnnotations.containsKey(annotationToken)) {
-                        perTokenAnnotations.put(annotationToken, new ArrayList<>());
+                        perTokenAnnotations.put(annotationToken, new ArrayList<Annotation>());
                     }
                     perTokenAnnotations.get(annotationToken).add(annotation);
                 }
@@ -32,7 +32,12 @@ public class BratOutputGenerator implements OutputGenerator {
         for (AnnotationToken token : perTokenAnnotations.keySet()) {
             termCounter++;
             List<Annotation> annotationsForToken = perTokenAnnotations.get(token);
-            annotationsForToken.sort(Comparator.comparingDouble(Annotation::getScore));
+            Collections.sort(annotationsForToken, new Comparator<Annotation>() {
+                @Override
+                public int compare(Annotation o1, Annotation o2) {
+                    return Double.compare(o1.getScore(),o2.getScore());
+                }
+            });
             Annotation annotation = null;
             if (!annotationsForToken.isEmpty()) {
                 Annotation current = annotationsForToken.get(0);

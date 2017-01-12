@@ -1,6 +1,3 @@
-import io.github.twktheainur.sparqy.graph.storage.JenaRemoteSPARQLStore;
-import io.github.twktheainur.sparqy.graph.storage.StoreHandler;
-import io.github.twktheainur.sparqy.graph.store.Store;
 import org.junit.Test;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
@@ -12,6 +9,9 @@ import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
 import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
+import org.sparqy.api.graph.store.Store;
+import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
+import org.sparqy.graph.storage.StoreHandler;
 
 import java.util.List;
 

@@ -134,7 +134,7 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
             }
             return new BioportalLazyHierarchy(hierarchyElements, hierarchyNode);
         } else {
-            return new BioportalLazyHierarchy(Collections.emptyList(), null);
+            return new BioportalLazyHierarchy(Collections.<HierarchyElement>emptyList(), null);
         }
     }
 
