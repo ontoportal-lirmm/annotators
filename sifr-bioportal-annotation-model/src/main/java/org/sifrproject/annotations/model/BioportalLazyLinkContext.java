@@ -1,9 +1,10 @@
 package org.sifrproject.annotations.model;
 
 
-import org.json.simple.JSONObject;
-import org.sifrproject.annotations.api.model.LinkContext;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.LazyModelElement;
+import org.sifrproject.annotations.api.model.LinkContext;
 
 public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
 
@@ -19,32 +20,32 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     private String mappings;
     private String ui;
 
-    private JSONObject jsonObject;
+    private JsonObject jsonObject;
 
-    BioportalLazyLinkContext(JSONObject jsonObject) {
+    BioportalLazyLinkContext(JsonObject jsonObject) {
         this.jsonObject = jsonObject;
         self = "";
         ontology = "";
         children = "";
         parents = "";
-        descendants = (String) jsonObject.get("descendants");
-        ancestors = (String) jsonObject.get("ancestors");
-        instances = (String) jsonObject.get("instances");
-        tree = (String) jsonObject.get("tree");
-        notes = (String) jsonObject.get("descendants");
-        mappings = (String) jsonObject.get("mappings");
-        ui = (String) jsonObject.get("descendants");
+        descendants = jsonObject.get("descendants").asString();
+        ancestors = jsonObject.get("ancestors").asString();
+        instances = jsonObject.get("instances").asString();
+        tree = jsonObject.get("tree").asString();
+        notes = jsonObject.get("descendants").asString();
+        mappings = jsonObject.get("mappings").asString();
+        ui = jsonObject.get("descendants").asString();
     }
 
     @Override
-    public JSONObject getJSONObject() {
+    public JsonObject getJSONObject() {
         return jsonObject;
     }
 
     @Override
     public String getSelf() {
         if (self.isEmpty()) {
-            self = (String) jsonObject.get("self");
+            self = jsonObject.get("self").asString();
         }
         return self;
     }
@@ -52,7 +53,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getOntology() {
         if (ontology != null && ontology.isEmpty()) {
-            ontology = (String) jsonObject.get("ontology");
+            ontology = jsonObject.get("ontology").asString();
         }
         return ontology;
     }
@@ -60,7 +61,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getChildren() {
         if (children != null && children.isEmpty()) {
-            children = (String) jsonObject.get("children");
+            children = jsonObject.get("children").asString();
         }
         return children;
     }
@@ -68,7 +69,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getParents() {
         if (parents != null && parents.isEmpty()) {
-            parents = (String) jsonObject.get("parents");
+            parents = jsonObject.get("parents").asString();
         }
         return parents;
     }
@@ -76,7 +77,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getDescendants() {
         if (descendants != null && descendants.isEmpty()) {
-            descendants = (String) jsonObject.get("descendants");
+            descendants = jsonObject.get("descendants").asString();
         }
         return descendants;
     }
@@ -84,7 +85,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getAncestors() {
         if (ancestors != null && ancestors.isEmpty()) {
-            ancestors = (String) jsonObject.get("ancestors");
+            ancestors = jsonObject.get("ancestors").asString();
         }
         return ancestors;
     }
@@ -92,7 +93,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getInstances() {
         if (instances != null && instances.isEmpty()) {
-            instances = (String) jsonObject.get("instances");
+            instances = jsonObject.get("instances").asString();
         }
         return instances;
     }
@@ -100,7 +101,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getTree() {
         if (tree != null && tree.isEmpty()) {
-            tree = (String) jsonObject.get("tree");
+            tree = jsonObject.get("tree").asString();
         }
         return tree;
     }
@@ -108,7 +109,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getNotes() {
         if (notes != null && notes.isEmpty()) {
-            notes = (String) jsonObject.get("notes");
+            notes = jsonObject.get("notes").asString();
         }
         return notes;
     }
@@ -116,7 +117,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getMappings() {
         if (mappings.isEmpty()) {
-            mappings = (String) jsonObject.get("mappings");
+            mappings = jsonObject.get("mappings").asString();
         }
         return mappings;
     }
@@ -124,13 +125,13 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
     @Override
     public String getUi() {
         if (ui != null && ui.isEmpty()) {
-            ui = (String) jsonObject.get("ui");
+            ui = jsonObject.get("ui").asString();
         }
         return ui;
     }
 
     @Override
     public String toString() {
-        return jsonObject.toJSONString();
+        return jsonObject.toString(WriterConfig.PRETTY_PRINT);
     }
 }

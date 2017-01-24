@@ -1,16 +1,20 @@
 package org.sifrproject.annotations.model;
 
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.simple.JSONObject;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
-import org.sifrproject.annotations.api.model.Links;
 import org.sifrproject.annotations.api.model.LazyModelElement;
+import org.sifrproject.annotations.api.model.Links;
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroup;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelElement {
     private String id = "";
@@ -25,22 +29,22 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     private Set<UMLSGroup> semanticGroups;
 
-    private JSONObject jsonObject;
+    private JsonObject jsonObject;
 
     private PropertyRetriever cuiPropertyRetriever;
     private PropertyRetriever semanticGroupRetriever;
 
     private final UMLSGroupIndex umlsGroupIndex;
 
-    public JSONObject getJSONObject() {
+    public JsonValue getJSONObject() {
         return jsonObject;
     }
 
     @SuppressWarnings("all")
-    BioPortalLazyAnnotatedClass(JSONObject jsonObject, Links links, PropertyRetriever cuiPropertyRetriever, PropertyRetriever semanticGroupRetriever, UMLSGroupIndex umlsGroupIndex) {
+    BioPortalLazyAnnotatedClass(JsonObject jsonObject, Links links, PropertyRetriever cuiPropertyRetriever, PropertyRetriever semanticGroupRetriever, UMLSGroupIndex umlsGroupIndex) {
         this.jsonObject = jsonObject;
-        this.id = (String) jsonObject.get("@id");
-        this.type = (String) jsonObject.get("@type");
+        this.id = jsonObject.get("@id").asString();
+        this.type = jsonObject.get("@type").asString();
         this.links = links;
         cuis = new TreeSet<>();
         semanticGroups = new HashSet<>();
@@ -64,19 +68,19 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
                     value.append(umlsGroup.name());
                 }
 
-                jsonObject.put("semantic_groups", value.toString());
+                jsonObject.add("semantic_groups", value.toString());
             }
         }
     }
 
-    BioPortalLazyAnnotatedClass(JSONObject jsonObject, Links links) {
+    BioPortalLazyAnnotatedClass(JsonObject jsonObject, Links links) {
         this(jsonObject, links, null, null, null);
     }
 
     @Override
     public String getId() {
         if (id.isEmpty()) {
-            id = (String) jsonObject.get("@id");
+            id = jsonObject.get("@id").asString();
         }
         return id;
     }
@@ -84,7 +88,7 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     @Override
     public String getType() {
         if (type.isEmpty()) {
-            type = (String) jsonObject.get("@type");
+            type = (String) jsonObject.get("@type").asString();
         }
         return type;
     }
@@ -97,7 +101,7 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     @Override
     public String getContextVocab() {
         if (contextVocab.isEmpty()) {
-            contextVocab = (String) ((JSONObject) jsonObject.get("@context")).get("@vocab");
+            contextVocab = jsonObject.get("@context").asObject().get("@vocab").asString();
         }
         return contextVocab;
     }
@@ -121,6 +125,6 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     @Override
     public String toString() {
-        return StringEscapeUtils.unescapeJson(jsonObject.toJSONString());
+        return jsonObject.toString(WriterConfig.PRETTY_PRINT);
     }
 }

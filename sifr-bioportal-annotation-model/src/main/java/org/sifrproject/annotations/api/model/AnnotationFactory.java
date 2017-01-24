@@ -1,7 +1,7 @@
 package org.sifrproject.annotations.api.model;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
@@ -20,12 +20,12 @@ public interface AnnotationFactory {
      * @param jsonObject     The underlying JSON model object
      * @return An appropriate instance of {@code Annotation}
      */
-    Annotation createAnnotation(AnnotatedClass annotatedClass, AnnotationTokens annotations, Hierarchy hierarchy, Mappings mappings, JSONObject jsonObject);
+    Annotation createAnnotation(AnnotatedClass annotatedClass, AnnotationTokens annotations, Hierarchy hierarchy, Mappings mappings, JsonObject jsonObject);
 
 
-    AnnotatedClass createAnnotatedClass(JSONObject jsonObject, Links links, PropertyRetriever cuiRetriever, PropertyRetriever semanticGroupRetriever, UMLSGroupIndex umlsGroupIndex);
+    AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links, PropertyRetriever cuiRetriever, PropertyRetriever semanticGroupRetriever, UMLSGroupIndex umlsGroupIndex);
 
-    AnnotatedClass createAnnotatedClass(JSONObject jsonObject, Links links);
+    AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links);
 
     /**
      * Creates an instance of {@code {@link AnnotationToken}}
@@ -33,7 +33,7 @@ public interface AnnotationFactory {
      * @param jsonObject The underlying JSON model object
      * @return the {@code {@link AnnotationToken}} instance
      */
-    AnnotationToken createAnnotationToken(JSONObject jsonObject);
+    AnnotationToken createAnnotationToken(JsonObject jsonObject);
 
     /**
      * Creates an instance of {@code {@link AnnotationTokens}}
@@ -41,7 +41,7 @@ public interface AnnotationFactory {
      * @param jsonObject The underlying JSON model object
      * @return the {@code {@link AnnotationToken}} instance
      */
-    AnnotationTokens createAnnotationTokens(List<AnnotationToken> annotationTokens, JSONArray jsonObject);
+    AnnotationTokens createAnnotationTokens(List<AnnotationToken> annotationTokens, JsonArray jsonObject);
 
 
     /**
@@ -51,7 +51,7 @@ public interface AnnotationFactory {
      * @param jsonObject     The underlying JSON model object
      * @return The instance of {@code {@link HierarchyElement}}
      */
-    HierarchyElement createHierarchyElement(AnnotatedClass annotatedClass, JSONObject jsonObject);
+    HierarchyElement createHierarchyElement(AnnotatedClass annotatedClass, JsonObject jsonObject);
 
     /**
      * Creates an instance of {@code {@link HierarchyElement}}
@@ -63,9 +63,9 @@ public interface AnnotationFactory {
     HierarchyElement createHierarchyElement(AnnotatedClass annotatedClass, int distance);
 
 
-    Links createLinks(LinkMetadata linksMetadata, LinkMetadata linksContextMetadata, JSONObject jsonObject);
+    Links createLinks(LinkMetadata linksMetadata, LinkMetadata linksContextMetadata, JsonObject jsonObject);
 
-    LinkMetadata createLinkMetadata(JSONObject jsonObject);
+    LinkMetadata createLinkMetadata(JsonObject jsonObject);
 
 
     /**
@@ -75,7 +75,7 @@ public interface AnnotationFactory {
      * @param jsonObject     The underlying JSON model object
      * @return The {@code {@link Mapping}} instance
      */
-    Mapping createMapping(AnnotatedClass annotatedClass, JSONObject jsonObject);
+    Mapping createMapping(AnnotatedClass annotatedClass, JsonObject jsonObject);
 
     /**
      * Adds a mapping to the referenced annotated class
@@ -83,6 +83,6 @@ public interface AnnotationFactory {
      * @param jsonObject The underlying JSON model object
      * @return The {@code {@link Mapping}} instance
      */
-    Mappings createMappings(List<Mapping> mappings, JSONArray jsonObject);
+    Mappings createMappings(List<Mapping> mappings, JsonArray jsonObject);
 
 }

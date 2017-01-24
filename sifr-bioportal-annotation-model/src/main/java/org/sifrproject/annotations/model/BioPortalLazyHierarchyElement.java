@@ -1,6 +1,7 @@
 package org.sifrproject.annotations.model;
 
-import org.json.simple.JSONObject;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.HierarchyElement;
 import org.sifrproject.annotations.api.model.LazyModelElement;
@@ -12,16 +13,16 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
 
     private double score;
 
-    private JSONObject jsonObject;
+    private JsonObject jsonObject;
 
-    BioPortalLazyHierarchyElement(AnnotatedClass annotatedClass, JSONObject jsonObject) {
+    BioPortalLazyHierarchyElement(AnnotatedClass annotatedClass, JsonObject jsonObject) {
         this.annotatedClass = annotatedClass;
         this.jsonObject = jsonObject;
         distance = -1;
         score = -1;
     }
 
-    public JSONObject getJSONObject() {
+    public JsonObject getJSONObject() {
         return jsonObject;
     }
 
@@ -34,7 +35,7 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
     @Override
     public int getDistance() {
         if (distance < 0) {
-            distance = ((Long) jsonObject.get("distance")).intValue();
+            distance = jsonObject.get("distance").asInt();
         }
         return distance;
     }
@@ -42,7 +43,7 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
     @Override
     public double getScore() {
         if (score < 0) {
-            score = Double.valueOf((String) jsonObject.get("score"));
+            score = jsonObject.get("score").asDouble();
         }
         return score;
     }
@@ -51,11 +52,11 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
     @Override
     public void setScore(double score) {
         this.score = score;
-        jsonObject.put("score", Double.valueOf(score));
+        jsonObject.add("score", Double.valueOf(score));
     }
 
     @Override
     public String toString() {
-        return jsonObject.toJSONString();
+        return jsonObject.toString(WriterConfig.PRETTY_PRINT);
     }
 }

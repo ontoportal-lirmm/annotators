@@ -1,7 +1,9 @@
 package org.sifrproject.annotations.model;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.WriterConfig;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.simple.JSONArray;
 import org.sifrproject.annotations.api.model.Hierarchy;
 import org.sifrproject.annotations.api.model.HierarchyElement;
 import org.sifrproject.annotations.api.model.LazyModelElement;
@@ -14,14 +16,14 @@ public class BioportalLazyHierarchy implements Hierarchy, LazyModelElement {
 
     private List<HierarchyElement> hierarchyList;
 
-    private JSONArray jsonObject;
+    private JsonValue jsonObject;
 
-    public BioportalLazyHierarchy(List<HierarchyElement> hierarchyList, JSONArray jsonObject) {
+    public BioportalLazyHierarchy(List<HierarchyElement> hierarchyList, JsonArray jsonObject) {
         this.hierarchyList = hierarchyList;
         this.jsonObject = jsonObject;
     }
 
-    public Object getJSONObject() {
+    public JsonValue getJSONObject() {
         return jsonObject;
     }
 
@@ -32,6 +34,6 @@ public class BioportalLazyHierarchy implements Hierarchy, LazyModelElement {
 
     @Override
     public String toString() {
-        return StringEscapeUtils.unescapeJson(jsonObject.toJSONString());
+        return StringEscapeUtils.unescapeJson(jsonObject.toString(WriterConfig.PRETTY_PRINT));
     }
 }

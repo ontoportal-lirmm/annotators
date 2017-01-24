@@ -94,7 +94,7 @@ public class TestLazyModel {
                 "          }\n" +
                 "        },\n" +
                 "        \"distance\": 1,\n" +
-                "        \"score\": \"3.199642121456988\"\n" +
+                "        \"score\": 3.19964\n" +
                 "      },\n" +
                 "      {\n" +
                 "        \"annotatedClass\": {\n" +
@@ -131,7 +131,7 @@ public class TestLazyModel {
                 "          }\n" +
                 "        },\n" +
                 "        \"distance\": 2,\n" +
-                "        \"score\": \"2.945457969051174\"\n" +
+                "        \"score\": 2.94545\n" +
                 "      },\n" +
                 "      {\n" +
                 "        \"annotatedClass\": {\n" +
@@ -168,7 +168,7 @@ public class TestLazyModel {
                 "          }\n" +
                 "        },\n" +
                 "        \"distance\": 3,\n" +
-                "        \"score\": \"2.697799693760812\"\n" +
+                "        \"score\": 2.69779\n" +
                 "      },\n" +
                 "      {\n" +
                 "        \"annotatedClass\": {\n" +
@@ -205,7 +205,7 @@ public class TestLazyModel {
                 "          }\n" +
                 "        },\n" +
                 "        \"distance\": 4,\n" +
-                "        \"score\": \"3.346543383201999\"\n" +
+                "        \"score\": 3.34654\n" +
                 "      }\n" +
                 "    ],\n" +
                 "    \"annotations\": [\n" +
@@ -251,7 +251,7 @@ public class TestLazyModel {
                 "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
                 "          }\n" +
                 "        },\n" +
-                "        \"score\": \"4.954196310386876\"\n" +
+                "        \"score\": 4.95419\n" +
                 "      },\n" +
                 "      {\n" +
                 "        \"annotatedClass\": {\n" +
@@ -287,10 +287,10 @@ public class TestLazyModel {
                 "            \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
                 "          }\n" +
                 "        },\n" +
-                "        \"score\": \"4.954196310386876\"\n" +
+                "        \"score\": 4.954196\n" +
                 "      }\n" +
                 "    ],\n" +
-                "    \"score\": \"3.9068905956085187\"\n" +
+                "    \"score\": 3.90689\n" +
                 "  }," +
                 "{}," +
                 "{\"annotatedClass\":{\"@id\":\"\", \"@type\":\"\", \"@context\":{\"@vocab\":\"\"},\"links\":{}},\"hierarchy\": [{}]}]";

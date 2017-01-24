@@ -20,7 +20,134 @@ import static org.junit.Assert.assertTrue;
 public class TestScore {
 
 
-    private final String annotationsText = "[{\"annotatedClass\":{\"@id\":\"http://purl.obolibrary.org/obo/DOID_1909\",\"@type\":\"http://www.w3.org/2002/07/owl#Class\",\"links\":{\"self\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909\",\"ontology\":\"http://data.bioontology.org/ontologies/DOID\",\"children\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/children\",\"parents\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/parents\",\"descendants\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/descendants\",\"ancestors\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/ancestors\",\"tree\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/tree\",\"notes\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/notes\",\"mappings\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/mappings\",\"ui\":\"http://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909\",\"@context\":{\"self\":\"http://www.w3.org/2002/07/owl#Class\",\"ontology\":\"http://data.bioontology.org/metadata/Ontology\",\"children\":\"http://www.w3.org/2002/07/owl#Class\",\"parents\":\"http://www.w3.org/2002/07/owl#Class\",\"descendants\":\"http://www.w3.org/2002/07/owl#Class\",\"ancestors\":\"http://www.w3.org/2002/07/owl#Class\",\"tree\":\"http://www.w3.org/2002/07/owl#Class\",\"notes\":\"http://data.bioontology.org/metadata/Note\",\"mappings\":\"http://data.bioontology.org/metadata/Mapping\",\"ui\":\"http://www.w3.org/2002/07/owl#Class\"}},\"@context\":{\"@vocab\":\"http://data.bioontology.org/metadata/\"}},\"hierarchy\":[],\"annotations\":[{\"from\":1,\"to\":8,\"matchType\":\"PREF\",\"text\":\"MELANOMA\"},{\"from\":10,\"to\":17,\"matchType\":\"PREF\",\"text\":\"MELANOMA\"},{\"from\":24,\"to\":31,\"matchType\":\"PREF\",\"text\":\"MELANOMA\"},{\"from\":38,\"to\":45,\"matchType\":\"PREF\",\"text\":\"MELANOMA\"},{\"from\":52,\"to\":59,\"matchType\":\"PREF\",\"text\":\"MELANOMA\"}],\"mappings\":[]},{\"annotatedClass\":{\"@id\":\"http://purl.obolibrary.org/obo/DOID_8923\",\"@type\":\"http://www.w3.org/2002/07/owl#Class\",\"links\":{\"self\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923\",\"ontology\":\"http://data.bioontology.org/ontologies/DOID\",\"children\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/children\",\"parents\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/parents\",\"descendants\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/descendants\",\"ancestors\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/ancestors\",\"tree\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/tree\",\"notes\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/notes\",\"mappings\":\"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/mappings\",\"ui\":\"http://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923\",\"@context\":{\"self\":\"http://www.w3.org/2002/07/owl#Class\",\"ontology\":\"http://data.bioontology.org/metadata/Ontology\",\"children\":\"http://www.w3.org/2002/07/owl#Class\",\"parents\":\"http://www.w3.org/2002/07/owl#Class\",\"descendants\":\"http://www.w3.org/2002/07/owl#Class\",\"ancestors\":\"http://www.w3.org/2002/07/owl#Class\",\"tree\":\"http://www.w3.org/2002/07/owl#Class\",\"notes\":\"http://data.bioontology.org/metadata/Note\",\"mappings\":\"http://data.bioontology.org/metadata/Mapping\",\"ui\":\"http://www.w3.org/2002/07/owl#Class\"}},\"@context\":{\"@vocab\":\"http://data.bioontology.org/metadata/\"}},\"hierarchy\":[],\"annotations\":[{\"from\":19,\"to\":31,\"matchType\":\"PREF\",\"text\":\"SKIN MELANOMA\"},{\"from\":33,\"to\":45,\"matchType\":\"PREF\",\"text\":\"SKIN MELANOMA\"},{\"from\":47,\"to\":59,\"matchType\":\"PREF\",\"text\":\"SKIN MELANOMA\"}],\"mappings\":[]}]";
+    private final String annotationsText = "[\n" +
+            "  {\n" +
+            "    \"annotatedClass\": {\n" +
+            "      \"@id\": \"http://purl.obolibrary.org/obo/DOID_1909\",\n" +
+            "      \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "      \"links\": {\n" +
+            "        \"self\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909\",\n" +
+            "        \"ontology\": \"http://data.bioontology.org/ontologies/DOID\",\n" +
+            "        \"children\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/children\",\n" +
+            "        \"parents\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/parents\",\n" +
+            "        \"descendants\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/descendants\",\n" +
+            "        \"ancestors\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/ancestors\",\n" +
+            "        \"tree\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/tree\",\n" +
+            "        \"notes\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/notes\",\n" +
+            "        \"mappings\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909/mappings\",\n" +
+            "        \"ui\": \"http://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909\",\n" +
+            "        \"instances\": \"http://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_1909\",\n" +
+            "        \"@context\": {\n" +
+            "          \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+            "          \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+            "          \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+            "          \"ui\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"instances\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+            "        }\n" +
+            "      }\n" +
+            "    },\n" +
+            "    \"@context\": {\n" +
+            "      \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+            "    },\n" +
+            "    \"hierarchy\": [],\n" +
+            "    \"annotations\": [\n" +
+            "      {\n" +
+            "        \"from\": 1,\n" +
+            "        \"to\": 8,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"MELANOMA\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"from\": 10,\n" +
+            "        \"to\": 17,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"MELANOMA\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"from\": 24,\n" +
+            "        \"to\": 31,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"MELANOMA\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"from\": 38,\n" +
+            "        \"to\": 45,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"MELANOMA\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"from\": 52,\n" +
+            "        \"to\": 59,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"MELANOMA\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"mappings\": []\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"annotatedClass\": {\n" +
+            "      \"@id\": \"http://purl.obolibrary.org/obo/DOID_8923\",\n" +
+            "      \"@type\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "      \"links\": {\n" +
+            "        \"self\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923\",\n" +
+            "        \"ontology\": \"http://data.bioontology.org/ontologies/DOID\",\n" +
+            "        \"instances\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "        \"children\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/children\",\n" +
+            "        \"parents\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/parents\",\n" +
+            "        \"descendants\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/descendants\",\n" +
+            "        \"ancestors\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/ancestors\",\n" +
+            "        \"tree\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/tree\",\n" +
+            "        \"notes\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/notes\",\n" +
+            "        \"mappings\": \"http://data.bioontology.org/ontologies/DOID/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923/mappings\",\n" +
+            "        \"ui\": \"http://bioportal.bioontology.org/ontologies/DOID?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_8923\",\n" +
+            "        \"@context\": {\n" +
+            "          \"instances:\": \"http://stuff\",\n" +
+            "          \"self\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"ontology\": \"http://data.bioontology.org/metadata/Ontology\",\n" +
+            "          \"children\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"parents\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"descendants\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"ancestors\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"tree\": \"http://www.w3.org/2002/07/owl#Class\",\n" +
+            "          \"notes\": \"http://data.bioontology.org/metadata/Note\",\n" +
+            "          \"mappings\": \"http://data.bioontology.org/metadata/Mapping\",\n" +
+            "          \"ui\": \"http://www.w3.org/2002/07/owl#Class\"\n" +
+            "        }\n" +
+            "      }\n" +
+            "    },\n" +
+            "    \"@context\": {\n" +
+            "      \"@vocab\": \"http://data.bioontology.org/metadata/\"\n" +
+            "    },\n" +
+            "    \"hierarchy\": [],\n" +
+            "    \"annotations\": [\n" +
+            "      {\n" +
+            "        \"from\": 19,\n" +
+            "        \"to\": 31,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"SKIN MELANOMA\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"from\": 33,\n" +
+            "        \"to\": 45,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"SKIN MELANOMA\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"from\": 47,\n" +
+            "        \"to\": 59,\n" +
+            "        \"matchType\": \"PREF\",\n" +
+            "        \"text\": \"SKIN MELANOMA\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"mappings\": []\n" +
+            "  }\n" +
+            "]";
     private final String id1 = "http://purl.obolibrary.org/obo/DOID_1909";
     private final String id2 = "http://purl.obolibrary.org/obo/DOID_8923";
     private final AnnotationFactory factory = new BioPortalLazyAnnotationFactory();

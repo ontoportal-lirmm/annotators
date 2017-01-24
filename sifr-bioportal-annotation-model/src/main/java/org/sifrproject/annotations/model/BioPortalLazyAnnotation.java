@@ -1,10 +1,10 @@
 package org.sifrproject.annotations.model;
 
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.simple.JSONObject;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.*;
-import org.sifrproject.annotations.api.model.LazyModelElement;
 
 class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
 
@@ -12,9 +12,9 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
 
     private final Hierarchy hierarchy;
 
-    private JSONObject jsonObject;
+    private JsonObject jsonObject;
 
-    public JSONObject getJSONObject() {
+    public JsonObject getJSONObject() {
         return jsonObject;
     }
 
@@ -26,7 +26,7 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
     private double score;
 
 
-    BioPortalLazyAnnotation(AnnotatedClass annotatedClass, Hierarchy hierarchy, AnnotationTokens annotations, Mappings mappings, JSONObject jsonObject) {
+    BioPortalLazyAnnotation(AnnotatedClass annotatedClass, Hierarchy hierarchy, AnnotationTokens annotations, Mappings mappings, JsonObject jsonObject) {
         this.jsonObject = jsonObject;
         this.annotatedClass = annotatedClass;
         this.annotationTokens = annotations;
@@ -46,10 +46,11 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
     @Override
     public double getScore() {
         this.score = -1;
-        if (jsonObject.containsKey("score")) {
-            score = (Double) jsonObject.get("score");
+        JsonValue score = jsonObject.get("score");
+        if (score !=null) {
+            this.score =  score.asDouble();
         }
-        return score;
+        return this.score;
     }
 
 
@@ -57,7 +58,7 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
     @Override
     public void setScore(double score) {
         this.score = score;
-        jsonObject.put("score", Double.valueOf(score));
+        jsonObject.add("score", Double.valueOf(score));
     }
 
     public Hierarchy getHierarchy() {
@@ -71,6 +72,6 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
 
     @Override
     public String toString() {
-        return StringEscapeUtils.unescapeJson(jsonObject.toJSONString());
+        return jsonObject.toString(WriterConfig.PRETTY_PRINT);
     }
 }

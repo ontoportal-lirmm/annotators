@@ -1,10 +1,12 @@
 package org.sifrproject.annotations.model;
 
 
-import org.json.simple.JSONObject;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.WriterConfig;
+import org.sifrproject.annotations.api.model.LazyModelElement;
 import org.sifrproject.annotations.api.model.LinkMetadata;
 import org.sifrproject.annotations.api.model.Links;
-import org.sifrproject.annotations.api.model.LazyModelElement;
 
 public class BioPortalLazyLinks implements Links, LazyModelElement {
 
@@ -22,13 +24,13 @@ public class BioPortalLazyLinks implements Links, LazyModelElement {
     private String mappings;
     private String ui;
 
-    private JSONObject jsonObject;
+    private JsonObject jsonObject;
 
-    public JSONObject getJSONObject() {
+    public JsonValue getJSONObject() {
         return jsonObject;
     }
 
-    BioPortalLazyLinks(LinkMetadata linksMetadata, LinkMetadata linksContextMetadata, JSONObject jsonObject) {
+    BioPortalLazyLinks(LinkMetadata linksMetadata, LinkMetadata linksContextMetadata, JsonObject jsonObject) {
         this.linksContextMetadata = linksContextMetadata;
         self = linksMetadata.getSelf();
         ontology = linksContextMetadata.getOntology();
@@ -106,6 +108,6 @@ public class BioPortalLazyLinks implements Links, LazyModelElement {
 
     @Override
     public String toString() {
-        return jsonObject.toJSONString();
+        return jsonObject.toString(WriterConfig.PRETTY_PRINT);
     }
 }
