@@ -9,6 +9,10 @@ import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
 import java.util.List;
 
+/**
+ * Default lazy dereference implementation of BioPortalLazyAnnotationFactory. Use this factory to instantiate all
+ * lazy implementations of the annotation model.
+ */
 public class BioPortalLazyAnnotationFactory implements AnnotationFactory {
 
 
@@ -65,5 +69,10 @@ public class BioPortalLazyAnnotationFactory implements AnnotationFactory {
     @Override
     public Mappings createMappings(List<Mapping> mappings, JsonArray jsonObject) {
         return new BioportalLazyMappings(mappings, jsonObject);
+    }
+
+    @Override
+    public Annotation createErrorAnnotation(String message) {
+        return new BioportalErrorAnnotation(message);
     }
 }

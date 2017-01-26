@@ -10,6 +10,10 @@ import org.sifrproject.annotations.api.model.context.ExperiencerContext;
 import org.sifrproject.annotations.api.model.context.NegationContext;
 import org.sifrproject.annotations.api.model.context.TemporalityContext;
 
+/**
+ * Default lazy dereference implementation of AnnotationToken. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelElement {
     private int from;
     private int to;
@@ -22,12 +26,13 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     private JsonObject jsonObject;
 
+    @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }
 
 
-    public BioPortalLazyAnnotationToken(JsonObject jsonObject) {
+    BioPortalLazyAnnotationToken(JsonObject jsonObject) {
         to = -1;
         from = -1;
         text = "";

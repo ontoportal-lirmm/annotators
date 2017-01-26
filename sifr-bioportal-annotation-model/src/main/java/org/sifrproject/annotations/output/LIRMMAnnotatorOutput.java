@@ -3,6 +3,9 @@ package org.sifrproject.annotations.output;
 
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 
+/**
+ * Default implementation of AnnotatorOutput
+ */
 public class LIRMMAnnotatorOutput implements AnnotatorOutput {
     private String content;
     private String mimeType;

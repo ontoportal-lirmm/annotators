@@ -24,6 +24,10 @@ public class BioportalAnnotatorQueryBuilder {
     private List<String> semanticTypes = new ArrayList<>();
     private String format = "json";
 
+    private boolean negation;
+    private boolean experiencer;
+    private boolean temporality;
+
     private BioportalAnnotatorQueryBuilder() {
     }
 
@@ -97,6 +101,20 @@ public class BioportalAnnotatorQueryBuilder {
         return this;
     }
 
+    public BioportalAnnotatorQueryBuilder negation(boolean negation){
+        this.negation=negation;
+        return this;
+    }
+
+    public BioportalAnnotatorQueryBuilder temporality(boolean temporality){
+        this.temporality=temporality;
+        return this;
+    }
+
+    public BioportalAnnotatorQueryBuilder experiencer(boolean experiencer){
+        this.experiencer=experiencer;
+        return this;
+    }
 
     public BioPortalAnnotatorQuery build() {
         DefaultBioPortalAnnotatorQuery defaultBioportalAnnotatorQuery = new DefaultBioPortalAnnotatorQuery(text);
@@ -115,6 +133,9 @@ public class BioportalAnnotatorQueryBuilder {
         defaultBioportalAnnotatorQuery.setWholeWordOnly(wholeWordOnly);
         defaultBioportalAnnotatorQuery.setScore(score);
         defaultBioportalAnnotatorQuery.setFormat(format);
+        defaultBioportalAnnotatorQuery.setNegation(negation);
+        defaultBioportalAnnotatorQuery.setTemporality(temporality);
+        defaultBioportalAnnotatorQuery.setExperiencer(experiencer);
 
         ontologies.clear();
         semanticTypes.clear();

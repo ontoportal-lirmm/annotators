@@ -8,6 +8,10 @@ import org.sifrproject.annotations.api.model.LazyModelElement;
 import org.sifrproject.annotations.api.model.LinkMetadata;
 import org.sifrproject.annotations.api.model.Links;
 
+/**
+ * Default lazy dereference implementation of Links. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioPortalLazyLinks implements Links, LazyModelElement {
 
     private LinkMetadata linksContextMetadata;
@@ -26,6 +30,7 @@ public class BioPortalLazyLinks implements Links, LazyModelElement {
 
     private JsonObject jsonObject;
 
+    @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }

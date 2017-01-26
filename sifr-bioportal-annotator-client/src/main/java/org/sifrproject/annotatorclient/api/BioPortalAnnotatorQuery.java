@@ -23,10 +23,15 @@ public interface BioPortalAnnotatorQuery {
     /**
      * Add a UMLS sémantic type (e.g. T021) to restrict the output annotations to this type.
      *
-     * @param semanticType
+     * @param semanticType The semantic type to add
      */
     void addSemanticType(String semanticType);
 
+    /**
+     * Generate the comma-separated list of semanticTypes from the group restructions and previous semantic type
+     * restrictions
+     * @return The comma-separated list of semanticTypes
+     */
     String generateSemanticTypesString();
 
     void setLongestOnly(boolean longestOnly);
@@ -68,4 +73,16 @@ public interface BioPortalAnnotatorQuery {
     String getFormat();
 
     void setFormat(String format);
+
+    boolean isNegation();
+
+    void setNegation(boolean negation);
+
+    boolean isExperiencer();
+
+    void setExperiencer(boolean experiencer);
+
+    boolean isTemporality();
+
+    void setTemporality(boolean temporality);
 }

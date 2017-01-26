@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * UMLS Group Index utility class allows to dereference UMLS semantic groups
+ */
 public final class UMLSGroupIndex {
     private final static Logger logger = LoggerFactory.getLogger(UMLSGroupIndex.class);
 

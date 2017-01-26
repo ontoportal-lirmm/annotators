@@ -6,6 +6,9 @@ import org.sifrproject.scoring.api.Scorer;
 
 import java.util.List;
 
+/**
+ * Adds score annotations
+ */
 public class ScoringPostAnnotator implements PostAnnotator {
     private final Scorer scorer;
 

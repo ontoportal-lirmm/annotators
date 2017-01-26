@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Data class representing and UMLS group
+ */
 public class UMLSGroup {
     private String name;
     private List<String> types = new ArrayList<>();
@@ -14,6 +17,10 @@ public class UMLSGroup {
         this.name = name;
     }
 
+    /**
+     * Get the name of the semantic group
+     * @return the name of the semantic group
+     */
     public String name() {
         return name;
     }
@@ -26,6 +33,10 @@ public class UMLSGroup {
         typeString += type;
     }
 
+    /**
+     * Get the list of types associated to the semantic group
+     * @return the list of types associated to the semantic group
+     */
     public List<String> types() {
         return Collections.unmodifiableList(types);
     }

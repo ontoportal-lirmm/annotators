@@ -6,6 +6,10 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.*;
 
+/**
+ * Default lazy dereference implementation of Annotation. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
 
     private AnnotatedClass annotatedClass;
@@ -14,6 +18,7 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
 
     private JsonObject jsonObject;
 
+    @Override
     public JsonObject getJSONObject() {
         return jsonObject;
     }

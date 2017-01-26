@@ -11,9 +11,10 @@ import org.sifrproject.annotations.umls.UMLSGroup;
 import java.util.*;
 
 /**
- * Produces a BRAT output from a list of bioportal {@code {@link Annotation}} objects
+ * Produces a BRAT output from a list of bioportal {@code {@link Annotation}} objects compatible with the
+ * CLEF eHealth 2014-2016 Quaero Evaluation Corpus
  */
-public class BratOutputGenerator implements OutputGenerator {
+public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
     @Override
     public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
         Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();

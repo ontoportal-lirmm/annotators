@@ -6,6 +6,10 @@ import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.LazyModelElement;
 import org.sifrproject.annotations.api.model.LinkContext;
 
+/**
+ * Default lazy dereference implementation of LinkContext. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
 
     private String self;

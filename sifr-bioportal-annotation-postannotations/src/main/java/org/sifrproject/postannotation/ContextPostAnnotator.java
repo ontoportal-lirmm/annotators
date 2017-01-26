@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Adds negation, experiencer and temporality annotations with Context
+ */
 public class ContextPostAnnotator implements PostAnnotator {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextPostAnnotator.class);

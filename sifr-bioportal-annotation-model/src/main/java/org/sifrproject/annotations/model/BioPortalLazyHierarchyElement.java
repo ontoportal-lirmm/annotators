@@ -6,6 +6,10 @@ import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.HierarchyElement;
 import org.sifrproject.annotations.api.model.LazyModelElement;
 
+/**
+ * Default lazy dereference implementation of HierarchyElement. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyModelElement {
     private AnnotatedClass annotatedClass;
 
@@ -22,6 +26,7 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
         score = -1;
     }
 
+    @Override
     public JsonObject getJSONObject() {
         return jsonObject;
     }

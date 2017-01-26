@@ -22,6 +22,9 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     private int classHierarchyMaxLevel; // class_hierarchy_max_level=[1..10|999] (999 for All)
     private List<String> semanticTypes; //semantic_types=Type1, Type2,...
     private String format;
+    private boolean negation;
+    private boolean experiencer;
+    private boolean temporality;
 
 
     DefaultBioPortalAnnotatorQuery(String text) {
@@ -160,4 +163,33 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
         this.format = format;
     }
 
+    @Override
+    public boolean isNegation() {
+        return negation;
+    }
+
+    @Override
+    public void setNegation(boolean negation) {
+        this.negation = negation;
+    }
+
+    @Override
+    public boolean isExperiencer() {
+        return experiencer;
+    }
+
+    @Override
+    public void setExperiencer(boolean experiencer) {
+        this.experiencer = experiencer;
+    }
+
+    @Override
+    public boolean isTemporality() {
+        return temporality;
+    }
+
+    @Override
+    public void setTemporality(boolean temporality) {
+        this.temporality = temporality;
+    }
 }

@@ -20,7 +20,7 @@ public final class SemanticGroupParameterHandler implements ParameterHandler {
     public void processParameter(UrlParameters parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
         String unknownGroups = "";
         String[] initialSemanticTypes = parameters.get("semantic_types");
-        String[] groups = parameters.get("semantic_groups");
+        String groups = parameters.getFirst("semantic_groups","");
         parameters.remove("semantic_groups");
 
         UMLSGroupIndex groupIndex = UMLSSemanticGroupsLoader.load();
@@ -35,7 +35,7 @@ public final class SemanticGroupParameterHandler implements ParameterHandler {
         }
 
 
-        for (String groupName : groups) {
+        for (String groupName : groups.split(",")) {
             UMLSGroup group = groupIndex.getGroupByName(groupName);
             if (group != null) {
                 finalTypeParameters.addAll(group.types());

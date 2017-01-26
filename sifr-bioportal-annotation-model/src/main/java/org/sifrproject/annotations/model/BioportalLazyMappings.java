@@ -10,17 +10,22 @@ import java.util.Iterator;
 import java.util.List;
 
 
+/**
+ * Default lazy dereference implementation of Mappings. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioportalLazyMappings implements Mappings, LazyModelElement {
 
     private List<Mapping> mappings;
 
     private JsonArray jsonObject;
 
-    public BioportalLazyMappings(List<Mapping> mappings, JsonArray jsonObject) {
+     public BioportalLazyMappings(List<Mapping> mappings, JsonArray jsonObject) {
         this.mappings = mappings;
         this.jsonObject = jsonObject;
     }
 
+    @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }

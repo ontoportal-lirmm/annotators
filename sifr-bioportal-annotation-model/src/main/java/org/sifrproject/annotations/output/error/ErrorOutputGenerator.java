@@ -7,6 +7,9 @@ import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 
 
+/**
+ * Generates an error output in JSON in the same way as Bioportal Annotator
+ */
 public class ErrorOutputGenerator implements OutputGenerator {
 
     @Override

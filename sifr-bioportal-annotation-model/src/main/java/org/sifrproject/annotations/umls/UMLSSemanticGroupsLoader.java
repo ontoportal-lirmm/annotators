@@ -9,16 +9,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * Utility class that allows to load (from the classpath, by default /semgroups.ssv, which should be bundled
+ * with the maven dependency) the UMLS semantic group index
+ */
 public final class UMLSSemanticGroupsLoader {
     private final static Logger logger = LoggerFactory.getLogger(UMLSSemanticGroupsLoader.class);
 
     private UMLSSemanticGroupsLoader() {
     }
 
+    /**
+     * Load the index from the default classpath location and return an instance of {@code UMLSGroupIndex}
+     * @return and instance of {@code UMLSGroupIndex} where the semantic groups are loaded
+     */
     public static UMLSGroupIndex load() {
         return load(UMLSSemanticGroupsLoader.class.getResourceAsStream("/semgroups.ssv"));
     }
 
+    /**
+     * Load the index from from the supplied InputStream and return an instance of {@code UMLSGroupIndex}
+     * @return and instance of {@code UMLSGroupIndex} where the semantic groups are loaded
+     */
+    @SuppressWarnings("all")
     public static UMLSGroupIndex load(InputStream stream) {
         UMLSGroupIndex groupIndex = new UMLSGroupIndex();
         if (stream == null) {

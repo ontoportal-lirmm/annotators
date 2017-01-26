@@ -7,6 +7,9 @@ import org.sifrproject.postannotation.api.PostAnnotator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Default implementation of the PostAnnotationRegistry
+ */
 public class LIRMMPostAnnotationRegistry implements PostAnnotationRegistry {
 
     private final List<PostAnnotator> postAnnotators = new ArrayList<>();

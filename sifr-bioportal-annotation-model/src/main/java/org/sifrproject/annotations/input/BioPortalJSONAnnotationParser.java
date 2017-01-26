@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The default BioportalAnnotationParser, creates a lazy annotation model with underlying JSON objects and access-time
+ * retrieval.
+ */
 public class BioPortalJSONAnnotationParser implements AnnotationParser {
 
     private final static Logger logger = LoggerFactory.getLogger(BioPortalJSONAnnotationParser.class);
@@ -33,6 +37,13 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
     private final UMLSGroupIndex groupIndex;
 
 
+    /**
+     * Create an annotation parser
+     * @param annotationFactory The factory for annotation elements
+     * @param cuiRetrieval The property retriever for CUIs (may be null, see second constructor)
+     * @param umlsTypeRetrieval The property retriever of UMLS semantic groups (may be null, see second constructor)
+     * @param groupIndex The UMLS group index that maps UMLS groups to their semantic types and vice versa
+     */
     public BioPortalJSONAnnotationParser(AnnotationFactory annotationFactory, PropertyRetriever cuiRetrieval,
                                          PropertyRetriever umlsTypeRetrieval, UMLSGroupIndex groupIndex) {
         this.annotationFactory = annotationFactory;
@@ -41,6 +52,10 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
         this.umlsTypeRetrieval = umlsTypeRetrieval;
     }
 
+    /**
+     * Create an annotation parser
+     * @param annotationFactory The factory for annotation elements
+     */
     public BioPortalJSONAnnotationParser(AnnotationFactory annotationFactory) {
         this(annotationFactory, null, null, null);
     }

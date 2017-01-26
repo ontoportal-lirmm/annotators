@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * Default lazy dereference implementation of AnnotatedClass. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelElement {
     private String id = "";
 
@@ -36,6 +40,7 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     private final UMLSGroupIndex umlsGroupIndex;
 
+    @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }

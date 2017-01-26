@@ -6,7 +6,11 @@ import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 
-public class JSONOutputGenerator implements OutputGenerator {
+/**
+ * Lazy JSON generator, relies on the toString method of the Lazy model implementation, to generate JSON directly
+ * through the underlying Json object
+ */
+public class JSONLazyOutputGenerator implements OutputGenerator {
 
     @Override
     public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {

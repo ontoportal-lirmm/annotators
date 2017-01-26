@@ -6,10 +6,19 @@ import org.sifrproject.annotations.umls.UMLSGroup;
 
 import java.util.*;
 
+/**
+ * Error/dummy implementation of Annotation, meant to encapsulate errors from the source Bioportal so that it may be
+ * displayed appropriately through the generic output generator
+ */
 public class BioportalErrorAnnotation implements Annotation {
 
     private final String message;
 
+
+    /**
+     * Build an error annotation
+     * @param message The message
+     */
     public BioportalErrorAnnotation(String message) {
         this.message = message;
     }

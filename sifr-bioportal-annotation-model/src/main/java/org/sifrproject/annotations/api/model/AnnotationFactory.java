@@ -85,4 +85,11 @@ public interface AnnotationFactory {
      */
     Mappings createMappings(List<Mapping> mappings, JsonArray jsonObject);
 
+    /**
+     * Create an error annotation to encapsulate a Bioportal error
+     * @param message The error message
+     * @return The Annotation instance
+     */
+    Annotation createErrorAnnotation(String message);
+
 }

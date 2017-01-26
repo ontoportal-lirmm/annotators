@@ -8,6 +8,10 @@ import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.LazyModelElement;
 import org.sifrproject.annotations.api.model.Mapping;
 
+/**
+ * Default lazy dereference implementation of Mapping. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioPortalLazyMapping implements Mapping, LazyModelElement {
     private AnnotatedClass annotatedClass;
     private double score;

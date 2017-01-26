@@ -11,7 +11,10 @@ import org.sifrproject.annotations.api.model.LazyModelElement;
 import java.util.Iterator;
 import java.util.List;
 
-
+/**
+ * Default lazy dereference implementation of AnnotationTokens. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioPortalLazyAnnotationTokens implements AnnotationTokens, LazyModelElement {
 
     private List<AnnotationToken> annotationTokens;
@@ -23,6 +26,7 @@ public class BioPortalLazyAnnotationTokens implements AnnotationTokens, LazyMode
         this.jsonObject = jsonObject;
     }
 
+    @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }

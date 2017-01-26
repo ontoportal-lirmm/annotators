@@ -12,6 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 
 
+/**
+ * Default lazy dereference implementation of Hierarchy. Cannot be constructed directly, please use the corresponding
+ * factory, {@link BioPortalLazyAnnotationFactory}
+ */
 public class BioportalLazyHierarchy implements Hierarchy, LazyModelElement {
 
     private List<HierarchyElement> hierarchyList;
@@ -23,6 +27,7 @@ public class BioportalLazyHierarchy implements Hierarchy, LazyModelElement {
         this.jsonObject = jsonObject;
     }
 
+    @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }

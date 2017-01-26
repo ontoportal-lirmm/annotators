@@ -18,8 +18,11 @@ import java.util.Date;
 import java.util.Random;
 
 
+/**
+ * RDF output generator using Jena, supports all the formats supported by Jena.
+ */
 public class JenaOutputGenerator implements OutputGenerator {
-    private final String outputMimeType;
+    private final String jenaPutputFormat;
 
 
     // Prefix
@@ -47,7 +50,7 @@ public class JenaOutputGenerator implements OutputGenerator {
      *                         for a list of all supported formats
      */
     public JenaOutputGenerator(String jenaOutputFormat) {
-        this.outputMimeType = jenaOutputFormat;
+        this.jenaPutputFormat = jenaOutputFormat;
     }
 
     @Override
@@ -75,8 +78,8 @@ public class JenaOutputGenerator implements OutputGenerator {
         }
 
         StringWriter rdfOutput = new StringWriter();
-        jenaModel.write(rdfOutput, outputMimeType.toUpperCase());
-        return new LIRMMAnnotatorOutput(rdfOutput.toString(), String.format("text/%s", outputMimeType));
+        jenaModel.write(rdfOutput, jenaPutputFormat.toUpperCase());
+        return new LIRMMAnnotatorOutput(rdfOutput.toString(), String.format("text/%s", jenaPutputFormat));
     }
 
     private void initializeModel(Model model, String annotatorURI) {

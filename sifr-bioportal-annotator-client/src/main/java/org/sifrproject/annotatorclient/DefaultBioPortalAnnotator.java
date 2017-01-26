@@ -84,6 +84,16 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
         if (query.getClassHierarchyMaxLevel() > 0) {
             parameters.add(new PairImpl<>("class_hierarchy_max_level", Integer.toString(query.getClassHierarchyMaxLevel())));
         }
+        if(query.isNegation()){
+            parameters.add(new PairImpl<String, String>("negation",Boolean.toString(query.isNegation())));
+        }
+        if(query.isTemporality()){
+            parameters.add(new PairImpl<String, String>("temporality",Boolean.toString(query.isTemporality())));
+        }
+
+        if(query.isExperiencer()){
+            parameters.add(new PairImpl<String, String>("experiencer",Boolean.toString(query.isExperiencer())));
+        }
         parameters.add(new PairImpl<>("format", query.getFormat()));
 
 
