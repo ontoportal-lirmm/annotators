@@ -64,12 +64,16 @@ public class ContextPostAnnotator implements PostAnnotator {
             for (Annotation annotation : annotations) {
                 AnnotationTokens annotationTokens = annotation.getAnnotations();
                 for (AnnotationToken annotationToken : annotationTokens) {
-                    int indexFromConcept = annotationToken.getFrom() - 1;
-                    //int indexToConcept = annotationToken.getTo();
+                    int indexFromConcept = annotationToken.getFrom();
+                    int indexToConcept = annotationToken.getTo();
                     String concept = annotationToken.getText();
                     // Seek the sentence corresponding to the concept
                     i = 0;
-                    while (i < sentences.size() && sentences.get(i).getIndexFrom() > indexFromConcept) i++;
+
+                    while (i < sentences.size() && sentences.get(i).getIndexTo() < indexFromConcept) {
+                        i++;
+                    }
+
                     try {
                         List<String> results = cxt.applyContext(concept, sentences.get(i).getSentence());
                         if (includeNegation) {
@@ -84,6 +88,7 @@ public class ContextPostAnnotator implements PostAnnotator {
                     } catch (Exception ex) {
                         logger.error(ex.getLocalizedMessage());
                     }
+
 
                 }
             }

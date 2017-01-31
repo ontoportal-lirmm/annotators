@@ -7,3 +7,4 @@ target
 .settings
 local-dep
 .DS_Store
+annotatorProxy.properties
