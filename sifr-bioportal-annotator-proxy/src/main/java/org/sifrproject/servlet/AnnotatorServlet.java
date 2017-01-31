@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
  * - It queries the suitable bioportal annotation server (w.r.t implementing subclasses)
  * - adds several new features
  *
- * @authors Julien Diener, Emmanuel Castanier
+ * @authors Julien Diener, Emmanuel Castanier, Andon Tchechmedjiev
  */
 public class AnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
@@ -104,7 +104,12 @@ public class AnnotatorServlet extends HttpServlet {
 
             parameterRegistry.registerParameterHandler("semantic_groups", new SemanticGroupParameterHandler(), true);
             parameterRegistry.registerParameterHandler("score", new ScoreParameterHandler(), true);
-            parameterRegistry.registerParameterHandler("negation|experiencer|temporality", new ContextParameterHandler(), true);
+
+            String contextLanguage = "English";
+            if(proxyProperties.containsKey("context.language")){
+                contextLanguage = proxyProperties.getProperty("context.language");
+            }
+            parameterRegistry.registerParameterHandler("negation|experiencer|temporality", new ContextParameterHandler(contextLanguage), true);
 
 
             /*
