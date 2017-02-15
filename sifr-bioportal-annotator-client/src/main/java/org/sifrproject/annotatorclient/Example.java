@@ -13,20 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public class Example {
     private static final Logger logger = LoggerFactory.getLogger(Example.class);
     public static void main(String[] args) throws IOException, NCBOAnnotatorErrorException, ParseException {
-
-
-
-
-        DefaultBioPortalAnnotator annotator = new DefaultBioPortalAnnotator("services.stageportal.lirmm.fr/annotator?","APIKEYSTAGE");
+        
+        DefaultBioPortalAnnotator annotator = new DefaultBioPortalAnnotator("http://services.stageportal.lirmm.fr/annotator","22522d5c-c4fe-45fc-afc6-d43e2e613169");
         BioPortalAnnotatorQuery query = BioportalAnnotatorQueryBuilder.DEFAULT
-                .semantic_groups(Collections.singletonList("DISO"))
-                .ontologies("ONTOLOGY1,ONTOLOGY2,...").build();
+                .semantic_groups("DISO")
+                .ontologies("MSHFRE","CIM-10").text("Il n'a jamais eu de cancer.").build();
 
         String output = annotator.runQuery(query);
 

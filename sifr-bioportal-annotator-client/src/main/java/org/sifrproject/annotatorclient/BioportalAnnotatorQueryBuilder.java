@@ -91,13 +91,13 @@ public class BioportalAnnotatorQueryBuilder {
     }
 
 
-    public BioportalAnnotatorQueryBuilder semantic_types(List<String> semanticTypes) {
-        this.semanticTypes.addAll(semanticTypes);
+    public BioportalAnnotatorQueryBuilder semantic_types(String... types) {
+        this.semanticTypes.addAll(Arrays.asList(types));
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder semantic_groups(List<String> semanticTypes) {
-        this.semanticGroups.addAll(semanticTypes);
+    public BioportalAnnotatorQueryBuilder semantic_groups(String... groups) {
+        this.semanticGroups.addAll(Arrays.asList(groups));
         return this;
     }
 
