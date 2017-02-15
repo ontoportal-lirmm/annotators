@@ -85,4 +85,7 @@ public interface BioPortalAnnotatorQuery {
     boolean isTemporality();
 
     void setTemporality(boolean temporality);
+
+    void addSemanticGroup(String semanticGroup);
+    String generateSemanticGroupsString();
 }

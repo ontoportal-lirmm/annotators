@@ -25,12 +25,14 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     private boolean negation;
     private boolean experiencer;
     private boolean temporality;
+    private final List<String> semanticGroups; //semantic_types=Type1, Type2,...
 
 
     DefaultBioPortalAnnotatorQuery(String text) {
         this.text = text;
         ontologies = new ArrayList<>();
         semanticTypes = new ArrayList<>();
+        semanticGroups = new ArrayList<>();
     }
 
     @Override
@@ -191,5 +193,14 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     @Override
     public void setTemporality(boolean temporality) {
         this.temporality = temporality;
+    }
+
+    @Override
+    public void addSemanticGroup(String semanticGroup) {
+        semanticGroups.add(semanticGroup);
+    }
+    @Override
+    public String generateSemanticGroupsString() {
+        return generateEnumString(semanticGroups);
     }
 }

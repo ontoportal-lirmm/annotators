@@ -3,7 +3,9 @@ package org.sifrproject.util;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Provides static methods to process url used by servlet servlets
@@ -12,19 +14,30 @@ import java.util.LinkedHashMap;
  */
 public class UrlParameters extends LinkedHashMap<String,String[]>{
     private static final long serialVersionUID = 4351112172500760834L;
+    private final String baseURI;
+    private final Map<String,String[]> headers;
 
     
     public UrlParameters(HttpServletRequest request){
+        baseURI = request.getRequestURI();
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
             String[] paramValues = request.getParameterValues(paramName);
             this.put(paramName, paramValues);
         }
+        headers = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        String headerName = "";
+        while (headerNames.hasMoreElements()){
+            headerName = headerNames.nextElement();
+            String[] values = request.getParameterValues(headerName);
+            headers.put(headerName,values);
+        }
     }
     
-    public String makeUrl(String baseUrl) {
-        String url = baseUrl;
+    String makeGETUrl() {
+        String url = baseURI;
         boolean first = true;
         for(String paramName : this.keySet()) {
             if (!first) {
@@ -39,7 +52,7 @@ public class UrlParameters extends LinkedHashMap<String,String[]>{
                 try {
                     url += paramName + "=" + URLEncoder.encode(paramValues[0], "UTF-8");
                     for(int i=1; i<paramValues.length; i++)
-                        url += "," + URLEncoder.encode(paramValues[i], "UTF-8");
+                       url += "," + URLEncoder.encode(paramValues[i], "UTF-8");
                 } catch (Exception e){
                     url += paramName + "=" + paramValues[0];
                     for(int i=1; i<paramValues.length; i++)
@@ -52,6 +65,14 @@ public class UrlParameters extends LinkedHashMap<String,String[]>{
             }
         }
         return url;
+    }
+
+    Map<String,String[]> getHeaders(){
+        return headers;
+    }
+
+    String makePOSTUrl() {
+        return baseURI;
     }
 
     /**

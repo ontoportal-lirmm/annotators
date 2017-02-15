@@ -15,6 +15,7 @@ import org.sifrproject.annotations.model.BioPortalLazyAnnotationTokens;
 import org.sifrproject.annotations.model.BioportalLazyHierarchy;
 import org.sifrproject.annotations.model.BioportalLazyMappings;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
+import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,7 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
      * @param annotationFactory The factory for annotation elements
      */
     public BioPortalJSONAnnotationParser(AnnotationFactory annotationFactory) {
-        this(annotationFactory, null, null, null);
+        this(annotationFactory, null, null, UMLSSemanticGroupsLoader.load());
     }
 
     @Override

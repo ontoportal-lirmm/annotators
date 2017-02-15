@@ -22,6 +22,7 @@ public class BioportalAnnotatorQueryBuilder {
     private boolean expandClassHierarchy = false;
     private int classHierarchyMaxLevel = 0;
     private List<String> semanticTypes = new ArrayList<>();
+    private List<String> semanticGroups = new ArrayList<>();
     private String format = "json";
 
     private boolean negation;
@@ -95,6 +96,11 @@ public class BioportalAnnotatorQueryBuilder {
         return this;
     }
 
+    public BioportalAnnotatorQueryBuilder semantic_groups(List<String> semanticTypes) {
+        this.semanticGroups.addAll(semanticTypes);
+        return this;
+    }
+
 
     public BioportalAnnotatorQueryBuilder format(String format) {
         this.format = format;
@@ -125,6 +131,10 @@ public class BioportalAnnotatorQueryBuilder {
         }
         for(String semanticType: semanticTypes){
             defaultBioportalAnnotatorQuery.addSemanticType(semanticType);
+        }
+
+        for(String semanticGroup: semanticGroups){
+            defaultBioportalAnnotatorQuery.addSemanticGroup(semanticGroup);
         }
         defaultBioportalAnnotatorQuery.setExcludeSynonyms(excludeSynonyms);
         defaultBioportalAnnotatorQuery.setExpandClassHierarchy(expandClassHierarchy);
