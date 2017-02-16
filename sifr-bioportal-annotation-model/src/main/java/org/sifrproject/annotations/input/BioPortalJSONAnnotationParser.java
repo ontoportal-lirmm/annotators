@@ -97,7 +97,6 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
             }
         } catch (RuntimeException e) {
             logger.error("Invalid JSON syntax:{}", e.getLocalizedMessage());
-            e.printStackTrace();
             throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
         }
         return annotations;

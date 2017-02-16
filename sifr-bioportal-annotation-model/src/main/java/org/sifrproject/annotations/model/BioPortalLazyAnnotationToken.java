@@ -102,9 +102,9 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public NegationContext getNegationContext() {
-        JsonObject negContext = jsonObject.get("negationContext").asObject();
+        String negContext = jsonObject.get("negationContext").asString();
         if (negationContext == null && negContext!=null) {
-            negationContext = NegationContext.valueOf(negContext.asString());
+            negationContext = NegationContext.valueOf(negContext);
         }
         return negationContext;
     }
@@ -118,9 +118,9 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public ExperiencerContext getExperiencerContext() {
-        JsonObject expeContext = jsonObject.get("experiencerContext").asObject();
+        String expeContext = jsonObject.get("experiencerContext").asString();
         if (experiencerContext == null && expeContext !=null) {
-            experiencerContext = ExperiencerContext.valueOf(expeContext.asString());
+            experiencerContext = ExperiencerContext.valueOf(expeContext);
         }
         return experiencerContext;
     }
@@ -135,9 +135,9 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public TemporalityContext getTemporalityContext() {
-        JsonObject tempoContext = jsonObject.get("temporalityContext").asObject();
+        String tempoContext = jsonObject.get("temporalityContext").asString();
         if (temporalityContext == null && tempoContext!=null) {
-            temporalityContext = TemporalityContext.valueOf(tempoContext.asString());
+            temporalityContext = TemporalityContext.valueOf(tempoContext);
         }
         return temporalityContext;
     }
