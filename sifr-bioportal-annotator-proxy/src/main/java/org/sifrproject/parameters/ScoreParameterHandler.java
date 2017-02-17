@@ -9,14 +9,14 @@ import org.sifrproject.postannotation.ScoringPostAnnotator;
 import org.sifrproject.scoring.CValueScore;
 import org.sifrproject.scoring.OldScore;
 import org.sifrproject.scoring.api.Scorer;
-import org.sifrproject.util.UrlParameters;
+import org.sifrproject.util.RequestGenerator;
 
 public class ScoreParameterHandler implements ParameterHandler {
     @Override
-    public void processParameter(UrlParameters parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
+    public void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
 
         if (parameters.containsKey("score")) {
-            String score = parameters.get("score")[0];
+            String score = parameters.get("score");
             parameters.remove("score");
 
             Scorer scorer;

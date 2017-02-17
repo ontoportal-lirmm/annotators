@@ -5,7 +5,7 @@ import org.sifrproject.parameters.api.ParameterHandler;
 import org.sifrproject.parameters.api.ParameterRegistry;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
-import org.sifrproject.util.UrlParameters;
+import org.sifrproject.util.RequestGenerator;
 
 import java.util.*;
 
@@ -32,16 +32,16 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
 
 
     @Override
-    public final void processParameters(UrlParameters urlParameters) throws InvalidParameterException {
-        if (!urlParameters.containsKey("text")) {
+    public final void processParameters(RequestGenerator requestGenerator) throws InvalidParameterException {
+        if (!requestGenerator.containsKey("text")) {
             throw new InvalidParameterException("Mandatory parameter 'text' missing");
         }
 
         for (Parameters parameter : this.parameterss) {
-            if (!parameter.isOptional() && !urlParameters.containsKey(parameter.getName())) {
+            if (!parameter.isOptional() && !requestGenerator.containsKey(parameter.getName())) {
                 throw new InvalidParameterException(String.format("Mandatory parameter missing -- %s", parameter.getName()));
-            } else if (parameter.atLeastOneContained(urlParameters)) {
-                parameterHandlers.get(parameter).processParameter(urlParameters, postAnnotationRegistry);
+            } else if (parameter.atLeastOneContained(requestGenerator)) {
+                parameterHandlers.get(parameter).processParameter(requestGenerator, postAnnotationRegistry);
             }
         }
     }
@@ -68,7 +68,7 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
             return names;
         }
 
-        boolean atLeastOneContained(UrlParameters parameters) {
+        boolean atLeastOneContained(RequestGenerator parameters) {
             boolean atLeastOne = false;
             for (String name : names) {
                 atLeastOne = parameters.containsKey(name);

@@ -1,6 +1,11 @@
 package org.sifrproject.util;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -9,70 +14,94 @@ import java.util.Map;
 
 /**
  * Provides static methods to process url used by servlet servlets
- * 
+ *
  * @author Julien Diener
  */
-public class UrlParameters extends LinkedHashMap<String,String[]>{
+public class RequestGenerator extends LinkedHashMap<String, String> {
     private static final long serialVersionUID = 4351112172500760834L;
     private final String baseURI;
-    private final Map<String,String[]> headers;
+    private final Map<String, String> headers;
+    private final HttpServletRequest httpServletRequest;
 
-    
-    public UrlParameters(HttpServletRequest request){
-        baseURI = request.getRequestURI();
+
+    public RequestGenerator(HttpServletRequest request, String annotatorURI) throws UnsupportedEncodingException {
+        this.httpServletRequest = request;
+        baseURI = annotatorURI;
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
-            String[] paramValues = request.getParameterValues(paramName);
-            this.put(paramName, paramValues);
+            String paramValue;
+            String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
+            paramValue = new String(request.getParameter(paramName).getBytes(encoding), "utf-8");
+            this.put(paramName, paramValue);
         }
         headers = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
-        String headerName = "";
-        while (headerNames.hasMoreElements()){
+        String headerName;
+        while (headerNames.hasMoreElements()) {
             headerName = headerNames.nextElement();
-            String[] values = request.getParameterValues(headerName);
-            headers.put(headerName,values);
+            String value = request.getHeader(headerName).toLowerCase();
+            headers.put(headerName, value);
         }
     }
-    
-    String makeGETUrl() {
-        String url = baseURI;
+
+    HttpURLConnection createRequest() throws IOException {
+        String uri = baseURI;
+        String parameterString = createParameterString();
+        if (!uri.endsWith("/")) {
+            uri += "/";
+        }
+        if (httpServletRequest.getMethod().equals("GET")) {
+            uri += "?" + parameterString;
+        } else if (uri.endsWith("?")) {
+            uri = uri.substring(0, uri.length() - 1) + "/";
+        }
+
+        URL url = new URL(uri);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(httpServletRequest.getMethod());
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        connection.setRequestProperty("Accept", "text/xml, application/json, text/html, text/plain");
+        transferHeaders(connection);
+
+        if (httpServletRequest.getMethod().equals("POST")) {
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8");
+            connection.setRequestProperty("Content-Length", "" +
+                    Integer.toString(parameterString.getBytes().length));
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            wr.writeBytes(parameterString);
+            wr.flush();
+            wr.close();
+        } else {
+            connection.setRequestProperty("Content-Length",
+                    Integer.toString(0));
+        }
+        return connection;
+    }
+
+    private String createParameterString() throws UnsupportedEncodingException {
+        String parameterString = "";
         boolean first = true;
-        for(String paramName : this.keySet()) {
+        for (String paramName : this.keySet()) {
             if (!first) {
-                url += "&";
+                parameterString += "&";
             }
             first = false;
-
-            String[] paramValues = this.get(paramName);
-
-            if (paramName.equals("text")) {
-                // Encode the text to be annotated (avoid error with % and others)
-                try {
-                    url += paramName + "=" + URLEncoder.encode(paramValues[0], "UTF-8");
-                    for(int i=1; i<paramValues.length; i++)
-                       url += "," + URLEncoder.encode(paramValues[i], "UTF-8");
-                } catch (Exception e){
-                    url += paramName + "=" + paramValues[0];
-                    for(int i=1; i<paramValues.length; i++)
-                        url += "," + paramValues[i];
-                }
-            } else {
-                url += paramName + "=" + paramValues[0];
-                for(int i=1; i<paramValues.length; i++)
-                    url += "," + paramValues[i];
-            }
+            parameterString += paramName + "=" + URLEncoder.encode(get(paramName), "UTF-8");
         }
-        return url;
+        return parameterString;
     }
 
-    Map<String,String[]> getHeaders(){
-        return headers;
-    }
-
-    String makePOSTUrl() {
-        return baseURI;
+    private void transferHeaders(HttpURLConnection connection) {
+        if (headers.containsKey("authorization")) {
+            connection.setRequestProperty("Authorization", headers.get("authorization"));
+        }
+        if (headers.containsKey("user-agent")) {
+            connection.setRequestProperty("User-agent", headers.get("user-agent"));
+        }
     }
 
     /**
@@ -83,10 +112,10 @@ public class UrlParameters extends LinkedHashMap<String,String[]>{
      * @return The parameter or the default value
      */
     public String getFirst(String name, String defaultValue) {
-        String[] values = get(name);
-        String value = defaultValue;
-        if (values != null && values.length > 0)
-            value = values[0];
+        String value = get(name);
+        if (value == null) {
+            value = defaultValue;
+        }
         return value;
     }
 }

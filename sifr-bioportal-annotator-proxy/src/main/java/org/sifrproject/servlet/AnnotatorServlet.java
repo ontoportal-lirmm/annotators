@@ -24,8 +24,8 @@ import org.sifrproject.parameters.api.ParameterRegistry;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.LIRMMPostAnnotationRegistry;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
-import org.sifrproject.util.RestfulQuery;
-import org.sifrproject.util.UrlParameters;
+import org.sifrproject.util.RestfulRequest;
+import org.sifrproject.util.RequestGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
@@ -131,8 +131,6 @@ public class AnnotatorServlet extends HttpServlet {
     // POST
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // parse parameters
-        UrlParameters parameters = new UrlParameters(request);
 
         /*
          * Initializing the annotator URI, from the properties if present
@@ -153,6 +151,8 @@ public class AnnotatorServlet extends HttpServlet {
             }
         }
 
+        RequestGenerator parameters = new RequestGenerator(request, annotatorURI);
+
         //Retrieving format parameter, json is the default output format if the format parameter is absent
         String format = parameters.getFirst("format", "json").toLowerCase();
 
@@ -171,8 +171,8 @@ public class AnnotatorServlet extends HttpServlet {
             /*
             * Querying the bioportal annotator and building the model
             */
-            String queryOutput = RestfulQuery.queryAnnotator(parameters, annotatorURI);
-            System.out.println(queryOutput);
+            String queryOutput = RestfulRequest.queryAnnotator(parameters);
+            logger.debug(queryOutput);
             annotations = parser.parseAnnotations(queryOutput);
 
         } catch (InvalidParameterException | ParseException | IOException | NCBOAnnotatorErrorException e) {

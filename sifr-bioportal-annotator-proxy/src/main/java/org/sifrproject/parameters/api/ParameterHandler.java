@@ -3,7 +3,7 @@ package org.sifrproject.parameters.api;
 
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
-import org.sifrproject.util.UrlParameters;
+import org.sifrproject.util.RequestGenerator;
 
 /**
  * Handler for a parameter passed to the Proxy Servlet. A parameter handler should be registered in a {@link ParameterRegistry}.
@@ -21,5 +21,5 @@ public interface ParameterHandler {
      * @throws InvalidParameterException This exception must be thrown, if the format of the parameter or its options
      *                                   are incorrect or ill-formed.
      */
-    void processParameter(UrlParameters parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException;
+    void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException;
 }
