@@ -77,13 +77,13 @@ public class ContextPostAnnotator implements PostAnnotator {
                     try {
                         List<String> results = cxt.applyContext(concept, sentences.get(i).getSentence());
                         if (includeNegation) {
-                            annotationToken.setNegationContext(NegationContext.valueOf(results.get(2)));
+                            annotationToken.setNegationContext(NegationContext.valueOf(results.get(2).toUpperCase()));
                         }
                         if (includeTemporality) {
-                            annotationToken.setTemporalityContext(TemporalityContext.valueOf(results.get(3)));
+                            annotationToken.setTemporalityContext(TemporalityContext.valueOf(results.get(3).toUpperCase()));
                         }
                         if (includeExperiencer) {
-                            annotationToken.setExperiencerContext(ExperiencerContext.valueOf(results.get(4)));
+                            annotationToken.setExperiencerContext(ExperiencerContext.valueOf(results.get(4).toUpperCase()));
                         }
                     } catch (Exception ex) {
                         logger.error(ex.getLocalizedMessage());
