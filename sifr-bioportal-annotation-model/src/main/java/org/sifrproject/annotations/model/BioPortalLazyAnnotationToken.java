@@ -113,7 +113,7 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     @Override
     public void setNegationContext(NegationContext negationContext) {
         this.negationContext = negationContext;
-        jsonObject.add("negationContext", negationContext.toString());
+        jsonObject.add("negationContext", negationContext.name());
     }
 
     @Override
@@ -130,7 +130,7 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     @Override
     public void setExperiencerContext(ExperiencerContext experiencerContext) {
         this.experiencerContext = experiencerContext;
-        jsonObject.add("experiencerContext", experiencerContext.toString());
+        jsonObject.add("experiencerContext", experiencerContext.name());
     }
 
     @Override
@@ -146,6 +146,6 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     @Override
     public void setTemporalityContext(TemporalityContext temporalityContext) {
         this.temporalityContext = temporalityContext;
-        jsonObject.add("temporalityContext", temporalityContext.toString());
+        jsonObject.add("temporalityContext", temporalityContext.name());
     }
 }
