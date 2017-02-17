@@ -1,9 +1,6 @@
 package org.sifrproject.scoring.cvalue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class CValueEvaluator {
@@ -48,7 +45,7 @@ public class CValueEvaluator {
         double ln2 = Math.log(2.);
 
         // sort terms by word number
-        terms.sort(CValueTerm.wordNumberComparator);
+        Collections.sort(terms,CValueTerm.wordNumberComparator);
 
         for(int i=0;i<terms.size();i++) {
             CValueTerm term = terms.get(i);
@@ -79,8 +76,9 @@ public class CValueEvaluator {
     }
 
     public List<CValueTerm> getTerms(boolean sort){
-        if(sort)
-            terms.sort(CValueTerm.importanceComparator);
+        if(sort) {
+            Collections.sort(terms, CValueTerm.importanceComparator);
+        }
         return terms;
     }
 }
