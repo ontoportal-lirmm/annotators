@@ -3,20 +3,14 @@ package org.sifrproject.annotatorclient;
 
 import org.sifrproject.annotatorclient.api.BioPortalAnnotator;
 import org.sifrproject.annotatorclient.api.BioPortalAnnotatorQuery;
-import org.sifrproject.annotatorclient.util.Pair;
-import org.sifrproject.annotatorclient.util.PairImpl;
-import org.sifrproject.annotatorclient.util.RestfulQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.sifrproject.annotatorclient.util.RequestGenerator;
+import org.sifrproject.annotatorclient.util.RestfulRequest;
 
 import java.io.IOException;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
-
-    private static Logger logger = LoggerFactory.getLogger(BioPortalAnnotator.class);
 
     private final String baseURI;
     private final String apiKey;
@@ -46,73 +40,77 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
      **/
     @Override
     public String runQuery(BioPortalAnnotatorQuery query) throws IOException {
-        List<Pair<String, String>> parameters = new ArrayList<>();
-
-        parameters.add(new PairImpl<>("text", query.getText()));
-
-        parameters.add(new PairImpl<>("apikey", apiKey));
-
-        String ontologyString = query.generateOntologyString();
-        if (!ontologyString.isEmpty()) {
-            parameters.add(new PairImpl<>("ontologies", ontologyString));
-        }
-
-        String semanticTypesString = query.generateSemanticTypesString();
-        if (!semanticTypesString.isEmpty()) {
-            parameters.add(new PairImpl<>("semantic_types", semanticTypesString));
-        }
-
-        if (query.isExcludeNumbers()) {
-            parameters.add(new PairImpl<>("exclude_numbers", "true"));
-        }
-        if (query.isWholeWordOnly()) {
-            parameters.add(new PairImpl<>("whole_word_only", "true"));
-        }
-        if (query.isExcludeSynonyms()) {
-            parameters.add(new PairImpl<>("exclude_synonyms", "true"));
-        }
-        if (query.isExpandMappings()) {
-            parameters.add(new PairImpl<>("expand_mappings", "true"));
-        }
-        if (query.isExpandClassHierarchy()) {
-            parameters.add(new PairImpl<>("expand_class_hierarchy", "true"));
-        }
-
-        if (!query.getScore().isEmpty()) {
-            parameters.add(new PairImpl<>("score", query.getScore()));
-        }
-        if (query.getClassHierarchyMaxLevel() > 0) {
-            parameters.add(new PairImpl<>("class_hierarchy_max_level", Integer.toString(query.getClassHierarchyMaxLevel())));
-        }
-        if(query.isNegation()){
-            parameters.add(new PairImpl<String, String>("negation",Boolean.toString(query.isNegation())));
-        }
-        if(query.isTemporality()){
-            parameters.add(new PairImpl<String, String>("temporality",Boolean.toString(query.isTemporality())));
-        }
-
-        if(query.isExperiencer()){
-            parameters.add(new PairImpl<String, String>("experiencer",Boolean.toString(query.isExperiencer())));
-        }
-
-        if(query.isLemmatize()){
-            parameters.add(new PairImpl<String, String>("lemmatize",Boolean.toString(query.isLemmatize())));
-        }
-        parameters.add(new PairImpl<>("format", query.getFormat()));
 
 
         /*
          * Request parameters
          */
 
-        List<Pair<String, String>> requestProperties = new ArrayList<>();
-        requestProperties.add(new PairImpl<>("Authorization", String.format("apikey token=%s", apiKey)));
-        requestProperties.add(new PairImpl<>("Accept", "application/rdf+xml"));
+        Map<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", String.format("apikey token=%s", apiKey));
+        requestProperties.put("Accept", "application/rdf+xml");
 
-        URLConnection connection = RestfulQuery.restfulQuery(baseURI, parameters, requestProperties, "ISO-8859-15");
+        RequestGenerator requestGenerator = new RequestGenerator(baseURI,"POST", requestProperties);
+
+        requestGenerator.put("text", query.getText());
+
+        requestGenerator.put("apikey", apiKey);
+
+        String ontologyString = query.generateOntologyString();
+        if (!ontologyString.isEmpty()) {
+            requestGenerator.put("ontologies", ontologyString);
+        }
+
+        String semanticTypesString = query.generateSemanticTypesString();
+        if (!semanticTypesString.isEmpty()) {
+            requestGenerator.put("semantic_types", semanticTypesString);
+        }
+
+        String semanticGroupsString = query.generateSemanticGroupsString();
+        if (!semanticTypesString.isEmpty()) {
+            requestGenerator.put("semantic_groups", semanticGroupsString);
+        }
+
+        if (query.isExcludeNumbers()) {
+            requestGenerator.put("exclude_numbers", "true");
+        }
+        if (query.isWholeWordOnly()) {
+            requestGenerator.put("whole_word_only", "true");
+        }
+        if (query.isExcludeSynonyms()) {
+            requestGenerator.put("exclude_synonyms", "true");
+        }
+        if (query.isExpandMappings()) {
+            requestGenerator.put("expand_mappings", "true");
+        }
+        if (query.isExpandClassHierarchy()) {
+            requestGenerator.put("expand_class_hierarchy", "true");
+        }
+
+        if (!query.getScore().isEmpty()) {
+            requestGenerator.put("score", query.getScore());
+        }
+        if (query.getClassHierarchyMaxLevel() > 0) {
+            requestGenerator.put("class_hierarchy_max_level", Integer.toString(query.getClassHierarchyMaxLevel()));
+        }
+        if(query.isNegation()){
+            requestGenerator.put("negation", Boolean.toString(query.isNegation()));
+        }
+        if(query.isTemporality()){
+            requestGenerator.put("temporality", Boolean.toString(query.isTemporality()));
+        }
+
+        if(query.isExperiencer()){
+            requestGenerator.put("experiencer", Boolean.toString(query.isExperiencer()));
+        }
+
+        if(query.isLemmatize()){
+            requestGenerator.put("lemmatize", Boolean.toString(query.isLemmatize()));
+        }
+        requestGenerator.put("format", query.getFormat());
 
         //logger.error(connection.toString());
 
-        return RestfulQuery.getRequestOutput(connection);
+        return RestfulRequest.queryAnnotator(requestGenerator);
     }
 }

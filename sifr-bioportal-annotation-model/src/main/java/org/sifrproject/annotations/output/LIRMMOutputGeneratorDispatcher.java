@@ -15,8 +15,12 @@ public class LIRMMOutputGeneratorDispatcher extends AbstractOutputGeneratorDispa
         registerGenerator("json", new JSONLazyOutputGenerator());
         registerGenerator("rdf", new JenaOutputGenerator("rdf/xml"));
         registerGenerator("turtle", new JenaOutputGenerator("ttl"));
-        registerGenerator("quaero", new eHealthQuaeroBratOutputGenerator(false));
-        registerGenerator("quaerod", new eHealthQuaeroBratOutputGenerator(true));
+        registerGenerator("quaero", new eHealthQuaeroBratOutputGenerator(false, false, false));
+        registerGenerator("quaerodg", new eHealthQuaeroBratOutputGenerator(true, false, false));
+        registerGenerator("quaerosg", new eHealthQuaeroBratOutputGenerator(true, true, false));
+        registerGenerator("quaerodgsg", new eHealthQuaeroBratOutputGenerator(true, true, false));
+        registerGenerator("quaeroimg", new eHealthQuaeroBratOutputGenerator(false, false, true));
+        registerGenerator("quaerodgimg", new eHealthQuaeroBratOutputGenerator(true, false, true));
         registerGenerator("brat", new BratOutputGenerator());
         registerGenerator("error", new ErrorOutputGenerator());
     }

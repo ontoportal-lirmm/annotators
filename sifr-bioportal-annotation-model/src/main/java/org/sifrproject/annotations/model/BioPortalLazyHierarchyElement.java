@@ -1,6 +1,7 @@
 package org.sifrproject.annotations.model;
 
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.HierarchyElement;
@@ -48,7 +49,12 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
     @Override
     public double getScore() {
         if (score < 0) {
-            score = jsonObject.get("score").asDouble();
+            JsonValue jsonValue = jsonObject.get("score");
+            if(jsonValue == null ){
+                score = 0d;
+            } else {
+                score = jsonValue.asDouble();
+            }
         }
         return score;
     }
