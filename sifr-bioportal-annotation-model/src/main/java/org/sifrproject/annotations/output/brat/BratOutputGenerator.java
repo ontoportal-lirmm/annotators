@@ -3,10 +3,12 @@ package org.sifrproject.annotations.output.brat;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
+import org.sifrproject.annotations.api.model.context.ExperiencerContext;
+import org.sifrproject.annotations.api.model.context.NegationContext;
+import org.sifrproject.annotations.api.model.context.TemporalityContext;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
-import org.sifrproject.annotations.umls.UMLSGroup;
 
 import java.util.*;
 
@@ -14,15 +16,7 @@ import java.util.*;
  * Produces a BRAT output from a list of bioportal {@code {@link Annotation}} objects compatible with the
  * CLEF eHealth 2014-2016 Quaero Evaluation Corpus
  */
-public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
-
-    private boolean disambiguate;
-
-
-    public eHealthQuaeroBratOutputGenerator(boolean disambiguate) {
-        this.disambiguate = disambiguate;
-    }
-
+public class BratOutputGenerator implements OutputGenerator {
     @Override
     public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
         Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
@@ -37,6 +31,7 @@ public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
             }
         }
         int termCounter = 0;
+        int attributeCounter = 1;
         StringBuilder stringBuilder = new StringBuilder();
         for (AnnotationToken token : perTokenAnnotations.keySet()) {
             termCounter++;
@@ -47,17 +42,6 @@ public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
                     return Double.compare(o1.getScore(),o2.getScore());
                 }
             });
-
-            if(disambiguate){
-                List<Annotation> disambiguatedList = new ArrayList<>();
-                List<Annotation> fullList = perTokenAnnotations.get(token);
-                if(!fullList.isEmpty()) {
-                    disambiguatedList.add(fullList.get(0));
-                    perTokenAnnotations.put(token,disambiguatedList);
-                    fullList.clear();
-                }
-            }
-
             Annotation annotation = null;
             if (!annotationsForToken.isEmpty()) {
                 Annotation current = annotationsForToken.get(0);
@@ -72,12 +56,29 @@ public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
 
             if (annotation != null) {
                 AnnotatedClass annotatedClass = annotation.getAnnotatedClass();
-                stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, buildGroupList(annotatedClass.getSemanticGroups()),
+                stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, annotatedClass.getId(),
                         token.getFrom(),
                         token.getTo(),
                         token.getText()
                                 .toLowerCase())).append("\n");
-                stringBuilder.append(String.format("#%d\tAnnotatorNotes T%d\t%s", termCounter, termCounter, buildCUILIst(annotatedClass.getCuis()))).append("\n");
+                NegationContext negationContext = token.getNegationContext();
+                ExperiencerContext experiencerContext = token.getExperiencerContext();
+                TemporalityContext temporalityContext = token.getTemporalityContext();
+                if(negationContext!=null){
+                    stringBuilder.append(String.format("A%d\t%s T%d",attributeCounter,negationContext.name(),termCounter));
+                    attributeCounter++;
+                }
+
+                if(experiencerContext!=null){
+                    stringBuilder.append(String.format("A%d\t%s T%d",attributeCounter,experiencerContext.name(),termCounter));
+                    attributeCounter++;
+                }
+
+                if(temporalityContext!=null){
+                    stringBuilder.append(String.format("A%d\t%s T%d",attributeCounter,temporalityContext.name(),termCounter));
+                    attributeCounter++;
+                }
+//                stringBuilder.append(String.format("#%d\tAnnotatorNotes T%d\t%s", termCounter, termCounter, buildCUILIst(annotatedClass.getCuis()))).append("\n");
             }
 
         }
@@ -85,29 +86,4 @@ public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
         return new LIRMMAnnotatorOutput(stringBuilder.toString(), "application/brat");
     }
 
-    private String buildCUILIst(Set<String> set) {
-        StringBuilder stringBuilder = new StringBuilder("");
-        boolean first = true;
-        for (String elem : set) {
-            if (!first) {
-                stringBuilder.append(",");
-            }
-            stringBuilder.append(elem);
-            first = false;
-        }
-        return stringBuilder.toString();
-    }
-
-    private String buildGroupList(Set<UMLSGroup> set) {
-        StringBuilder stringBuilder = new StringBuilder();
-        boolean first = true;
-        for (UMLSGroup elem : set) {
-            if (!first) {
-                stringBuilder.append(",");
-            }
-            stringBuilder.append(elem.name());
-            first = false;
-        }
-        return stringBuilder.toString();
-    }
 }

@@ -44,12 +44,15 @@ public final class SemanticGroupParameterHandler implements ParameterHandler {
                 unknownGroups += " " + groupName;
             }
         }
-        String[] typesParameter = new String[finalTypeParameters.size()];
-        for (int i = 0; i < typesParameter.length; i++) {
-            typesParameter[i] = finalTypeParameters.get(i);
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < finalTypeParameters.size(); i++) {
+            stringBuilder.append(finalTypeParameters.get(i));
+            if(i<finalTypeParameters.size()-1){
+                stringBuilder.append(",");
+            }
         }
 
-        //parameters.put("semantic_types", typesParameter);
+        parameters.put("semantic_types", stringBuilder.toString());
         if (!unknownGroups.isEmpty()) {
             throw new InvalidParameterException(String.format("Invalid group parameter values -- %s", unknownGroups));
         }

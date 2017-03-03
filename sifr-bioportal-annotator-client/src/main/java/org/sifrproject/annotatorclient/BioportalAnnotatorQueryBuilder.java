@@ -29,6 +29,8 @@ public class BioportalAnnotatorQueryBuilder {
     private boolean experiencer;
     private boolean temporality;
 
+    private boolean lemmatize;
+
     private BioportalAnnotatorQueryBuilder() {
     }
 
@@ -107,6 +109,11 @@ public class BioportalAnnotatorQueryBuilder {
         return this;
     }
 
+    public BioportalAnnotatorQueryBuilder lemmatize(boolean lemmataze) {
+        this.lemmatize = lemmataze;
+        return this;
+    }
+
     public BioportalAnnotatorQueryBuilder negation(boolean negation){
         this.negation=negation;
         return this;
@@ -146,6 +153,7 @@ public class BioportalAnnotatorQueryBuilder {
         defaultBioportalAnnotatorQuery.setNegation(negation);
         defaultBioportalAnnotatorQuery.setTemporality(temporality);
         defaultBioportalAnnotatorQuery.setExperiencer(experiencer);
+        defaultBioportalAnnotatorQuery.setLemmatize(lemmatize);
 
         ontologies.clear();
         semanticTypes.clear();

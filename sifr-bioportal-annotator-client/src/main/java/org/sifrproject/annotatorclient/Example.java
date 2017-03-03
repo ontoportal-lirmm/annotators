@@ -20,11 +20,11 @@ public class Example {
     private static final Logger logger = LoggerFactory.getLogger(Example.class);
     public static void main(String[] args) throws IOException, NCBOAnnotatorErrorException, ParseException {
 
-        BioPortalAnnotator annotator = new DefaultBioPortalAnnotator("http://services.stageportal.lirmm.fr/annotator","APIKEY");
+        BioPortalAnnotator annotator = new DefaultBioPortalAnnotator("http://services.stageportal.lirmm.fr/annotator","22522d5c-c4fe-45fc-afc6-d43e2e613169");
 
         BioPortalAnnotatorQuery query = BioportalAnnotatorQueryBuilder.DEFAULT
                 .semantic_groups("DISO")
-                .ontologies("MSHFRE","CIM-10").text("Il n'a jamais eu de cancer.").build();
+                .ontologies("MSHFRE","CIM-10").text("Il n'a jamais eu de cancer.").format("brat").build();
 
         String output = annotator.runQuery(query);
 

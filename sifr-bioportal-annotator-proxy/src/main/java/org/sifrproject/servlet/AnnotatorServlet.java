@@ -16,10 +16,7 @@ import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever
 import org.sifrproject.annotations.output.LIRMMOutputGeneratorDispatcher;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
-import org.sifrproject.parameters.ContextParameterHandler;
-import org.sifrproject.parameters.LIRMMProxyParameterRegistry;
-import org.sifrproject.parameters.ScoreParameterHandler;
-import org.sifrproject.parameters.SemanticGroupParameterHandler;
+import org.sifrproject.parameters.*;
 import org.sifrproject.parameters.api.ParameterRegistry;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.LIRMMPostAnnotationRegistry;
@@ -104,6 +101,7 @@ public class AnnotatorServlet extends HttpServlet {
 
             parameterRegistry.registerParameterHandler("semantic_groups", new SemanticGroupParameterHandler(), true);
             parameterRegistry.registerParameterHandler("score", new ScoreParameterHandler(), true);
+            parameterRegistry.registerParameterHandler("format", new FormatParameterHandler(), true);
 
             String contextLanguage = "English";
             if(proxyProperties.containsKey("context.language")){
@@ -155,6 +153,7 @@ public class AnnotatorServlet extends HttpServlet {
 
         //Retrieving format parameter, json is the default output format if the format parameter is absent
         String format = parameters.getFirst("format", "json").toLowerCase();
+        parameters.remove("format");
 
         //Retrieving the source text parameter
         String text = parameters.getFirst("text", "").toLowerCase();

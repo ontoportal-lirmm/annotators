@@ -25,6 +25,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     private boolean negation;
     private boolean experiencer;
     private boolean temporality;
+    private boolean lemmatize;
     private final List<String> semanticGroups; //semantic_types=Type1, Type2,...
 
 
@@ -202,5 +203,15 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     @Override
     public String generateSemanticGroupsString() {
         return generateEnumString(semanticGroups);
+    }
+
+    @Override
+    public boolean isLemmatize() {
+        return lemmatize;
+    }
+
+    @Override
+    public void setLemmatize(boolean lemmatize) {
+        this.lemmatize = lemmatize;
     }
 }

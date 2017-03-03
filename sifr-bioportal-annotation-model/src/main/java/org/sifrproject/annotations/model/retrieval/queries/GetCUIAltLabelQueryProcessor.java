@@ -46,7 +46,7 @@ public class GetCUIAltLabelQueryProcessor extends AbstractQueryProcessor<String>
             QuerySolution qs = nextSolution();
             RDFNode resultUri = qs.get(CUI_VAR);
 
-            Pattern pattern = Pattern.compile("(C[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])");
+            Pattern pattern = Pattern.compile("(C[0-9][0-9][0-9][0-9][0-9][0-9][0-9])");
             Matcher matcher = pattern.matcher(resultUri.asLiteral().getString());
             if (matcher.matches()) {
                 String cui = matcher.group(1);

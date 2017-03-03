@@ -31,7 +31,7 @@ public final class RestfulQuery {
                 } else {
                     params.append("&");
                 }
-                params.append(pair.first()).append("=").append(URLEncoder.encode(pair.second().trim(), "ISO-8859-15"));
+                params.append(pair.first()).append("=").append(URLEncoder.encode(pair.second().trim(), "UTF-8"));
             }
         }
         URL url = new URL(uri + params);
@@ -53,7 +53,7 @@ public final class RestfulQuery {
                 .getInputStream()))) {
             String line = br.readLine();
             while (line != null) {
-                output.append(line);
+                output.append(line).append(System.lineSeparator());
                 line = br.readLine();
             }
             br.close();

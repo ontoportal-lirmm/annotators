@@ -94,6 +94,10 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
         if(query.isExperiencer()){
             parameters.add(new PairImpl<String, String>("experiencer",Boolean.toString(query.isExperiencer())));
         }
+
+        if(query.isLemmatize()){
+            parameters.add(new PairImpl<String, String>("lemmatize",Boolean.toString(query.isLemmatize())));
+        }
         parameters.add(new PairImpl<>("format", query.getFormat()));
 
 

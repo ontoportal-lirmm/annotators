@@ -2,6 +2,7 @@ package org.sifrproject.annotations.model.retrieval;
 
 
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.model.retrieval.queries.GetCUIAltLabelQueryProcessor;
 import org.sifrproject.annotations.model.retrieval.queries.GetCUIUMLSPropQueryProcessor;
 import org.sparqy.api.Graph;
 import org.sparqy.api.queries.QueryProcessor;
@@ -27,9 +28,9 @@ public final class CUIPropertyRetriever implements PropertyRetriever {
         cuiProcessor.runQuery();
         cuis.addAll(cuiProcessor.processResults());
 
-        /*QueryProcessor<String> cuiProcessorAlt = new GetCUIAltLabelQueryProcessor(graph, URI);
+        QueryProcessor<String> cuiProcessorAlt = new GetCUIAltLabelQueryProcessor(graph, URI);
         cuiProcessorAlt.runQuery();
-        cuis.addAll(cuiProcessorAlt.processResults());*/
+        cuis.addAll(cuiProcessorAlt.processResults());
         return cuis;
     }
 

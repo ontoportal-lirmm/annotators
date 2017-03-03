@@ -78,6 +78,10 @@ public interface BioPortalAnnotatorQuery {
 
     void setNegation(boolean negation);
 
+    boolean isLemmatize();
+
+    void setLemmatize(boolean negation);
+
     boolean isExperiencer();
 
     void setExperiencer(boolean experiencer);
