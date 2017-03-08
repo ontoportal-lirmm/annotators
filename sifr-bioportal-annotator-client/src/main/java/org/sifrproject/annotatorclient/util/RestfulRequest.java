@@ -16,17 +16,17 @@ public final class RestfulRequest {
     public static String queryAnnotator(RequestGenerator requestGenerator) throws IOException {
 
         HttpURLConnection httpURLConnection = requestGenerator.createRequest();
-        logger.info("Request to NCBO Annotator: {}",httpURLConnection.getURL());
+        logger.debug("Request to NCBO Annotator: {}",httpURLConnection.getURL());
         int code = httpURLConnection.getResponseCode();
         String message = httpURLConnection.getResponseMessage();
-        logger.info("{} - {}", code, message);
+        logger.debug("{} - {}", code, message);
         String response;
         if(code==400){
             response = streamAsString(httpURLConnection.getErrorStream());
         } else {
             response = streamAsString(httpURLConnection.getInputStream());
         }
-        logger.info(response);
+        logger.debug(response);
         return response;
     }
 
