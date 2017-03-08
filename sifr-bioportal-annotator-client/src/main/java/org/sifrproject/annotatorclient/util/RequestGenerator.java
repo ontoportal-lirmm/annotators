@@ -34,6 +34,8 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
             uri += "?" + parameterString;
         } else if (uri.endsWith("?")) {
             uri = uri.substring(0, uri.length() - 1) + "/";
+        } else if (!uri.endsWith("/")){
+            uri += "/";
         }
 
         URL url = new URL(uri);
