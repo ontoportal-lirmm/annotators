@@ -67,7 +67,7 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
         }
 
         String semanticGroupsString = query.generateSemanticGroupsString();
-        if (!semanticTypesString.isEmpty()) {
+        if (!semanticGroupsString.isEmpty()) {
             requestGenerator.put("semantic_groups", semanticGroupsString);
         }
 
