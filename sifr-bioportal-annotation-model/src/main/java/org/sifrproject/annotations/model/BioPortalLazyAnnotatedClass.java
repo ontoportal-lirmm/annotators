@@ -119,7 +119,13 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     }
 
     public Set<UMLSGroup> getSemanticGroups() {
-        if (semanticGroups.isEmpty() && semanticGroupRetriever != null) {
+        JsonValue value = jsonObject.get("semantic_groups");
+        if (value!=null){
+            String groupString = value.asString();
+            for(String group: groupString.split(",")){
+                semanticGroups.add(umlsGroupIndex.getGroupByName(group));
+            }
+        } else if (semanticGroups.isEmpty() && semanticGroupRetriever != null) {
             List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
             for(String type: types){
                 semanticGroups.add(umlsGroupIndex.getGroupByType(type));
