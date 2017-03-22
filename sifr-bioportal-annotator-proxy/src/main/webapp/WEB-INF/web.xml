@@ -13,7 +13,7 @@
 
   <servlet-mapping>
     <servlet-name>AnnotatorServlet</servlet-name>
-    <url-pattern>/annotator</url-pattern>
+    <url-pattern>/annotator/</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
