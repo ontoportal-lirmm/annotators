@@ -23,7 +23,7 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
     }
 
     @Override
-    public void registerParameterHandler(String name, ParameterHandler parameterHandler, boolean isOptional) {
+    public synchronized void registerParameterHandler(String name, ParameterHandler parameterHandler, boolean isOptional) {
         Parameters currentParameters = new Parameters(name, isOptional);
         parameterss.add(currentParameters);
         parameterHandlers.put(currentParameters, parameterHandler);
@@ -31,7 +31,7 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
 
 
     @Override
-    public final void processParameters(RequestGenerator requestGenerator) throws InvalidParameterException {
+    public synchronized final void processParameters(RequestGenerator requestGenerator) throws InvalidParameterException {
         if (!requestGenerator.containsKey("text")) {
             throw new InvalidParameterException("Mandatory parameter 'text' missing");
         }
@@ -46,7 +46,7 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
     }
 
     @Override
-    public void setPostAnnotationRegistry(PostAnnotationRegistry postAnnotationRegistry) {
+    public synchronized void setPostAnnotationRegistry(PostAnnotationRegistry postAnnotationRegistry) {
         this.postAnnotationRegistry = postAnnotationRegistry;
     }
 
