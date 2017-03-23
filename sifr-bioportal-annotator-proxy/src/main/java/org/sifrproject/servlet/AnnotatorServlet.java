@@ -21,8 +21,8 @@ import org.sifrproject.parameters.api.ParameterRegistry;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.LIRMMPostAnnotationRegistry;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
-import org.sifrproject.util.RestfulRequest;
 import org.sifrproject.util.RequestGenerator;
+import org.sifrproject.util.RestfulRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
@@ -58,7 +58,6 @@ public class AnnotatorServlet extends HttpServlet {
 
     private AnnotationParser parser;
 
-    private PostAnnotationRegistry postAnnotationRegistry;
     private ParameterRegistry parameterRegistry;
 
     private Properties proxyProperties;
@@ -92,8 +91,7 @@ public class AnnotatorServlet extends HttpServlet {
             //to the annotations produced by the BioPortal annotator
             //This needs to be initialized here, as parameter handler will need and instance of the registry
             //in order to directly register post-annotation components depending on the values of the parameters
-            postAnnotationRegistry = new LIRMMPostAnnotationRegistry();
-            parameterRegistry = new LIRMMProxyParameterRegistry(postAnnotationRegistry);
+            parameterRegistry = new LIRMMProxyParameterRegistry();
 
             /*
              * Registering parameter handlers
@@ -104,7 +102,7 @@ public class AnnotatorServlet extends HttpServlet {
             parameterRegistry.registerParameterHandler("format", new FormatParameterHandler(), true);
 
             String contextLanguage = "English";
-            if(proxyProperties.containsKey("context.language")){
+            if (proxyProperties.containsKey("context.language")) {
                 contextLanguage = proxyProperties.getProperty("context.language");
             }
             parameterRegistry.registerParameterHandler("negation|experiencer|temporality", new ContextParameterHandler(contextLanguage), true);
@@ -129,7 +127,7 @@ public class AnnotatorServlet extends HttpServlet {
     // POST
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        PostAnnotationRegistry postAnnotationRegistry = new LIRMMPostAnnotationRegistry();
         /*
          * Initializing the annotator URI, from the properties if present
          * Otherwise the default behaviour is adopted, assuming the proxy runs on the same machine as the ncbo annotator
@@ -165,6 +163,8 @@ public class AnnotatorServlet extends HttpServlet {
             /*
              * Running parameter handlers
              */
+
+            parameterRegistry.setPostAnnotationRegistry(postAnnotationRegistry);
             parameterRegistry.processParameters(parameters);
 
             /*

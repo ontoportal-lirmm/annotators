@@ -17,10 +17,9 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
 
     private PostAnnotationRegistry postAnnotationRegistry;
 
-    public LIRMMProxyParameterRegistry(PostAnnotationRegistry postAnnotationRegistry) {
+    public LIRMMProxyParameterRegistry() {
         parameterss = new ArrayList<>();
         parameterHandlers = new HashMap<>();
-        this.postAnnotationRegistry = postAnnotationRegistry;
     }
 
     @Override
@@ -44,6 +43,11 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
                 parameterHandlers.get(parameter).processParameter(requestGenerator, postAnnotationRegistry);
             }
         }
+    }
+
+    @Override
+    public void setPostAnnotationRegistry(PostAnnotationRegistry postAnnotationRegistry) {
+        this.postAnnotationRegistry = postAnnotationRegistry;
     }
 
     private final class Parameters {
