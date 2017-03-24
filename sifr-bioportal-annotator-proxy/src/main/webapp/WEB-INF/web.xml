@@ -8,7 +8,7 @@
     </description>
     <display-name>AnnotatorServlet</display-name>
     <servlet-name>AnnotatorServlet</servlet-name>
-      <servlet-class>org.sifrproject.servlet.AnnotatorServlet</servlet-class>
+    <servlet-class>org.sifrproject.servlet.AnnotatorServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -17,9 +17,6 @@
   </servlet-mapping>
 
   <welcome-file-list>
-    <welcome-file>annotator</welcome-file>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>/</welcome-file>
   </welcome-file-list>
 </web-app>
