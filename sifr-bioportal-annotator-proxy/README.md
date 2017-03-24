@@ -40,8 +40,8 @@ infrastructure, you may run the servlet through the maven jetty plugin.
 You need to 
  first copy `annotatorProxy.properties.sample` from the root of the project to `src/main/resources/annotatorProxy.properties`.
  Then modify the annotatorURI property to point to the URL of the REST API of the NCBO annotator. For the the LIRMM annotator,
- the default value should suffice (annotatorURI=http://services.bioportal.lirmm.fr/annotator?), for the NCBO bioportal, it should 
- be (annotatorURI=http://data.bioontology.org/annotator?).
+ the default value should suffice (annotatorURI=http://services.bioportal.lirmm.fr/annotator), for the NCBO bioportal, it should 
+ be (annotatorURI=http://data.bioontology.org/annotator).
  
  Then you may run `mvn clean war jetty:run`. Note that you need to have done a `mvn clean install` on the parent maven project 
  before deploying the proxy.
