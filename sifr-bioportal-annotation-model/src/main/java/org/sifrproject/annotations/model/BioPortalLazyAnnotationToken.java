@@ -112,15 +112,19 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     @SuppressWarnings("All")
     @Override
     public void setNegationContext(NegationContext negationContext) {
-        this.negationContext = negationContext;
-        jsonObject.add("negationContext", negationContext.name());
+        if(jsonObject.get("negationContext")!=null) {
+            this.negationContext = negationContext;
+            jsonObject.add("negationContext", negationContext.name());
+        }
     }
 
     @Override
     public ExperiencerContext getExperiencerContext() {
-        String expeContext = jsonObject.get("experiencerContext").asString();
-        if (experiencerContext == null && expeContext !=null) {
-            experiencerContext = ExperiencerContext.valueOf(expeContext);
+        if(jsonObject.get("experiencerContext")!=null) {
+            String expeContext = jsonObject.get("experiencerContext").asString();
+            if (experiencerContext == null && expeContext != null) {
+                experiencerContext = ExperiencerContext.valueOf(expeContext);
+            }
         }
         return experiencerContext;
     }
@@ -135,9 +139,11 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public TemporalityContext getTemporalityContext() {
-        String tempoContext = jsonObject.get("temporalityContext").asString();
-        if (temporalityContext == null && tempoContext!=null) {
-            temporalityContext = TemporalityContext.valueOf(tempoContext);
+        if(jsonObject.get("temporalityContext")!=null) {
+            String tempoContext = jsonObject.get("temporalityContext").asString();
+            if (temporalityContext == null && tempoContext != null) {
+                temporalityContext = TemporalityContext.valueOf(tempoContext);
+            }
         }
         return temporalityContext;
     }
