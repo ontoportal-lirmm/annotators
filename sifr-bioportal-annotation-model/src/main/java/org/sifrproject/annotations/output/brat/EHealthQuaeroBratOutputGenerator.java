@@ -14,13 +14,13 @@ import java.util.*;
  * Produces a BRAT output from a list of bioportal {@code {@link Annotation}} objects compatible with the
  * CLEF eHealth 2014-2016 Quaero Evaluation Corpus
  */
-public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
+public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
 
     private boolean disambiguate;
     private boolean selectSingleGroup;
     private boolean ignoreAmbiguous;
 
-    public eHealthQuaeroBratOutputGenerator(boolean disambiguate, boolean selectSingleGroup, boolean ignoreAmbiguous) {
+    public EHealthQuaeroBratOutputGenerator(boolean disambiguate, boolean selectSingleGroup, boolean ignoreAmbiguous) {
         this.disambiguate = disambiguate;
         this.selectSingleGroup = selectSingleGroup;
         this.ignoreAmbiguous = ignoreAmbiguous;
