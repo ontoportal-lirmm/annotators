@@ -86,6 +86,9 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
         if (query.isExpandClassHierarchy()) {
             requestGenerator.put("expand_class_hierarchy", "true");
         }
+        if(query.isLongestOnly()){
+            requestGenerator.put("longest_only", "true");
+        }
 
         if (!query.getScore().isEmpty()) {
             requestGenerator.put("score", query.getScore());

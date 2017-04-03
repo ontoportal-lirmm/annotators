@@ -16,12 +16,12 @@ public final class RestfulRequest {
     public static String queryAnnotator(RequestGenerator requestGenerator) throws IOException {
 
         HttpURLConnection httpURLConnection = requestGenerator.createRequest();
-        logger.debug("Request to NCBO Annotator: {}",httpURLConnection.getURL());
+        logger.debug("Request to NCBO Annotator: {}", httpURLConnection.getURL());
         int code = httpURLConnection.getResponseCode();
         String message = httpURLConnection.getResponseMessage();
-        logger.info("{} - {}", code, message);
+        logger.info("{} - {} {}", code, message, httpURLConnection.getURL().toString());
         String response;
-        if(code==400){
+        if (code != 200) {
             response = streamAsString(httpURLConnection.getErrorStream());
         } else {
             response = streamAsString(httpURLConnection.getInputStream());
@@ -30,8 +30,8 @@ public final class RestfulRequest {
         return response;
     }
 
-    private static String streamAsString(InputStream stream){
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream,"UTF-8"))) {
+    private static String streamAsString(InputStream stream) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "UTF-8"))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line = bufferedReader.readLine();
             while (line != null && !line.isEmpty()) {

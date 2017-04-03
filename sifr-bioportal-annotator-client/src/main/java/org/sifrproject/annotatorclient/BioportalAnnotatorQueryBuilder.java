@@ -157,6 +157,20 @@ public class BioportalAnnotatorQueryBuilder {
 
         ontologies.clear();
         semanticTypes.clear();
+        semanticGroups.clear();
+        text="";
+        experiencer =false;
+        temporality = false;
+        negation = false;
+        lemmatize=false;
+        format="json";
+        classHierarchyMaxLevel=0;
+        expandClassHierarchy=false;
+
+        score="";
+        expandMappings = false;
+        excludeSynonyms = false;
+        wholeWordOnly = true;
 
         return defaultBioportalAnnotatorQuery;
     }

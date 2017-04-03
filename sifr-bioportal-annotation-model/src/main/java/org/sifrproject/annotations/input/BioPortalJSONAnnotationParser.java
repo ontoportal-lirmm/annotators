@@ -69,6 +69,9 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
             JsonValue rootNode = Json.parse(queryResponse);
             if (rootNode != null) {
                 try {
+                    if(rootNode.isObject()){
+                        throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
+                    }
                     for (JsonValue childObject : rootNode.asArray()) {
                         JsonObject child = childObject.asObject();
                         JsonValue annotatedClassNode = child.get("annotatedClass");
