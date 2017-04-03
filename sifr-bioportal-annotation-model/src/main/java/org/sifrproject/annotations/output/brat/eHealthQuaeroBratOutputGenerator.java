@@ -83,13 +83,14 @@ public class eHealthQuaeroBratOutputGenerator implements OutputGenerator {
                 }
 
                 if(!semanticGroups.isEmpty()) {
-                    if(!ignoreAmbiguous || (ignoreAmbiguous && semanticGroups.size() == 1))
-                    stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, group,
-                            token.getFrom(),
-                            token.getTo(),
-                            token.getText()
-                                    .toLowerCase())).append("\n");
-                    stringBuilder.append(String.format("#%d\tAnnotatorNotes T%d\t%s", termCounter, termCounter, buildCUILIst(annotatedClass.getCuis()))).append("\n");
+                    if(!ignoreAmbiguous || (ignoreAmbiguous && semanticGroups.size() == 1)) {
+                        stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, group,
+                                token.getFrom(),
+                                token.getTo(),
+                                token.getText()
+                                        .toLowerCase())).append("\n");
+                        stringBuilder.append(String.format("#%d\tAnnotatorNotes T%d\t%s", termCounter, termCounter, buildCUILIst(annotatedClass.getCuis()))).append("\n");
+                    }
                 }
             }
 
