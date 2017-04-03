@@ -1,1 +1,4 @@
-annotatorURI=http://services.bioportal.lirmm.fr/annotator?
+annotatorURI=http://data.bioportal.lirmm.fr/annotator
+
+# Language can be ENGLISH or FRENCH
+context.language=FRENCH
