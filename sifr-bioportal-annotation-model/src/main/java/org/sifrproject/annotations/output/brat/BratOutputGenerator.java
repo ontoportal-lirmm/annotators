@@ -68,7 +68,7 @@ public class BratOutputGenerator implements OutputGenerator {
                 final int tokenTo = token.getTo();
                 final String surfaceForm = (sourceText.isEmpty())?token.getText().toLowerCase():sourceText.substring(tokenFrom, tokenTo);
                 for(final UMLSGroup group: semanticGroups) {
-                    stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, annotatedClass.getId(),
+                    stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, prepareEnumName(group.name()),
                             tokenFrom,
                             tokenTo,
                             surfaceForm
