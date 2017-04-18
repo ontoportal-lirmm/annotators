@@ -48,9 +48,9 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
 
         if (method.equals("POST")) {
             connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type",
+            connection.setRequestProperty("ContentType",
                     "application/x-www-form-urlencoded; charset=UTF-8");
-            connection.setRequestProperty("Content-Length", "" +
+            connection.setRequestProperty("Content-Length",
                     Integer.toString(parameterString.getBytes().length));
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.writeBytes(parameterString);
@@ -66,7 +66,7 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
     private String createParameterString() throws UnsupportedEncodingException {
         String parameterString = "";
         boolean first = true;
-        for (String paramName : this.keySet()) {
+        for (final String paramName : this.keySet()) {
             if (!first) {
                 parameterString += "&";
             }
@@ -76,27 +76,12 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
         return parameterString;
     }
 
-    private void transferHeaders(HttpURLConnection connection) {
+    private void transferHeaders(final HttpURLConnection connection) {
         if (headers.containsKey("authorization")) {
             connection.setRequestProperty("Authorization", headers.get("authorization"));
         }
         if (headers.containsKey("user-agent")) {
-            connection.setRequestProperty("User-agent", headers.get("user-agent"));
+            connection.setRequestProperty("User-Agent", headers.get("user-agent"));
         }
-    }
-
-    /**
-     * Retrieve the first parameter value from the {@code values} array if any, otherwise returns the {@code defaultValue} supplied
-     *
-     * @param name         The value of the parameter
-     * @param defaultValue The default value to return is the first argument is null or empty
-     * @return The parameter or the default value
-     */
-    public String getFirst(String name, String defaultValue) {
-        String value = get(name);
-        if (value == null) {
-            value = defaultValue;
-        }
-        return value;
     }
 }

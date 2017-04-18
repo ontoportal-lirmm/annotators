@@ -62,13 +62,12 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
     }
 
     @Override
-    public List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException {
+    public List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException, InvalidFormatException {
 
         List<Annotation> annotations = new ArrayList<>();
         try {
             JsonValue rootNode = Json.parse(queryResponse);
             if (rootNode != null) {
-                try {
                     if(rootNode.isObject()){
                         throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
                     }
@@ -92,9 +91,7 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
                         }
 
                     }
-                } catch (InvalidFormatException e) {
-                    logger.error(e.getLocalizedMessage());
-                }
+
             } else {
                 logger.error("Output empty!");
             }

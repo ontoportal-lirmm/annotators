@@ -44,7 +44,7 @@ public class TestOutputGeneration {
     @Test
     public void testLazyJSONGeneration() throws Exception {
         LIRMMOutputGeneratorDispatcher dispatcher = new LIRMMOutputGeneratorDispatcher();
-        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?");
+        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?", "");
         logger.info(output.getContent());
         List<Annotation> returnList = parser.parseAnnotations(output.getContent());
         assert returnList.size() == annotationList.size();
@@ -54,14 +54,14 @@ public class TestOutputGeneration {
     @Test
     public void testJenaGeneration() throws Exception {
         LIRMMOutputGeneratorDispatcher dispatcher = new LIRMMOutputGeneratorDispatcher();
-        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?");
+        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?", "");
         logger.info(output.getContent());
     }
 
     @Test
     public void testLazyBRATGeneration() throws Exception {
         LIRMMOutputGeneratorDispatcher dispatcher = new LIRMMOutputGeneratorDispatcher();
-        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?");
+        AnnotatorOutput output = dispatcher.generate(annotationList, "http://bioportal.lirmm.fr:8080/servlet?", "");
         logger.info(output.getContent());
     }
 }

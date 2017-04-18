@@ -13,5 +13,5 @@ public interface OutputGenerator {
      * @param annotations The list of annotations
      * @return The corresponding output
      */
-    AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI);
+    AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI, String sourceText);
 }

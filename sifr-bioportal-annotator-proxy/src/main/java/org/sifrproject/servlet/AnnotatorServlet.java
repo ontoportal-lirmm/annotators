@@ -7,6 +7,7 @@ import org.sifrproject.annotations.api.model.AnnotationFactory;
 import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGeneratorDispatcher;
+import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
@@ -29,6 +30,7 @@ import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
 import org.sparqy.graph.storage.StoreHandler;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,10 +51,14 @@ import java.util.regex.Pattern;
  *
  * @authors Julien Diener, Emmanuel Castanier, Andon Tchechmedjiev
  */
+@SuppressWarnings({"HardcodedFileSeparator", "LocalVariableOfConcreteClass"})
 public class AnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
     private static final String sparqlServer = "http://sparql.bioportal.lirmm.fr/sparql/";
     private static final Logger logger = LoggerFactory.getLogger(AnnotatorServlet.class);
+    private static final String FORMAT = "format";
+    private static final String ANNOTATOR_URI = "annotatorURI";
+    private static final String CONTEXT_LANGUAGE = "context.language";
 
     private String annotatorURI = null;
 
@@ -64,22 +70,23 @@ public class AnnotatorServlet extends HttpServlet {
 
     private OutputGeneratorDispatcher outputGeneratorDispatcher;
 
+    @SuppressWarnings({"OverlyCoupledMethod", "FeatureEnvy"})
     public AnnotatorServlet() {
         try {
             /*
              * Instantiating annotation parser and dependencies
              */
             StoreHandler.registerStoreInstance(new JenaRemoteSPARQLStore(sparqlServer));
-            PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
-            PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
-            UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
-            AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
+            final PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
+            final PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
+            final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
+            final AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
             parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
 
             /*
             * Loading configuration properties
             */
-            InputStream proxyPropertiesStream = AnnotatorServlet.class.getResourceAsStream("/annotatorProxy.properties");
+            final InputStream proxyPropertiesStream = AnnotatorServlet.class.getResourceAsStream("/annotatorProxy.properties");
             proxyProperties = new Properties();
             proxyProperties.load(proxyPropertiesStream);
 
@@ -99,11 +106,11 @@ public class AnnotatorServlet extends HttpServlet {
 
             parameterRegistry.registerParameterHandler("semantic_groups", new SemanticGroupParameterHandler(), true);
             parameterRegistry.registerParameterHandler("score", new ScoreParameterHandler(), true);
-            parameterRegistry.registerParameterHandler("format", new FormatParameterHandler(), true);
+            parameterRegistry.registerParameterHandler(FORMAT, new FormatParameterHandler(), true);
 
             String contextLanguage = "English";
-            if (proxyProperties.containsKey("context.language")) {
-                contextLanguage = proxyProperties.getProperty("context.language");
+            if (proxyProperties.containsKey(CONTEXT_LANGUAGE)) {
+                contextLanguage = proxyProperties.getProperty(CONTEXT_LANGUAGE);
             }
             parameterRegistry.registerParameterHandler("negation|experiencer|temporality", new ContextParameterHandler(contextLanguage), true);
 
@@ -113,48 +120,49 @@ public class AnnotatorServlet extends HttpServlet {
              * particular format from the annotation model automatically
              */
             outputGeneratorDispatcher = new LIRMMOutputGeneratorDispatcher();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error("Cannot instantiate servlet: {}", e.getLocalizedMessage());
         }
     }
 
     // redirect GET to POST
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         doPost(req, resp);
     }
 
     // POST
+    @SuppressWarnings("LocalVariableOfConcreteClass")
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PostAnnotationRegistry postAnnotationRegistry = new LIRMMPostAnnotationRegistry();
+    protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+        final PostAnnotationRegistry postAnnotationRegistry = new LIRMMPostAnnotationRegistry();
         /*
          * Initializing the annotator URI, from the properties if present
          * Otherwise the default behaviour is adopted, assuming the proxy runs on the same machine as the ncbo annotator
          * but on different ports (by default 80 for the proxy and 8080 for the ncbo annotator).
          */
-        if (proxyProperties.containsKey("annotatorURI")) {
+        if (proxyProperties.containsKey(ANNOTATOR_URI)) {
             //To debug locally using a remote bioportal, comment matcher condition above and uncomment the line below
             //annotatorURI = "http://services.bioportal.lirmm.fr:8080/servlet?";
-            annotatorURI = proxyProperties.getProperty("annotatorURI");
+            annotatorURI = proxyProperties.getProperty(ANNOTATOR_URI);
         } else {
             // Extract the base url of the tomcat server and generate the servlet URL from it (the servlet have to be
             // deployed on the same server as the servlet used)
-            Pattern pattern = Pattern.compile("^((?:https?://)?[^:]+)");
-            Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+            final Pattern pattern = Pattern.compile("^((?:https?://)?[^:]+)");
+            final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
             if (matcher.find()) {
                 annotatorURI = matcher.group(1) + ":8080/servlet?";
             }
         }
 
-        RequestGenerator parameters = new RequestGenerator(request, annotatorURI);
+        final RequestGenerator parameters = new RequestGenerator(request, annotatorURI);
 
         //Retrieving format parameter, json is the default output format if the format parameter is absent
-        String format = parameters.getFirst("format", "json").toLowerCase();
-        parameters.remove("format");
+        String format = parameters.getFirst(FORMAT, "json").toLowerCase();
+        parameters.remove(FORMAT);
 
         //Retrieving the source text parameter
-        String text = parameters.getFirst("text", "").toLowerCase();
+        final String text = parameters.getFirst("text", "");
 
         //Create annotation list to hold the annotation model
         List<Annotation> annotations;
@@ -170,17 +178,17 @@ public class AnnotatorServlet extends HttpServlet {
             /*
             * Querying the bioportal annotator and building the model
             */
-            String queryOutput = RestfulRequest.queryAnnotator(parameters);
+            final String queryOutput = RestfulRequest.queryAnnotator(parameters);
             logger.debug(queryOutput);
             annotations = parser.parseAnnotations(queryOutput);
 
-        } catch (InvalidParameterException | ParseException | IOException | NCBOAnnotatorErrorException e) {
+        } catch (InvalidParameterException | InvalidFormatException | ParseException | IOException | NCBOAnnotatorErrorException e) {
             /*
              * Handling exceptions by activating the 'error' output format and creating a single error annotation that
              * will contain the error message. This requires that the OutputGeneratorDispatcher registers the appropriate
              * error output generator, which is the case with the current LIRMMOutputGeneratorDispatcher
              */
-            format = "error";
+            format = LIRMMOutputGeneratorDispatcher.ERROR_OUTPUT;
             annotations = new ArrayList<>();
             annotations.add(new BioportalErrorAnnotation(e.getMessage()));
         }
@@ -196,12 +204,12 @@ public class AnnotatorServlet extends HttpServlet {
          */
         //Response writer
         response.setCharacterEncoding("UTF-8");
-        PrintWriter servletResponseWriter = response.getWriter();
-        outputContent(outputGeneratorDispatcher.generate(format, annotations, annotatorURI), response, servletResponseWriter);
+        final PrintWriter servletResponseWriter = response.getWriter();
+        outputContent(outputGeneratorDispatcher.generate(format, annotations, annotatorURI, text), response, servletResponseWriter);
 
     }
 
-    private void outputContent(AnnotatorOutput annotatorOutput, HttpServletResponse response, PrintWriter output) {
+    private void outputContent(final AnnotatorOutput annotatorOutput, final ServletResponse response, final PrintWriter output) {
         response.setContentType(String.format("%s; charset=UTF-8", annotatorOutput.getMimeType()));
         output.println(annotatorOutput.getContent());
         output.flush();

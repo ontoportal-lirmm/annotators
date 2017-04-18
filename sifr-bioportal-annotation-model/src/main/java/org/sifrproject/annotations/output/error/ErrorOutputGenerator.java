@@ -5,6 +5,7 @@ import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
+import org.sifrproject.annotations.output.MimeTypes;
 
 
 /**
@@ -13,11 +14,11 @@ import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 public class ErrorOutputGenerator implements OutputGenerator {
 
     @Override
-    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
+    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final StringBuilder stringBuilder = new StringBuilder();
-        for(Annotation annotation: annotations) {
-          stringBuilder.append(annotation.toString());
+        for(final Annotation annotation: annotations) {
+          stringBuilder.append(annotation);
         }
-        return new LIRMMAnnotatorOutput(stringBuilder.toString(), "application/json");
+        return new LIRMMAnnotatorOutput(stringBuilder.toString(), MimeTypes.APPLICATION_JSON);
     }
 }

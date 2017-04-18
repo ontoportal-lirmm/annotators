@@ -19,36 +19,42 @@ import java.util.Map;
  */
 public class RequestGenerator extends LinkedHashMap<String, String> {
     private static final long serialVersionUID = 4351112172500760834L;
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 = "application/x-www-form-urlencoded; charset=UTF-8";
+    public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String ACCEPT_HEADER = "Accept";
+    public static final String ACCEPTED_MIMES = "text/xml, application/json, text/html, text/plain";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String USER_AGENT_HEADER = "User-agent";
     private final String baseURI;
     private final Map<String, String> headers;
     private final HttpServletRequest httpServletRequest;
 
 
-    public RequestGenerator(HttpServletRequest request, String annotatorURI) throws UnsupportedEncodingException {
+    public RequestGenerator(final HttpServletRequest request, final String annotatorURI) throws UnsupportedEncodingException {
         this.httpServletRequest = request;
         baseURI = annotatorURI;
-        Enumeration<String> parameterNames = request.getParameterNames();
+        final Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
-            String paramName = parameterNames.nextElement();
-            String paramValue;
-//            String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
+            final String paramName = parameterNames.nextElement();
+            //            String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
 //            paramValue = new String(request.getParameter(paramName).getBytes(encoding), "utf-8");
-            paramValue = request.getParameter(paramName);
+            final String paramValue = request.getParameter(paramName);
             this.put(paramName, paramValue);
         }
         headers = new HashMap<>();
-        Enumeration<String> headerNames = request.getHeaderNames();
-        String headerName;
+        final Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            headerName = headerNames.nextElement();
-            String value = request.getHeader(headerName).toLowerCase();
+            final String headerName = headerNames.nextElement();
+            final String value = request.getHeader(headerName).toLowerCase();
             headers.put(headerName, value);
         }
     }
 
+    @SuppressWarnings("HardcodedFileSeparator")
     HttpURLConnection createRequest() throws IOException {
         String uri = baseURI;
-        String parameterString = createParameterString();
+        final String parameterString = createParameterString();
         if (!uri.endsWith("/")) {
             uri += "/";
         }
@@ -58,26 +64,27 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
             uri = uri.substring(0, uri.length() - 1) + "/";
         }
 
-        URL url = new URL(uri);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        final URL url = new URL(uri);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(httpServletRequest.getMethod());
         connection.setUseCaches(false);
         connection.setDoInput(true);
-        connection.setRequestProperty("Accept", "text/xml, application/json, text/html, text/plain");
+        connection.setRequestProperty(ACCEPT_HEADER, ACCEPTED_MIMES);
         transferHeaders(connection);
 
         if (httpServletRequest.getMethod().equals("POST")) {
             connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded; charset=UTF-8");
-            connection.setRequestProperty("Content-Length", "" +
+            connection.setRequestProperty(CONTENT_TYPE,
+                    APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
+            connection.setRequestProperty(CONTENT_LENGTH,
                     Integer.toString(parameterString.getBytes().length));
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(parameterString);
-            wr.flush();
-            wr.close();
+            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+                wr.writeBytes(parameterString);
+                wr.flush();
+                wr.close();
+            }
         } else {
-            connection.setRequestProperty("Content-Length",
+            connection.setRequestProperty(CONTENT_LENGTH,
                     Integer.toString(0));
         }
         return connection;
@@ -86,7 +93,7 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
     private String createParameterString() throws UnsupportedEncodingException {
         String parameterString = "";
         boolean first = true;
-        for (String paramName : this.keySet()) {
+        for (final String paramName : keySet()) {
             if (!first) {
                 parameterString += "&";
             }
@@ -96,12 +103,12 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
         return parameterString;
     }
 
-    private void transferHeaders(HttpURLConnection connection) {
-        if (headers.containsKey("authorization")) {
-            connection.setRequestProperty("Authorization", headers.get("authorization"));
+    private void transferHeaders(final HttpURLConnection connection) {
+        if (headers.containsKey(AUTHORIZATION_HEADER.toLowerCase())) {
+            connection.setRequestProperty(AUTHORIZATION_HEADER, headers.get(AUTHORIZATION_HEADER.toLowerCase()));
         }
-        if (headers.containsKey("user-agent")) {
-            connection.setRequestProperty("User-agent", headers.get("user-agent"));
+        if (headers.containsKey(USER_AGENT_HEADER.toLowerCase())) {
+            connection.setRequestProperty(USER_AGENT_HEADER, headers.get(USER_AGENT_HEADER.toLowerCase()));
         }
     }
 

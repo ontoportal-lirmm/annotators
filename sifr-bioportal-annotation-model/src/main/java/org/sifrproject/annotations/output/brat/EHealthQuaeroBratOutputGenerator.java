@@ -6,6 +6,7 @@ import org.sifrproject.annotations.api.model.AnnotationToken;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
+import org.sifrproject.annotations.output.MimeTypes;
 import org.sifrproject.annotations.umls.UMLSGroup;
 
 import java.util.*;
@@ -14,23 +15,25 @@ import java.util.*;
  * Produces a BRAT output from a list of bioportal {@code {@link Annotation}} objects compatible with the
  * CLEF eHealth 2014-2016 Quaero Evaluation Corpus
  */
+@SuppressWarnings({"LawOfDemeter", "HardcodedLineSeparator"})
 public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
 
-    private boolean disambiguate;
-    private boolean selectSingleGroup;
-    private boolean ignoreAmbiguous;
+    private final boolean disambiguate;
+    private final boolean selectSingleGroup;
+    private final boolean ignoreAmbiguous;
 
-    public EHealthQuaeroBratOutputGenerator(boolean disambiguate, boolean selectSingleGroup, boolean ignoreAmbiguous) {
+    public EHealthQuaeroBratOutputGenerator(final boolean disambiguate, final boolean selectSingleGroup, final boolean ignoreAmbiguous) {
         this.disambiguate = disambiguate;
         this.selectSingleGroup = selectSingleGroup;
         this.ignoreAmbiguous = ignoreAmbiguous;
     }
 
+    @SuppressWarnings({"FeatureEnvy", "OverlyComplexMethod", "MethodWithMoreThanThreeNegations", "OverlyLongMethod"})
     @Override
-    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
-        Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
-        for (Annotation annotation : annotations) {
-            for (AnnotationToken annotationToken : annotation.getAnnotations()) {
+    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
+        for (final Annotation annotation : annotations) {
+            for (final AnnotationToken annotationToken : annotation.getAnnotations()) {
                 if (annotationToken != null) {
                     if (!perTokenAnnotations.containsKey(annotationToken)) {
                         perTokenAnnotations.put(annotationToken, new ArrayList<Annotation>());
@@ -40,10 +43,10 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
             }
         }
         int termCounter = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-        for (AnnotationToken token : perTokenAnnotations.keySet()) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final Map.Entry<AnnotationToken, List<Annotation>> annotationTokenListEntry : perTokenAnnotations.entrySet()) {
             termCounter++;
-            List<Annotation> annotationsForToken = perTokenAnnotations.get(token);
+            List<Annotation> annotationsForToken = annotationTokenListEntry.getValue();
             Collections.sort(annotationsForToken, new Comparator<Annotation>() {
                 @Override
                 public int compare(Annotation o1, Annotation o2) {
@@ -52,9 +55,9 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
             });
 
             if (disambiguate) {
-                List<Annotation> disambiguatedList = new ArrayList<>();
-                List<Annotation> fullList = perTokenAnnotations.get(token);
+                final List<Annotation> fullList = annotationTokenListEntry.getValue();
                 if (!fullList.isEmpty()) {
+                    final List<Annotation> disambiguatedList = new ArrayList<>();
                     disambiguatedList.add(fullList.get(0));
                     annotationsForToken = disambiguatedList;
                 }
@@ -64,7 +67,7 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
             if (!annotationsForToken.isEmpty()) {
                 Annotation current = annotationsForToken.get(0);
                 int currentIndex = 1;
-                while (current.getAnnotatedClass().getCuis().isEmpty() && currentIndex < annotationsForToken.size()) {
+                while (current.getAnnotatedClass().getCuis().isEmpty() && (currentIndex < annotationsForToken.size())) {
                     current = annotationsForToken.get(currentIndex);
                     currentIndex++;
 
@@ -73,21 +76,17 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
             }
 
             if (annotation != null) {
-                AnnotatedClass annotatedClass = annotation.getAnnotatedClass();
-                Set<UMLSGroup> semanticGroups = annotatedClass.getSemanticGroups();
+                final AnnotatedClass annotatedClass = annotation.getAnnotatedClass();
+                final Set<UMLSGroup> semanticGroups = annotatedClass.getSemanticGroups();
                 String group = "";
-                if (selectSingleGroup && !semanticGroups.isEmpty()) {
-                    group += semanticGroups.iterator().next().name();
-                } else {
-                    group +=buildGroupList(semanticGroups);
-                }
+                group += (selectSingleGroup && !semanticGroups.isEmpty()) ? semanticGroups.iterator().next().name() : buildGroupList(semanticGroups);
 
                 if(!semanticGroups.isEmpty()) {
-                    if(!ignoreAmbiguous || (ignoreAmbiguous && semanticGroups.size() == 1)) {
+                    if(!ignoreAmbiguous || (ignoreAmbiguous && (semanticGroups.size() == 1))) {
                         stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, group,
-                                token.getFrom(),
-                                token.getTo(),
-                                token.getText()
+                                annotationTokenListEntry.getKey().getFrom(),
+                                annotationTokenListEntry.getKey().getTo(),
+                                annotationTokenListEntry.getKey().getText()
                                         .toLowerCase())).append("\n");
                         stringBuilder.append(String.format("#%d\tAnnotatorNotes T%d\t%s", termCounter, termCounter, buildCUILIst(annotatedClass.getCuis()))).append("\n");
                     }
@@ -96,13 +95,13 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
 
         }
 
-        return new LIRMMAnnotatorOutput(stringBuilder.toString(), "application/brat");
+        return new LIRMMAnnotatorOutput(stringBuilder.toString(), MimeTypes.APPLICATION_BRAT);
     }
 
-    private String buildCUILIst(Set<String> set) {
-        StringBuilder stringBuilder = new StringBuilder("");
+    private String buildCUILIst(final Iterable<String> set) {
+        final StringBuilder stringBuilder = new StringBuilder("");
         boolean first = true;
-        for (String elem : set) {
+        for (final String elem : set) {
             if (!first) {
                 stringBuilder.append(",");
             }
@@ -112,10 +111,10 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
         return stringBuilder.toString();
     }
 
-    private String buildGroupList(Set<UMLSGroup> set) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private String buildGroupList(final Iterable<UMLSGroup> set) {
+        final StringBuilder stringBuilder = new StringBuilder();
         boolean first = true;
-        for (UMLSGroup elem : set) {
+        for (final UMLSGroup elem : set) {
             if (!first) {
                 stringBuilder.append(",");
             }

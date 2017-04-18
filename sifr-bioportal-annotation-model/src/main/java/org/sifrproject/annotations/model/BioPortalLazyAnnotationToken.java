@@ -102,9 +102,11 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public NegationContext getNegationContext() {
-        String negContext = jsonObject.get("negationContext").asString();
-        if (negationContext == null && negContext!=null) {
-            negationContext = NegationContext.valueOf(negContext);
+        if(jsonObject.get("negationContext")!=null) {
+            String negContext = jsonObject.get("negationContext").asString();
+            if (negationContext == null && negContext != null) {
+                negationContext = NegationContext.valueOf(negContext);
+            }
         }
         return negationContext;
     }
@@ -112,10 +114,8 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     @SuppressWarnings("All")
     @Override
     public void setNegationContext(NegationContext negationContext) {
-        if(jsonObject.get("negationContext")!=null) {
             this.negationContext = negationContext;
             jsonObject.add("negationContext", negationContext.name());
-        }
     }
 
     @Override

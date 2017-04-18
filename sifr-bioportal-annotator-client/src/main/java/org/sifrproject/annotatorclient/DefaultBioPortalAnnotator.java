@@ -39,7 +39,7 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
      *              semantic_types=Type1, Type2,...
      **/
     @Override
-    public String runQuery(BioPortalAnnotatorQuery query) throws IOException {
+    public String runQuery(final BioPortalAnnotatorQuery query) throws IOException {
 
 
         /*

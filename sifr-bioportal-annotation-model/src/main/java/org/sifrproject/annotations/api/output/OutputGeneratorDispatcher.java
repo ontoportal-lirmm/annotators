@@ -13,6 +13,6 @@ public interface OutputGeneratorDispatcher extends OutputGenerator {
      * @param annotatorURI The annotator URI that will serve the content
      * @return The annotation output
      */
-    AnnotatorOutput generate(String generatorTrigger, Iterable<Annotation> annotations, String annotatorURI);
+    AnnotatorOutput generate(String generatorTrigger, Iterable<Annotation> annotations, String annotatorURI, String sourceText);
 
 }

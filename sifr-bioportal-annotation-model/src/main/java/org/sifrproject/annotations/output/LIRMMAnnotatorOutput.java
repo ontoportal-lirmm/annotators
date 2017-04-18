@@ -7,18 +7,20 @@ import org.sifrproject.annotations.api.output.AnnotatorOutput;
  * Default implementation of AnnotatorOutput
  */
 public class LIRMMAnnotatorOutput implements AnnotatorOutput {
-    private String content;
-    private String mimeType;
+    private final String content;
+    private final String mimeType;
 
-    public LIRMMAnnotatorOutput(String content, String mimeType) {
+    public LIRMMAnnotatorOutput(final String content, final String mimeType) {
         this.content = content;
         this.mimeType = mimeType;
     }
 
+    @Override
     public String getContent() {
         return content;
     }
 
+    @Override
     public String getMimeType() {
         return mimeType;
     }

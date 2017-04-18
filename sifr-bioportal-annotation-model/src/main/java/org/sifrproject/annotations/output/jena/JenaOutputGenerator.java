@@ -21,14 +21,17 @@ import java.util.Random;
 /**
  * RDF output generator using Jena, supports all the formats supported by Jena.
  */
+@SuppressWarnings({"LawOfDemeter", "HardcodedFileSeparator"})
 public class JenaOutputGenerator implements OutputGenerator {
+    private static final String SIFR_ANNOTATOR = "SIFR Annotator";
+    private static final String THE_SIFR_ANNOTATOR_IS_A_SPECIFIC_VERSION_OF_THE_NCBO_ANNOTATOR_BUT_FOR_FRENCH_ONTOLOGIES_TERMINOLOGIES_YOU_SHALL_USE_IT_TO_ANNOTATE_FRENCH_BIOMEDICAL_TEXT_WITH_ONTOLOGY_CONCEPTS = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+    private static final String ANNOTATION = "Annotation";
     private final String jenaPutputFormat;
 
 
     // Prefix
     private static final String aofPrefix = "http://purl.org/ao/foaf/";
     private static final String aoPrefix = "http://purl.org/ao/";
-    private static final String aotrPrefix = "http://purl.org/ao/types/";
     private static final String pavPrefix = "http://purl.org/pav/2.0/";
     private static final String annPrefix = "http://www.w3.org/2000/10/annotation-ns#";
     private static final String aosPrefix = "http://purl.org/ao/selectors/";
@@ -49,60 +52,60 @@ public class JenaOutputGenerator implements OutputGenerator {
      *                         {@see https://jena.apache.org/documentation/io/rdf-output.html#jena_model_write_formats}
      *                         for a list of all supported formats
      */
-    public JenaOutputGenerator(String jenaOutputFormat) {
+    public JenaOutputGenerator(final String jenaOutputFormat) {
         this.jenaPutputFormat = jenaOutputFormat;
     }
 
     @Override
-    public AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI) {
-        Model jenaModel = ModelFactory.createOntologyModel();
+    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+        final Model jenaModel = ModelFactory.createOntologyModel();
         initializeModel(jenaModel, annotatorURI);
 
-        Integer count = 0;
-        int uid = (new Random()).nextInt(10000);
+        final Integer count = 0;
+        final int uid = (new Random()).nextInt(10000);
 
-        for (Annotation annotation : annotations) {
-            String id = annotation.getAnnotatedClass().getId();
-            AnnotationTokens tokens = annotation.getAnnotations();
+        for (final Annotation annotation : annotations) {
+            final String id = annotation.getAnnotatedClass().getId();
+            final AnnotationTokens tokens = annotation.getAnnotations();
             appendAnnotationsToModel(jenaModel, tokens, id, "ExactQualifier", count, uid);
 
-            for (Mapping mapping : annotation.getMappings()) {
+            for (final Mapping mapping : annotation.getMappings()) {
                 appendAnnotationsToModel(jenaModel, tokens, mapping.getAnnotatedClass().getId(),
                         "CloseQualifier", count, uid);
             }
-            for (HierarchyElement hierarchyElement : annotation.getHierarchy()) {
+            for (final HierarchyElement hierarchyElement : annotation.getHierarchy()) {
                 appendAnnotationsToModel(jenaModel, tokens, hierarchyElement.getAnnotatedClass().getId(),
                         "BroadQualifier", count, uid);
             }
 
         }
 
-        StringWriter rdfOutput = new StringWriter();
+        final StringWriter rdfOutput = new StringWriter();
         jenaModel.write(rdfOutput, jenaPutputFormat.toUpperCase());
         return new LIRMMAnnotatorOutput(rdfOutput.toString(), String.format("text/%s", jenaPutputFormat));
     }
 
-    private void initializeModel(Model model, String annotatorURI) {
+    private void initializeModel(final Model model, final String annotatorURI) {
         //Describing the servlet used
-        Resource annotatorResource = model.createResource(annotatorURI);
-        Resource annotatorType1 = model.createResource("http://www.w3.org/ns/prov#SoftwareAgent");
-        Resource annotatorType2 = model.createResource("http://bioontology.org/ontologies/BiomedicalResourceOntology.owl#Data_Computation_Service");
-        Resource annotatorType3 = model.createResource("http://dbpedia.org/resource/Software");
+        final Resource annotatorResource = model.createResource(annotatorURI);
+        final Resource annotatorType1 = model.createResource("http://www.w3.org/ns/prov#SoftwareAgent");
+        final Resource annotatorType2 = model.createResource("http://bioontology.org/ontologies/BiomedicalResourceOntology.owl#Data_Computation_Service");
+        final Resource annotatorType3 = model.createResource("http://dbpedia.org/resource/Software");
 
-        Property foafNameProp = model.createProperty(foafPrefix + "name");
-        Property foafDescriptionProp = model.createProperty(foafPrefix + "description");
+        final Property foafNameProp = model.createProperty(foafPrefix + "name");
+        final Property foafDescriptionProp = model.createProperty(foafPrefix + "description");
 
-        String annotatorFoafName;
-        String annotatorFoafDescription;
+        final String annotatorFoafName;
+        final String annotatorFoafDescription;
 
         switch (annotatorURI) {
             case "http://vm-bioportal-vincent:8080/servlet?":
-                annotatorFoafName = "SIFR Annotator";
-                annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+                annotatorFoafName = SIFR_ANNOTATOR;
+                annotatorFoafDescription = THE_SIFR_ANNOTATOR_IS_A_SPECIFIC_VERSION_OF_THE_NCBO_ANNOTATOR_BUT_FOR_FRENCH_ONTOLOGIES_TERMINOLOGIES_YOU_SHALL_USE_IT_TO_ANNOTATE_FRENCH_BIOMEDICAL_TEXT_WITH_ONTOLOGY_CONCEPTS;
                 break;
             case "http://bioportal.lirmm.fr:8080/servlet?":
-                annotatorFoafName = "SIFR Annotator";
-                annotatorFoafDescription = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
+                annotatorFoafName = SIFR_ANNOTATOR;
+                annotatorFoafDescription = THE_SIFR_ANNOTATOR_IS_A_SPECIFIC_VERSION_OF_THE_NCBO_ANNOTATOR_BUT_FOR_FRENCH_ONTOLOGIES_TERMINOLOGIES_YOU_SHALL_USE_IT_TO_ANNOTATE_FRENCH_BIOMEDICAL_TEXT_WITH_ONTOLOGY_CONCEPTS;
                 break;
             case "http://agroportal.lirmm.fr:8080/servlet?":
                 annotatorFoafName = "IBC Annotator";
@@ -123,69 +126,70 @@ public class JenaOutputGenerator implements OutputGenerator {
 
     }
 
-    private void appendAnnotationsToModel(Model m, AnnotationTokens annotationTokens, String topicURL, String qualifierSubclass, Integer count, int uid) {
+    @SuppressWarnings("HardcodedFileSeparator")
+    private void appendAnnotationsToModel(final Model model, final Iterable<AnnotationToken> annotationTokens, final String topicURL, final String qualifierSubclass, Integer count, final int uid) {
 
 
-        for (AnnotationToken annotationToken : annotationTokens) {
-            String text = annotationToken.getText();
-            int from = annotationToken.getFrom();
-            int to = annotationToken.getTo();
-            int taill = to - from + 1;
+        for (final AnnotationToken annotationToken : annotationTokens) {
+            final String text = annotationToken.getText();
+            final int from = annotationToken.getFrom();
+            final int to = annotationToken.getTo();
+            final int taill = (to - from) + 1;
 
-            Resource root = m.createResource(rootURL + uid + "/" + count);
+            final Resource root = model.createResource(rootURL + uid + "/" + count);
 
             // Document provenance
-            Property annotatesDocument = m.createProperty(aofPrefix + "annotatesDocument");
-            Resource annotatesDocumentResource = m.createResource(onDocumentURL + uid);
+            final Property annotatesDocument = model.createProperty(aofPrefix + "annotatesDocument");
+            final Resource annotatesDocumentResource = model.createResource(onDocumentURL + uid);
 
             // Annotation topic
-            Property context = m.createProperty(aoPrefix + "context");
-            Property hasTopic = m.createProperty(aoPrefix + "hasTopic");
-            Resource hasTopicResource = m.createResource(topicURL);
+            final Property context = model.createProperty(aoPrefix + "context");
+            final Property hasTopic = model.createProperty(aoPrefix + "hasTopic");
+            final Resource hasTopicResource = model.createResource(topicURL);
 
             // Annotation provenance
-            Property createdBy = m.createProperty(pavPrefix + "createdBy");
-            Property createdOn = m.createProperty(pavPrefix + "createdOn");
-            Resource createdByResource = m.createResource(createdByURL);
+            final Property createdBy = model.createProperty(pavPrefix + "createdBy");
+            final Property createdOn = model.createProperty(pavPrefix + "createdOn");
+            final Resource createdByResource = model.createResource(createdByURL);
 
-            Date today = new Date();
-            SimpleDateFormat formater = new SimpleDateFormat("yy-MM-dd");
+            final Date today = new Date();
+            final SimpleDateFormat formater = new SimpleDateFormat("yy-MM-dd");
 
 
             // Annotation Selector
-            Property exact = m.createProperty(aosPrefix + "exact");
-            Property offset = m.createProperty(aosPrefix + "offset");
-            Property range = m.createProperty(aosPrefix + "range");
+            final Property exact = model.createProperty(aosPrefix + "exact");
+            final Property offset = model.createProperty(aosPrefix + "offset");
+            final Property range = model.createProperty(aosPrefix + "range");
 
             // Document provenance
-            Property onDocument = m.createProperty(aofPrefix + "onDocument");
-            Resource onDocumentResource = m.createResource(onDocumentURL + uid);
+            final Property onDocument = model.createProperty(aofPrefix + "onDocument");
+            final Resource onDocumentResource = model.createResource(onDocumentURL + uid);
 
-            Resource r1 = m.createResource(aot + qualifierSubclass);
-            Resource r2 = m.createResource(aot + "Qualifier");
-            Resource r3 = m.createResource(aoPrefix + "Annotation");
-            Resource r4 = m.createResource(annPrefix + "Annotation");
-            Resource r5 = m.createResource(aoPrefix + "Selector");
-            Resource r6 = m.createResource(aosPrefix + "TextSelector");
-            Resource r7 = m.createResource(aosPrefix + "OffsetRangeSelector");
+            final Resource r1 = model.createResource(aot + qualifierSubclass);
+            final Resource r2 = model.createResource(aot + "Qualifier");
+            final Resource r3 = model.createResource(aoPrefix + ANNOTATION);
+            final Resource r4 = model.createResource(annPrefix + ANNOTATION);
+            final Resource r5 = model.createResource(aoPrefix + "Selector");
+            final Resource r6 = model.createResource(aosPrefix + "TextSelector");
+            final Resource r7 = model.createResource(aosPrefix + "OffsetRangeSelector");
 
-            String selectorURI = getSelectorURI(from, taill, m);
-            Resource root2;
+            final String selectorURI = getSelectorURI(from, taill, model);
+            final Resource root2;
 
             if (selectorURI.equals("")) {
-                root2 = m.createResource(root2URL + uid + "/" + count);
-                m.add(root2, onDocument, onDocumentResource)
-                        .add(root2, range, m.createTypedLiteral(Integer.toString(taill), XSDDatatype.XSDinteger))
+                root2 = model.createResource(root2URL + uid + "/" + count);
+                model.add(root2, onDocument, onDocumentResource)
+                        .add(root2, range, model.createTypedLiteral(Integer.toString(taill), XSDDatatype.XSDinteger))
                         .add(root2, exact, text)
-                        .add(root2, offset, m.createTypedLiteral(Integer.toString(from), XSDDatatype.XSDinteger))
+                        .add(root2, offset, model.createTypedLiteral(Integer.toString(from), XSDDatatype.XSDinteger))
                         .add(root2, RDF.type, r7).add(root2, RDF.type, r6)
                         .add(root2, RDF.type, r5);
             } else {
-                root2 = m.createResource(selectorURI);
+                root2 = model.createResource(selectorURI);
             }
 
-            m.add(root, createdBy, createdByResource)
-                    .add(root, createdOn, m.createTypedLiteral(formater.format(today), XSDDatatype.XSDdate))
+            model.add(root, createdBy, createdByResource)
+                    .add(root, createdOn, model.createTypedLiteral(formater.format(today), XSDDatatype.XSDdate))
                     .add(root, hasTopic, hasTopicResource)
                     .add(root, context, root2)
                     .add(root, annotatesDocument, annotatesDocumentResource)
@@ -196,18 +200,19 @@ public class JenaOutputGenerator implements OutputGenerator {
         }
     }
 
-    private String getSelectorURI(int from, int size, Model m) {
-        String queryString = "select distinct ?sel where {?sel <" + aosPrefix + "range> ?range ; <" + aosPrefix + "offset> ?offset . FILTER (?range = " + Integer.toString(size) + " && ?offset = " + Integer.toString(from) + ") } LIMIT 10";
+    private String getSelectorURI(final int from, final int size, final Model model) {
+        final String queryString = "select distinct ?sel where {?sel <" + aosPrefix + "range> ?range ; <" + aosPrefix + "offset> ?offset . FILTER (?range = " + Integer.toString(size) + " && ?offset = " + Integer.toString(from) + ") } LIMIT 10";
 
-        Query query = QueryFactory.create(queryString);
-        QueryExecution qexec = QueryExecutionFactory.create(query, m);
-        ResultSet results = qexec.execSelect();
+        final Query query = QueryFactory.create(queryString);
         Resource r = null;
-        for (; results.hasNext(); ) {
-            QuerySolution soln = results.nextSolution();
-            r = soln.getResource("sel");
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            final ResultSet results = qexec.execSelect();
+            while (results.hasNext()) {
+                final QuerySolution soln = results.nextSolution();
+                r = soln.getResource("sel");
+            }
+            qexec.close();
         }
-        qexec.close();
 
         String selectorURI = "";
         if (r != null) {

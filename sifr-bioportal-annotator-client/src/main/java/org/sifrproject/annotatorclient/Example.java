@@ -5,6 +5,7 @@ import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
+import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class Example {
     private static final Logger logger = LoggerFactory.getLogger(Example.class);
-    public static void main(String[] args) throws IOException, NCBOAnnotatorErrorException, ParseException {
+    public static void main(String[] args) throws IOException, NCBOAnnotatorErrorException, ParseException, InvalidFormatException {
 
         BioPortalAnnotator annotator = new DefaultBioPortalAnnotator("http://services.stageportal.lirmm.fr/annotator","22522d5c-c4fe-45fc-afc6-d43e2e613169");
 

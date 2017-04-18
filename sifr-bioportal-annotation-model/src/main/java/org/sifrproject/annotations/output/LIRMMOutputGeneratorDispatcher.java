@@ -10,6 +10,9 @@ import org.sifrproject.annotations.output.json.JSONLazyOutputGenerator;
 
 public class LIRMMOutputGeneratorDispatcher extends AbstractOutputGeneratorDispatcher {
 
+    public static final String ERROR_OUTPUT = "error";
+
+    @SuppressWarnings("HardcodedFileSeparator")
     public LIRMMOutputGeneratorDispatcher() {
         super();
         registerGenerator("json", new JSONLazyOutputGenerator());
@@ -22,7 +25,7 @@ public class LIRMMOutputGeneratorDispatcher extends AbstractOutputGeneratorDispa
         registerGenerator("quaeroimg", new EHealthQuaeroBratOutputGenerator(false, false, true));
         registerGenerator("quaerodgimg", new EHealthQuaeroBratOutputGenerator(true, false, true));
         registerGenerator("brat", new BratOutputGenerator());
-        registerGenerator("error", new ErrorOutputGenerator());
+        registerGenerator(ERROR_OUTPUT, new ErrorOutputGenerator());
     }
 
 }

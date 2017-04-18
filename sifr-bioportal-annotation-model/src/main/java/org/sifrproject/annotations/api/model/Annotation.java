@@ -18,18 +18,6 @@ public interface Annotation extends ScoreableElement {
     AnnotationTokens getAnnotations();
 
     /**
-     * Returns the score associated with the annotation
-     * @return The score associated with the annotation
-     */
-    double getScore();
-
-    /**
-     * Sets the score associated with the annotation
-     * @param score The score the score associated with the annotation
-     */
-    void setScore(double score);
-
-    /**
      * Get the hierarchy associated with the annotation. For convenience Hierarchy is an {@link Iterable<HierarchyElement>}
      * @return the hierarchy associated with the annotations
      */

@@ -5,14 +5,14 @@ package org.sifrproject.annotations.api.model;
  */
 public interface ScoreableElement {
     /**
-     * Getter for the score
-     * @return the score
+     * Returns the score associated with the annotation
+     * @return The score associated with the annotation
      */
     double getScore();
 
     /**
-     * Setter for the score
-     * @param score The score
+     * Sets the score associated with the annotation
+     * @param score The score the score associated with the annotation
      */
     void setScore(double score);
 }

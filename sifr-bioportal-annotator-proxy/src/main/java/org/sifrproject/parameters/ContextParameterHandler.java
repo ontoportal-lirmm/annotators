@@ -10,15 +10,16 @@ import org.sifrproject.util.RequestGenerator;
 public class ContextParameterHandler implements ParameterHandler {
 
     private final String language;
-    public ContextParameterHandler(String language) {
+    public ContextParameterHandler(final String language) {
         this.language = language;
     }
 
+    @SuppressWarnings("FeatureEnvy")
     @Override
-    public void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
-        boolean negation = Boolean.valueOf(parameters.getFirst("negation", "false"));
-        boolean temporality = Boolean.valueOf(parameters.getFirst("temporality", "false"));
-        boolean experiencer = Boolean.valueOf(parameters.getFirst("experiencer", "false"));
+    public void processParameter(@SuppressWarnings("MethodParameterOfConcreteClass") final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
+        final boolean negation = Boolean.valueOf(parameters.getFirst("negation", "false"));
+        final boolean temporality = Boolean.valueOf(parameters.getFirst("temporality", "false"));
+        final boolean experiencer = Boolean.valueOf(parameters.getFirst("experiencer", "false"));
 
         if (negation || temporality || experiencer) {
             postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotator(language, negation, experiencer, temporality));

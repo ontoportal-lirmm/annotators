@@ -2,6 +2,7 @@ package org.sifrproject.annotations.api.input;
 
 import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.model.Annotation;
+import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface AnnotationParser {
      * @throws ParseException The format of the supplied {@code queryResponse} is invalid.
      * @throws NCBOAnnotatorErrorException The supplied {@code queryResponse} contains an error message.
      */
-    List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException;
+    List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException, InvalidFormatException;
 }
