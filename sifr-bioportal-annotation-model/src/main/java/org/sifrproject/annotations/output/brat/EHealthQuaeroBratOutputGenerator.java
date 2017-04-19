@@ -1,8 +1,10 @@
 package org.sifrproject.annotations.output.brat;
 
+import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
+import org.sifrproject.annotations.api.model.ScoreableElement;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
@@ -31,28 +33,13 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
     @SuppressWarnings({"FeatureEnvy", "OverlyComplexMethod", "MethodWithMoreThanThreeNegations", "OverlyLongMethod"})
     @Override
     public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
-        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
-        for (final Annotation annotation : annotations) {
-            for (final AnnotationToken annotationToken : annotation.getAnnotations()) {
-                if (annotationToken != null) {
-                    if (!perTokenAnnotations.containsKey(annotationToken)) {
-                        perTokenAnnotations.put(annotationToken, new ArrayList<Annotation>());
-                    }
-                    perTokenAnnotations.get(annotationToken).add(annotation);
-                }
-            }
-        }
+        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = AnnotationParser.perTokenAnnotations(annotations);
         int termCounter = 0;
         final StringBuilder stringBuilder = new StringBuilder();
         for (final Map.Entry<AnnotationToken, List<Annotation>> annotationTokenListEntry : perTokenAnnotations.entrySet()) {
             termCounter++;
             List<Annotation> annotationsForToken = annotationTokenListEntry.getValue();
-            Collections.sort(annotationsForToken, new Comparator<Annotation>() {
-                @Override
-                public int compare(Annotation o1, Annotation o2) {
-                    return Double.compare(o1.getScore(), o2.getScore());
-                }
-            });
+            annotationsForToken.sort(Comparator.comparingDouble(ScoreableElement::getScore));
 
             if (disambiguate) {
                 final List<Annotation> fullList = annotationTokenListEntry.getValue();
@@ -92,7 +79,6 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
                     }
                 }
             }
-
         }
 
         return new LIRMMAnnotatorOutput(stringBuilder.toString(), MimeTypes.APPLICATION_BRAT);
