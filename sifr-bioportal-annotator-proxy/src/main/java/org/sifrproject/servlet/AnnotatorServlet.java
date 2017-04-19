@@ -59,6 +59,7 @@ public class AnnotatorServlet extends HttpServlet {
     private static final String FORMAT = "format";
     private static final String ANNOTATOR_URI = "annotatorURI";
     private static final String CONTEXT_LANGUAGE = "context.language";
+    private static final String SPARQL_ENDPOINT_PROPERTY = "sparqlEndpoint";
 
     private String annotatorURI = null;
 
@@ -74,21 +75,29 @@ public class AnnotatorServlet extends HttpServlet {
     public AnnotatorServlet() {
         try {
             /*
+            * Loading configuration properties
+            */
+            final InputStream proxyPropertiesStream = AnnotatorServlet.class.getResourceAsStream("/annotatorProxy.properties");
+            proxyProperties = new Properties();
+            proxyProperties.load(proxyPropertiesStream);
+
+            String endPoint = sparqlServer;
+            if (proxyProperties.contains(SPARQL_ENDPOINT_PROPERTY)) {
+                endPoint = proxyProperties.getProperty(SPARQL_ENDPOINT_PROPERTY);
+            }
+            endPoint = endPoint.trim();
+
+            /*
              * Instantiating annotation parser and dependencies
              */
-            StoreHandler.registerStoreInstance(new JenaRemoteSPARQLStore(sparqlServer));
+            StoreHandler.registerStoreInstance(new JenaRemoteSPARQLStore(endPoint));
             final PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
             final PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
             final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
             final AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
             parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
 
-            /*
-            * Loading configuration properties
-            */
-            final InputStream proxyPropertiesStream = AnnotatorServlet.class.getResourceAsStream("/annotatorProxy.properties");
-            proxyProperties = new Properties();
-            proxyProperties.load(proxyPropertiesStream);
+
 
             /*
              * Instantiating parameter and post-annotation registries
@@ -151,9 +160,10 @@ public class AnnotatorServlet extends HttpServlet {
             final Pattern pattern = Pattern.compile("^((?:https?://)?[^:]+)");
             final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
             if (matcher.find()) {
-                annotatorURI = matcher.group(1) + ":8080/servlet?";
+                annotatorURI = matcher.group(1) + ":8080/annotator";
             }
         }
+        annotatorURI = annotatorURI.trim();
 
         final RequestGenerator parameters = new RequestGenerator(request, annotatorURI);
 
