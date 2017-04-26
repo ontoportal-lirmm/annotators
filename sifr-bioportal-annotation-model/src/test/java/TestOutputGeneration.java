@@ -2,15 +2,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
-import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
-import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
-import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
 import org.sifrproject.annotations.output.LIRMMOutputGeneratorDispatcher;
-import org.sifrproject.annotations.umls.UMLSGroupIndex;
-import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sparqy.api.graph.store.Store;
@@ -31,12 +26,9 @@ public class TestOutputGeneration {
     public void setUp() throws Exception {
         Store store = new JenaRemoteSPARQLStore("http://sparql.bioportal.lirmm.fr/sparql/");
         StoreHandler.registerStoreInstance(store);
-        PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
-        PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
-        UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
         AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
 
-        this.parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
+        this.parser = new BioPortalJSONAnnotationParser(annotationFactory);
         this.annotationList = parser.parseAnnotations(jsonOutput);
 
     }
