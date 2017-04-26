@@ -3,15 +3,10 @@ import org.junit.Test;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
-import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
-import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
-import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
-import org.sifrproject.annotations.umls.UMLSGroupIndex;
-import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 import org.sparqy.api.graph.store.Store;
 import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
 import org.sparqy.graph.storage.StoreHandler;
@@ -28,12 +23,12 @@ public class TestLazyModel {
 
     @Test
     public void testModelConstruction() throws IOException {
-        PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
-        PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
-        UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
+//        PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
+//        PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
+//        UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
         AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
 
-        AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
+        AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory);
         List<Annotation> annotationList = null;
         try {
             final String jsonOutput = "[{\n" +
