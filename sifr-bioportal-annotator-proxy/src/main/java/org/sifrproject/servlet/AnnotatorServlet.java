@@ -82,7 +82,7 @@ public class AnnotatorServlet extends HttpServlet {
             proxyProperties.load(proxyPropertiesStream);
 
             String endPoint = sparqlServer;
-            if (proxyProperties.contains(SPARQL_ENDPOINT_PROPERTY)) {
+            if (proxyProperties.containsKey(SPARQL_ENDPOINT_PROPERTY)) {
                 endPoint = proxyProperties.getProperty(SPARQL_ENDPOINT_PROPERTY);
             }
             endPoint = endPoint.trim();
