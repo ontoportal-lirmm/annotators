@@ -39,8 +39,11 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
             final String paramName = parameterNames.nextElement();
             final String paramValue;
             if(paramName.equals("text") && !request.getParameter(paramName).isEmpty()) {
-                final String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
-                 paramValue = new String(request.getParameter(paramName).getBytes(encoding), "utf-8");
+                String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
+                if((encoding==null) || encoding.isEmpty()){
+                    encoding = "utf-8";
+                }
+                paramValue = new String(request.getParameter(paramName).getBytes(encoding), "utf-8");
             } else {
                 paramValue = request.getParameter(paramName);
             }
