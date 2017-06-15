@@ -48,7 +48,7 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
 
         if (method.equals("POST")) {
             connection.setDoOutput(true);
-            connection.setRequestProperty("ContentType",
+            connection.setRequestProperty("Content-type",
                     "application/x-www-form-urlencoded; charset=UTF-8");
             connection.setRequestProperty("Content-Length",
                     Integer.toString(parameterString.getBytes().length));
