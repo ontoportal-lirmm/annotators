@@ -27,6 +27,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     private boolean temporality;
     private boolean lemmatize;
     private final List<String> semanticGroups; //semantic_types=Type1, Type2,...
+    private String recognizer;
 
 
     DefaultBioPortalAnnotatorQuery(String text) {
@@ -213,5 +214,13 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     @Override
     public void setLemmatize(boolean lemmatize) {
         this.lemmatize = lemmatize;
+    }
+
+    public String getRecognizer() {
+        return recognizer;
+    }
+
+    public void setRecognizer(String recognizer) {
+        this.recognizer = recognizer;
     }
 }

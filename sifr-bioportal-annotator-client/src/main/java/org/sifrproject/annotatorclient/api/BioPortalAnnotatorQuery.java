@@ -92,4 +92,8 @@ public interface BioPortalAnnotatorQuery {
 
     void addSemanticGroup(String semanticGroup);
     String generateSemanticGroupsString();
+
+    String getRecognizer();
+
+    void setRecognizer(String recognizer);
 }

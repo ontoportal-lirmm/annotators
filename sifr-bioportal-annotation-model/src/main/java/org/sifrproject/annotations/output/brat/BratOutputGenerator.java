@@ -1,6 +1,7 @@
 package org.sifrproject.annotations.output.brat;
 
 import org.sifrproject.annotations.api.input.AnnotationParser;
+import org.sifrproject.annotations.api.input.Token;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
@@ -25,32 +26,32 @@ import static org.sifrproject.annotations.output.MimeTypes.APPLICATION_BRAT;
 public class BratOutputGenerator implements OutputGenerator {
     @Override
     public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
-        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = AnnotationParser.perTokenAnnotations(annotations);
+        final List<Token> tokens = AnnotationParser.perTokenAnnotations(annotations);
         @SuppressWarnings("LocalVariableOfConcreteClass") final BratCounter bratCounter = new BratCounter();
         final StringBuilder stringBuilder = new StringBuilder();
-        for (final Map.Entry<AnnotationToken, List<Annotation>> annotationTokenListEntry : perTokenAnnotations.entrySet()) {
-            final List<Annotation> annotationsForToken = annotationTokenListEntry.getValue();
+        for (final Token token : tokens) {
+            final List<Annotation> annotationsForToken = new ArrayList<>(token.getAnnotations());
             annotationsForToken.sort(Comparator.comparingDouble(ScoreableElement::getScore));
 
             for (final Annotation annotation : annotationsForToken) {
                 if (annotation != null) {
                     final AnnotatedClass annotatedClass = annotation.getAnnotatedClass();
-                    final AnnotationToken token = annotationTokenListEntry.getKey();
+                    final AnnotationToken annotationToken = token.getAnnotationToken();
 
                     final Set<UMLSGroup> semanticGroups = annotatedClass.getSemanticGroups();
 
-                    final NegationContext negationContext = annotationTokenListEntry.getKey().getNegationContext();
-                    final ExperiencerContext experiencerContext = annotationTokenListEntry.getKey().getExperiencerContext();
-                    final TemporalityContext temporalityContext = annotationTokenListEntry.getKey().getTemporalityContext();
+                    final NegationContext negationContext = annotationToken.getNegationContext();
+                    final ExperiencerContext experiencerContext = annotationToken.getExperiencerContext();
+                    final TemporalityContext temporalityContext = annotationToken.getTemporalityContext();
 
                     if (semanticGroups.isEmpty()) {
                         generateAnnotationForGroup(stringBuilder, sourceText, bratCounter,
-                                annotatedClass, token, null, negationContext, experiencerContext,
+                                annotatedClass, annotationToken, null, negationContext, experiencerContext,
                                 temporalityContext);
                     } else {
                         for (final UMLSGroup group : semanticGroups) {
                             generateAnnotationForGroup(stringBuilder, sourceText, bratCounter,
-                                    annotatedClass, token, group, negationContext, experiencerContext,
+                                    annotatedClass, annotationToken, group, negationContext, experiencerContext,
                                     temporalityContext);
                         }
                     }

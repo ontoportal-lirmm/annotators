@@ -12,18 +12,19 @@ public class BioportalAnnotatorQueryBuilder {
     public static final BioportalAnnotatorQueryBuilder DEFAULT = new BioportalAnnotatorQueryBuilder();
 
     private String text = "";
-    private List<String> ontologies = new ArrayList<>();
-    private boolean longestOnly = false;
-    private boolean excludeNumbers = false;
+    private final List<String> ontologies = new ArrayList<>();
+    private boolean longestOnly;
+    private boolean excludeNumbers;
     private boolean wholeWordOnly = true;
-    private boolean excludeSynonyms = false;
-    private boolean expandMappings = false;
+    private boolean excludeSynonyms;
+    private boolean expandMappings;
     private String score = "";
-    private boolean expandClassHierarchy = false;
-    private int classHierarchyMaxLevel = 0;
-    private List<String> semanticTypes = new ArrayList<>();
-    private List<String> semanticGroups = new ArrayList<>();
+    private boolean expandClassHierarchy;
+    private int classHierarchyMaxLevel;
+    private final List<String> semanticTypes = new ArrayList<>();
+    private final List<String> semanticGroups = new ArrayList<>();
     private String format = "json";
+    private String recognizer = "";
 
     private boolean negation;
     private boolean experiencer;
@@ -34,97 +35,102 @@ public class BioportalAnnotatorQueryBuilder {
     private BioportalAnnotatorQueryBuilder() {
     }
 
-    public BioportalAnnotatorQueryBuilder text(String text) {
+    public BioportalAnnotatorQueryBuilder text(final String text) {
         this.text = text;
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder ontologies(String... ontology) {
+    public BioportalAnnotatorQueryBuilder ontologies(final String... ontology) {
         ontologies.addAll(Arrays.asList(ontology));
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder longest_only(boolean longestOnly) {
+    public BioportalAnnotatorQueryBuilder longest_only(final boolean longestOnly) {
         this.longestOnly = longestOnly;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder exclude_numbers(boolean excludeNumbers) {
+    public BioportalAnnotatorQueryBuilder exclude_numbers(final boolean excludeNumbers) {
         this.excludeNumbers = excludeNumbers;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder whole_word_only(boolean wholeWordOnly) {
+    public BioportalAnnotatorQueryBuilder whole_word_only(final boolean wholeWordOnly) {
         this.wholeWordOnly = wholeWordOnly;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder exclude_synonyms(boolean excludeSynonyms) {
+    public BioportalAnnotatorQueryBuilder exclude_synonyms(final boolean excludeSynonyms) {
         this.excludeSynonyms = excludeSynonyms;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder expand_mappings(boolean expandMappings) {
+    public BioportalAnnotatorQueryBuilder expand_mappings(final boolean expandMappings) {
         this.expandMappings = expandMappings;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder score(String score) {
+    public BioportalAnnotatorQueryBuilder score(final String score) {
         this.score = score;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder expand_class_hierarchy(boolean expandClassHierarchy) {
+    public BioportalAnnotatorQueryBuilder expand_class_hierarchy(final boolean expandClassHierarchy) {
         this.expandClassHierarchy = expandClassHierarchy;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder class_hierarchy_max_level(int classHierarchyMaxLevel) {
+    public BioportalAnnotatorQueryBuilder class_hierarchy_max_level(final int classHierarchyMaxLevel) {
         this.classHierarchyMaxLevel = classHierarchyMaxLevel;
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder semantic_types(String... types) {
-        this.semanticTypes.addAll(Arrays.asList(types));
+    public BioportalAnnotatorQueryBuilder semantic_types(final String... types) {
+        semanticTypes.addAll(Arrays.asList(types));
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder semantic_groups(String... groups) {
-        this.semanticGroups.addAll(Arrays.asList(groups));
+    public BioportalAnnotatorQueryBuilder semantic_groups(final String... groups) {
+        semanticGroups.addAll(Arrays.asList(groups));
         return this;
     }
 
 
-    public BioportalAnnotatorQueryBuilder format(String format) {
+    public BioportalAnnotatorQueryBuilder format(final String format) {
         this.format = format;
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder lemmatize(boolean lemmataze) {
-        this.lemmatize = lemmataze;
+    public BioportalAnnotatorQueryBuilder recognizer(final String recognizer) {
+        this.recognizer = recognizer;
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder negation(boolean negation){
+    public BioportalAnnotatorQueryBuilder lemmatize(final boolean lemmataze) {
+        lemmatize = lemmataze;
+        return this;
+    }
+
+    public BioportalAnnotatorQueryBuilder negation(final boolean negation){
         this.negation=negation;
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder temporality(boolean temporality){
+    public BioportalAnnotatorQueryBuilder temporality(final boolean temporality){
         this.temporality=temporality;
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder experiencer(boolean experiencer){
+    public BioportalAnnotatorQueryBuilder experiencer(final boolean experiencer){
         this.experiencer=experiencer;
         return this;
     }
@@ -133,14 +139,14 @@ public class BioportalAnnotatorQueryBuilder {
         DefaultBioPortalAnnotatorQuery defaultBioportalAnnotatorQuery = new DefaultBioPortalAnnotatorQuery(text);
         defaultBioportalAnnotatorQuery.setExcludeNumbers(excludeNumbers);
         defaultBioportalAnnotatorQuery.setClassHierarchyMaxLevel(classHierarchyMaxLevel);
-        for(String ontology: ontologies){
+        for(final String ontology: ontologies){
             defaultBioportalAnnotatorQuery.addOntology(ontology);
         }
-        for(String semanticType: semanticTypes){
+        for(final String semanticType: semanticTypes){
             defaultBioportalAnnotatorQuery.addSemanticType(semanticType);
         }
 
-        for(String semanticGroup: semanticGroups){
+        for(final String semanticGroup: semanticGroups){
             defaultBioportalAnnotatorQuery.addSemanticGroup(semanticGroup);
         }
         defaultBioportalAnnotatorQuery.setExcludeSynonyms(excludeSynonyms);
@@ -154,6 +160,7 @@ public class BioportalAnnotatorQueryBuilder {
         defaultBioportalAnnotatorQuery.setTemporality(temporality);
         defaultBioportalAnnotatorQuery.setExperiencer(experiencer);
         defaultBioportalAnnotatorQuery.setLemmatize(lemmatize);
+        defaultBioportalAnnotatorQuery.setRecognizer(recognizer);
 
         ontologies.clear();
         semanticTypes.clear();
@@ -166,6 +173,7 @@ public class BioportalAnnotatorQueryBuilder {
         format="json";
         classHierarchyMaxLevel=0;
         expandClassHierarchy=false;
+        recognizer = "";
 
         score="";
         expandMappings = false;

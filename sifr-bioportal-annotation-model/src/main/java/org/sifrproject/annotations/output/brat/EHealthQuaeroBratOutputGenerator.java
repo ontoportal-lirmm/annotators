@@ -1,9 +1,9 @@
 package org.sifrproject.annotations.output.brat;
 
 import org.sifrproject.annotations.api.input.AnnotationParser;
+import org.sifrproject.annotations.api.input.Token;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.Annotation;
-import org.sifrproject.annotations.api.model.AnnotationToken;
 import org.sifrproject.annotations.api.model.ScoreableElement;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGenerator;
@@ -11,7 +11,10 @@ import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 import org.sifrproject.annotations.output.MimeTypes;
 import org.sifrproject.annotations.umls.UMLSGroup;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Produces a BRAT output from a list of bioportal {@code {@link Annotation}} objects compatible with the
@@ -33,21 +36,24 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
     @SuppressWarnings({"FeatureEnvy", "OverlyComplexMethod", "MethodWithMoreThanThreeNegations", "OverlyLongMethod"})
     @Override
     public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
-        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = AnnotationParser.perTokenAnnotations(annotations);
+        final List<Token> tokens = AnnotationParser.perTokenAnnotations(annotations);
         int termCounter = 0;
         final StringBuilder stringBuilder = new StringBuilder();
-        for (final Map.Entry<AnnotationToken, List<Annotation>> annotationTokenListEntry : perTokenAnnotations.entrySet()) {
+        for (final Token token : tokens) {
             termCounter++;
-            List<Annotation> annotationsForToken = annotationTokenListEntry.getValue();
-            annotationsForToken.sort(Comparator.comparingDouble(ScoreableElement::getScore));
-
+            final List<Annotation> annotationsForToken;
             if (disambiguate) {
-                final List<Annotation> fullList = annotationTokenListEntry.getValue();
-                if (!fullList.isEmpty()) {
+                final List<Annotation> fullList = new ArrayList<>(token.getAnnotations());
+                if (fullList.isEmpty()) {
+                    annotationsForToken = fullList;
+                } else {
                     final List<Annotation> disambiguatedList = new ArrayList<>();
                     disambiguatedList.add(fullList.get(0));
                     annotationsForToken = disambiguatedList;
                 }
+            } else {
+                annotationsForToken = new ArrayList<>(token.getAnnotations());
+                annotationsForToken.sort(Comparator.comparingDouble(ScoreableElement::getScore));
             }
 
             Annotation annotation = null;
@@ -68,12 +74,12 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
                 String group = "";
                 group += (selectSingleGroup && !semanticGroups.isEmpty()) ? semanticGroups.iterator().next().name() : buildGroupList(semanticGroups);
 
-                if(!semanticGroups.isEmpty()) {
-                    if(!ignoreAmbiguous || (ignoreAmbiguous && (semanticGroups.size() == 1))) {
+                if (!semanticGroups.isEmpty()) {
+                    if (!ignoreAmbiguous || (semanticGroups.size() == 1)) {
                         stringBuilder.append(String.format("T%d\t%s %d %d\t%s", termCounter, group,
-                                annotationTokenListEntry.getKey().getFrom(),
-                                annotationTokenListEntry.getKey().getTo(),
-                                annotationTokenListEntry.getKey().getText()
+                                token.getAnnotationToken().getFrom(),
+                                token.getAnnotationToken().getTo(),
+                                token.getAnnotationToken().getText()
                                         .toLowerCase())).append("\n");
                         stringBuilder.append(String.format("#%d\tAnnotatorNotes T%d\t%s", termCounter, termCounter, buildCUILIst(annotatedClass.getCuis()))).append("\n");
                     }

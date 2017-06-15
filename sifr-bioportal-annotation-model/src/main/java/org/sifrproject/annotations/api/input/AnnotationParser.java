@@ -5,11 +5,9 @@ import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
+import org.sifrproject.annotations.input.TokenImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Parser for the custom json-ld format from NCBO Annotator
@@ -25,18 +23,37 @@ public interface AnnotationParser {
      */
     List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException, InvalidFormatException;
 
-    static Map<AnnotationToken, List<Annotation>> perTokenAnnotations(final Iterable<Annotation> annotations){
-        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
+//    static Map<AnnotationToken, List<Annotation>> perTokenAnnotations(final Iterable<Annotation> annotations){
+//        final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = new HashMap<>();
+//        for (final Annotation annotation : annotations) {
+//            for (final AnnotationToken annotationToken : annotation.getAnnotations()) {
+//                if (annotationToken != null) {
+//                    if (!perTokenAnnotations.containsKey(annotationToken)) {
+//                        perTokenAnnotations.put(annotationToken, new ArrayList<>());
+//                    }
+//                    perTokenAnnotations.get(annotationToken).add(annotation);
+//                }
+//            }
+//        }
+//        return perTokenAnnotations;
+//    }
+
+    static List<Token> perTokenAnnotations(final Iterable<Annotation> annotations){
+        final Collection<Token> tokens = new HashSet<>();
+
         for (final Annotation annotation : annotations) {
             for (final AnnotationToken annotationToken : annotation.getAnnotations()) {
                 if (annotationToken != null) {
-                    if (!perTokenAnnotations.containsKey(annotationToken)) {
-                        perTokenAnnotations.put(annotationToken, new ArrayList<>());
-                    }
-                    perTokenAnnotations.get(annotationToken).add(annotation);
+                    final Token token = new TokenImpl(annotationToken);
+                    tokens.add(token);
+                    token.addAnnotation(annotation);
                 }
             }
         }
-        return perTokenAnnotations;
+        final List<Token> tokensList = new ArrayList<>(tokens);
+        tokensList.sort(Comparable::compareTo);
+        return tokensList;
     }
+
+
 }
