@@ -5,7 +5,7 @@ import org.sifrproject.annotations.api.output.AbstractOutputGeneratorDispatcher;
 import org.sifrproject.annotations.output.brat.BratOutputGenerator;
 import org.sifrproject.annotations.output.brat.EHealthQuaeroBratOutputGenerator;
 import org.sifrproject.annotations.output.error.ErrorOutputGenerator;
-import org.sifrproject.annotations.output.jena.JenaOutputGenerator;
+import org.sifrproject.annotations.output.rdf.RDFOutputGenerator;
 import org.sifrproject.annotations.output.json.JSONLazyOutputGenerator;
 
 public class LIRMMOutputGeneratorDispatcher extends AbstractOutputGeneratorDispatcher {
@@ -16,8 +16,8 @@ public class LIRMMOutputGeneratorDispatcher extends AbstractOutputGeneratorDispa
     public LIRMMOutputGeneratorDispatcher() {
         super();
         registerGenerator("json", new JSONLazyOutputGenerator());
-        registerGenerator("rdf", new JenaOutputGenerator("rdf/xml"));
-        registerGenerator("turtle", new JenaOutputGenerator("ttl"));
+        registerGenerator("rdf", new RDFOutputGenerator("rdf/xml"));
+        registerGenerator("turtle", new RDFOutputGenerator("ttl"));
         registerGenerator("quaero", new EHealthQuaeroBratOutputGenerator(false, false, false));
         registerGenerator("quaerodg", new EHealthQuaeroBratOutputGenerator(true, false, false));
         registerGenerator("quaerosg", new EHealthQuaeroBratOutputGenerator(true, true, false));

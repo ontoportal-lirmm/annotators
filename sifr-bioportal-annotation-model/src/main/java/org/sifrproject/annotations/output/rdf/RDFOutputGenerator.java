@@ -1,4 +1,4 @@
-package org.sifrproject.annotations.output.jena;
+package org.sifrproject.annotations.output.rdf;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.*;
@@ -22,7 +22,7 @@ import java.util.Random;
  * RDF output generator using Jena, supports all the formats supported by Jena.
  */
 @SuppressWarnings({"LawOfDemeter", "HardcodedFileSeparator"})
-public class JenaOutputGenerator implements OutputGenerator {
+public class RDFOutputGenerator implements OutputGenerator {
     private static final String SIFR_ANNOTATOR = "SIFR Annotator";
     private static final String THE_SIFR_ANNOTATOR_IS_A_SPECIFIC_VERSION_OF_THE_NCBO_ANNOTATOR_BUT_FOR_FRENCH_ONTOLOGIES_TERMINOLOGIES_YOU_SHALL_USE_IT_TO_ANNOTATE_FRENCH_BIOMEDICAL_TEXT_WITH_ONTOLOGY_CONCEPTS = "The SIFR Annotator is a specific version of the NCBO Annotator but for French ontologies & terminologies. You shall use it to annotate French biomedical text with ontology concepts.";
     private static final String ANNOTATION = "Annotation";
@@ -48,11 +48,11 @@ public class JenaOutputGenerator implements OutputGenerator {
      * Output generator based on Apache Jena, can generate the output from the annotation modelin any of the formats
      * supported by Jena
      *
-     * @param jenaOutputFormat The jena output format,
-     *                         {@see https://jena.apache.org/documentation/io/rdf-output.html#jena_model_write_formats}
+     * @param jenaOutputFormat The rdf output format,
+     *                         {@see https://rdf.apache.org/documentation/io/rdf-output.html#jena_model_write_formats}
      *                         for a list of all supported formats
      */
-    public JenaOutputGenerator(final String jenaOutputFormat) {
+    public RDFOutputGenerator(final String jenaOutputFormat) {
         this.jenaPutputFormat = jenaOutputFormat;
     }
 
