@@ -13,13 +13,13 @@ import org.sifrproject.util.RequestGenerator;
 
 public class ScoreParameterHandler implements ParameterHandler {
     @Override
-    public void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
+    public void processParameter(final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
 
         if (parameters.containsKey("score")) {
-            String score = parameters.get("score");
+            final String score = parameters.get("score");
             parameters.remove("score");
 
-            Scorer scorer;
+            final Scorer scorer;
             switch (score) {
                 case "old":
                     scorer = new OldScore();
@@ -34,8 +34,19 @@ public class ScoreParameterHandler implements ParameterHandler {
                     throw new InvalidParameterException(String.format("Invalid value for score parameter -- %s", score));
             }
 
-            PostAnnotator scorePostAnnotator = new ScoringPostAnnotator(scorer);
+            final PostAnnotator scorePostAnnotator;
+            if(parameters.containsKey("threshold")){
+                final String threshold = parameters.get("threshold");
+                parameters.remove("threshold");
+                scorePostAnnotator = new ScoringPostAnnotator(scorer, Double.valueOf(threshold));
+            } else {
+                scorePostAnnotator = new ScoringPostAnnotator(scorer);
+            }
+
+
             postAnnotationRegistry.registerPostAnnotator(scorePostAnnotator);
+        } else if(parameters.containsKey("threshold")){
+            throw new InvalidParameterException("The threshold parameter requires the score parameter");
         }
     }
 }
