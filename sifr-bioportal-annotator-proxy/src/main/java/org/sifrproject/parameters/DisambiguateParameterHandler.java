@@ -13,8 +13,8 @@ import org.sifrproject.util.RequestGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScoreParameterHandler implements ParameterHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ScoreParameterHandler.class);
+public class DisambiguateParameterHandler implements ParameterHandler {
+    private static final Logger logger = LoggerFactory.getLogger(DisambiguateParameterHandler.class);
     @Override
     public void processParameter(final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
         logger.info("Processing score parameter");

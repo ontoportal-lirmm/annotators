@@ -17,7 +17,7 @@ public final class RestfulRequest {
         logger.debug("Request to Annotator: {}", httpURLConnection.getURL());
         final int code = httpURLConnection.getResponseCode();
         final String message = httpURLConnection.getResponseMessage();
-        logger.info("{} - {} {}", code, message, httpURLConnection.getURL().toString());
+        logger.info("{} - {} {}", code, message, httpURLConnection.getURL());
         final String response = streamAsString((code == 200) ? httpURLConnection.getInputStream() : httpURLConnection.getErrorStream());
         logger.debug(response);
         return response;

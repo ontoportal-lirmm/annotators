@@ -60,8 +60,9 @@ public class AnnotatorServlet extends HttpServlet {
     private static final String ANNOTATOR_URI = "annotatorURI";
     private static final String CONTEXT_LANGUAGE = "context.language";
     private static final String SPARQL_ENDPOINT_PROPERTY = "sparqlEndpoint";
+    private static final String SERVER_ENCODING = "server.encoding";
 
-    private String annotatorURI = null;
+    private String annotatorURI;
 
     private AnnotationParser parser;
 
@@ -144,6 +145,7 @@ public class AnnotatorServlet extends HttpServlet {
     @SuppressWarnings("LocalVariableOfConcreteClass")
     @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+        logger.info("Processing request {}", request);
         final PostAnnotationRegistry postAnnotationRegistry = new LIRMMPostAnnotationRegistry();
         /*
          * Initializing the annotator URI, from the properties if present
@@ -163,9 +165,16 @@ public class AnnotatorServlet extends HttpServlet {
                 annotatorURI = matcher.group(1) + ":8080/annotator";
             }
         }
+
+
+        String serverEncoding = "iso8859";
+        if(proxyProperties.containsKey(SERVER_ENCODING)) {
+            serverEncoding = proxyProperties.getProperty(SERVER_ENCODING);
+        }
         annotatorURI = annotatorURI.trim();
 
-        final RequestGenerator parameters = new RequestGenerator(request, annotatorURI);
+
+        final RequestGenerator parameters = new RequestGenerator(request, annotatorURI, serverEncoding);
 
         //Retrieving format parameter, json is the default output format if the format parameter is absent
         String format = parameters.getFirst(FORMAT, "json").toLowerCase();

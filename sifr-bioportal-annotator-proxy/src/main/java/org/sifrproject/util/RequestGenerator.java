@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Provides static methods to process url used by servlet servlets
@@ -19,28 +20,34 @@ import java.util.Map;
  */
 public class RequestGenerator extends LinkedHashMap<String, String> {
     private static final long serialVersionUID = 4351112172500760834L;
-    public static final String CONTENT_TYPE = "Content-Type";
-    public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 = "application/x-www-form-urlencoded; charset=UTF-8";
-    public static final String CONTENT_LENGTH = "Content-Length";
-    public static final String ACCEPT_HEADER = "Accept";
-    public static final String ACCEPTED_MIMES = "text/xml, application/json, text/html, text/plain";
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String USER_AGENT_HEADER = "User-agent";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 = "application/x-www-form-urlencoded; charset=UTF-8";
+    private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String ACCEPT_HEADER = "Accept";
+    private static final String ACCEPTED_MIMES = "text/xml, application/json, text/html, text/plain";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String USER_AGENT_HEADER = "User-agent";
+    private static final Pattern NORMALIZE_ENCODING = Pattern.compile("-");
     private final String baseURI;
     private final Map<String, String> headers;
     private final HttpServletRequest httpServletRequest;
 
 
-    public RequestGenerator(final HttpServletRequest request, final String annotatorURI) throws UnsupportedEncodingException {
-        this.httpServletRequest = request;
+    public RequestGenerator(final HttpServletRequest request, final String annotatorURI, final CharSequence serverEncoding) throws UnsupportedEncodingException {
+        httpServletRequest = request;
         baseURI = annotatorURI;
         final Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             final String paramName = parameterNames.nextElement();
-            final String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
-            final String paramValue = new String(request.getParameter(paramName).getBytes(encoding), "utf-8");
-            //final String paramValue = request.getParameter(paramName);
-            this.put(paramName, paramValue);
+            final String paramValue;
+
+            if(NORMALIZE_ENCODING.matcher(serverEncoding).replaceAll("").toLowerCase().equals("utf8")) {
+                final String encoding = (httpServletRequest.getMethod().equals("GET")) ? "8859_1" : httpServletRequest.getCharacterEncoding();
+                paramValue = new String(request.getParameter(paramName).getBytes(encoding), "utf-8");
+            } else {
+                paramValue = request.getParameter(paramName);
+            }
+            put(paramName, paramValue);
         }
         headers = new HashMap<>();
         final Enumeration<String> headerNames = request.getHeaderNames();
@@ -91,16 +98,16 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
     }
 
     private String createParameterString() throws UnsupportedEncodingException {
-        String parameterString = "";
+        final StringBuilder parameterString = new StringBuilder();
         boolean first = true;
         for (final String paramName : keySet()) {
             if (!first) {
-                parameterString += "&";
+                parameterString.append("&");
             }
             first = false;
-            parameterString += paramName + "=" + URLEncoder.encode(get(paramName), "UTF-8");
+            parameterString.append(paramName).append("=").append(URLEncoder.encode(get(paramName), "UTF-8"));
         }
-        return parameterString;
+        return parameterString.toString();
     }
 
     private void transferHeaders(final HttpURLConnection connection) {
@@ -119,11 +126,16 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
      * @param defaultValue The default value to return is the first argument is null or empty
      * @return The parameter or the default value
      */
-    public String getFirst(String name, String defaultValue) {
+    public String getFirst(final String name, final String defaultValue) {
         String value = get(name);
         if (value == null) {
             value = defaultValue;
         }
         return value;
+    }
+
+    @Override
+    public RequestGenerator clone() {
+        return (RequestGenerator) super.clone();
     }
 }
