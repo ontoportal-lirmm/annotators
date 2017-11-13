@@ -33,6 +33,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>annotator</finalName>
     </build>
     <dependencies>
         <dependency>
