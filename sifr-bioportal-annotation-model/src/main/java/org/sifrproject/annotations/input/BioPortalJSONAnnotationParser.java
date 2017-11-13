@@ -45,8 +45,8 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
      * @param umlsTypeRetrieval The property retriever of UMLS semantic groups (may be null, see second constructor)
      * @param groupIndex The UMLS group index that maps UMLS groups to their semantic types and vice versa
      */
-    public BioPortalJSONAnnotationParser(AnnotationFactory annotationFactory, PropertyRetriever cuiRetrieval,
-                                         PropertyRetriever umlsTypeRetrieval, UMLSGroupIndex groupIndex) {
+    public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory, final PropertyRetriever cuiRetrieval,
+                                         final PropertyRetriever umlsTypeRetrieval, final UMLSGroupIndex groupIndex) {
         this.annotationFactory = annotationFactory;
         this.cuiRetrieval = cuiRetrieval;
         this.groupIndex = groupIndex;
@@ -57,27 +57,27 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
      * Create an annotation parser
      * @param annotationFactory The factory for annotation elements
      */
-    public BioPortalJSONAnnotationParser(AnnotationFactory annotationFactory) {
+    public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory) {
         this(annotationFactory, null, null, UMLSSemanticGroupsLoader.load());
     }
 
     @Override
-    public List<Annotation> parseAnnotations(String queryResponse) throws ParseException, NCBOAnnotatorErrorException, InvalidFormatException {
+    public List<Annotation> parseAnnotations(final String queryResponse) throws ParseException, NCBOAnnotatorErrorException, InvalidFormatException {
 
-        List<Annotation> annotations = new ArrayList<>();
+        final List<Annotation> annotations = new ArrayList<>();
         try {
-            JsonValue rootNode = Json.parse(queryResponse);
+            final JsonValue rootNode = Json.parse(queryResponse);
             if (rootNode != null) {
                     if(rootNode.isObject()){
                         throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
                     }
-                    for (JsonValue childObject : rootNode.asArray()) {
-                        JsonObject child = childObject.asObject();
-                        JsonValue annotatedClassNode = child.get("annotatedClass");
-                        JsonValue annotationsNode = child.get("annotations");
-                        JsonValue hierarchyNode = child.get("hierarchy");
-                        JsonValue mappingsNode = child.get("mappings");
-                        if (annotatedClassNode!=null && annotationsNode!=null && mappingsNode!=null) {
+                    for (final JsonValue childObject : rootNode.asArray()) {
+                        final JsonObject child = childObject.asObject();
+                        final JsonValue annotatedClassNode = child.get("annotatedClass");
+                        final JsonValue annotationsNode = child.get("annotations");
+                        final JsonValue hierarchyNode = child.get("hierarchy");
+                        final JsonValue mappingsNode = child.get("mappings");
+                        if ((annotatedClassNode != null) && (annotationsNode != null) && (mappingsNode != null)) {
 
 
 
@@ -102,9 +102,9 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
         return annotations;
     }
 
-    private AnnotatedClass parseAnnotatedClass(JsonValue annotatedClassNode) throws InvalidFormatException {
+    private AnnotatedClass parseAnnotatedClass(final JsonValue annotatedClassNode) throws InvalidFormatException {
         if (annotatedClassNode != null) {
-            Links links = parseLinks(annotatedClassNode.asObject().get("links"));
+            final Links links = parseLinks(annotatedClassNode.asObject().get("links"));
 
             return annotationFactory.createAnnotatedClass(annotatedClassNode.asObject(), links, cuiRetrieval, umlsTypeRetrieval, groupIndex);
         } else {
@@ -112,7 +112,7 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
         }
     }
 
-    private Links parseLinks(JsonValue linksNode) {
+    private Links parseLinks(final JsonValue linksNode) {
         if (linksNode != null) {
             return annotationFactory.createLinks(
                     parseLinkMetadata(linksNode),

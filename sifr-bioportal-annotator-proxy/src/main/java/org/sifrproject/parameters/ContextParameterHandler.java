@@ -2,7 +2,7 @@ package org.sifrproject.parameters;
 
 import org.sifrproject.parameters.api.ParameterHandler;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
-import org.sifrproject.postannotation.ContextPostAnnotator;
+import org.sifrproject.postannotation.ContextPostAnnotationFilter;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
 import org.sifrproject.util.RequestGenerator;
 
@@ -22,7 +22,7 @@ public class ContextParameterHandler implements ParameterHandler {
         final boolean experiencer = Boolean.valueOf(parameters.getFirst("experiencer", "false"));
 
         if (negation || temporality || experiencer) {
-            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotator(language, negation, experiencer, temporality));
+            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotationFilter(language, negation, experiencer, temporality));
         }
     }
 }

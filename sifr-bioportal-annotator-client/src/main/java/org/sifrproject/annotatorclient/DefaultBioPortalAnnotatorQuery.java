@@ -20,16 +20,16 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     private String score; // score=[old|cvalue|cvalueh]
     private boolean expandClassHierarchy; //expand_class_hierarchy=[true|false]
     private int classHierarchyMaxLevel; // class_hierarchy_max_level=[1..10|999] (999 for All)
-    private List<String> semanticTypes; //semantic_types=Type1, Type2,...
+    private final List<String> semanticTypes; //semantic_types=Type1, Type2,...
     private String format;
     private boolean negation;
     private boolean experiencer;
     private boolean temporality;
     private boolean lemmatize;
     private final List<String> semanticGroups; //semantic_types=Type1, Type2,...
+    private boolean uniqueGroups;
 
-
-    DefaultBioPortalAnnotatorQuery(String text) {
+    DefaultBioPortalAnnotatorQuery(final String text) {
         this.text = text;
         ontologies = new ArrayList<>();
         semanticTypes = new ArrayList<>();
@@ -37,7 +37,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void addOntology(String ontologyName) {
+    public void addOntology(final String ontologyName) {
         ontologies.add(ontologyName);
     }
 
@@ -46,18 +46,18 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
         return generateEnumString(ontologies);
     }
 
-    private String generateEnumString(Iterable<String> iterable) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private String generateEnumString(final Iterable<String> iterable) {
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(" ");
-        for (String item : iterable) {
+        for (final String item : iterable) {
             stringBuilder.append(item).append(",");
         }
-        String string = stringBuilder.toString();
-        return string.substring(0, string.length() - 1).trim();
+        final String builderString = stringBuilder.toString();
+        return builderString.substring(0, builderString.length() - 1).trim();
     }
 
     @Override
-    public void addSemanticType(String semanticType) {
+    public void addSemanticType(final String semanticType) {
         semanticTypes.add(semanticType);
     }
 
@@ -67,7 +67,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setLongestOnly(boolean longestOnly) {
+    public void setLongestOnly(final boolean longestOnly) {
         this.longestOnly = longestOnly;
     }
 
@@ -82,7 +82,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setText(String text) {
+    public void setText(final String text) {
         this.text = text;
     }
 
@@ -92,7 +92,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setExcludeNumbers(boolean excludeNumbers) {
+    public void setExcludeNumbers(final boolean excludeNumbers) {
         this.excludeNumbers = excludeNumbers;
     }
 
@@ -102,7 +102,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setWholeWordOnly(boolean wholeWordOnly) {
+    public void setWholeWordOnly(final boolean wholeWordOnly) {
         this.wholeWordOnly = wholeWordOnly;
     }
 
@@ -112,7 +112,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setExcludeSynonyms(boolean excludeSynonyms) {
+    public void setExcludeSynonyms(final boolean excludeSynonyms) {
         this.excludeSynonyms = excludeSynonyms;
     }
 
@@ -122,7 +122,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setExpandMappings(boolean expandMappings) {
+    public void setExpandMappings(final boolean expandMappings) {
         this.expandMappings = expandMappings;
     }
 
@@ -132,7 +132,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setScore(String score) {
+    public void setScore(final String score) {
         this.score = score;
     }
 
@@ -142,7 +142,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setExpandClassHierarchy(boolean expandClassHierarchy) {
+    public void setExpandClassHierarchy(final boolean expandClassHierarchy) {
         this.expandClassHierarchy = expandClassHierarchy;
     }
 
@@ -152,7 +152,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setClassHierarchyMaxLevel(int classHierarchyMaxLevel) {
+    public void setClassHierarchyMaxLevel(final int classHierarchyMaxLevel) {
         this.classHierarchyMaxLevel = classHierarchyMaxLevel;
     }
 
@@ -162,7 +162,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setFormat(String format) {
+    public void setFormat(final String format) {
         this.format = format;
     }
 
@@ -172,7 +172,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setNegation(boolean negation) {
+    public void setNegation(final boolean negation) {
         this.negation = negation;
     }
 
@@ -182,7 +182,7 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setExperiencer(boolean experiencer) {
+    public void setExperiencer(final boolean experiencer) {
         this.experiencer = experiencer;
     }
 
@@ -192,12 +192,12 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setTemporality(boolean temporality) {
+    public void setTemporality(final boolean temporality) {
         this.temporality = temporality;
     }
 
     @Override
-    public void addSemanticGroup(String semanticGroup) {
+    public void addSemanticGroup(final String semanticGroup) {
         semanticGroups.add(semanticGroup);
     }
     @Override
@@ -211,7 +211,17 @@ class DefaultBioPortalAnnotatorQuery implements BioPortalAnnotatorQuery {
     }
 
     @Override
-    public void setLemmatize(boolean lemmatize) {
+    public void setLemmatize(final boolean lemmatize) {
         this.lemmatize = lemmatize;
+    }
+
+    @Override
+    public void setUniqueGroups(final boolean uniqueGroups){
+        this.uniqueGroups = uniqueGroups;
+    }
+
+    @Override
+    public boolean isUniqueGroups() {
+        return uniqueGroups;
     }
 }

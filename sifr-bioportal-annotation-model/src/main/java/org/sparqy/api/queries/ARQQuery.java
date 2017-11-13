@@ -29,7 +29,7 @@ public interface ARQQuery {
     /**
      * Adds a variable as a annotresult variable in the ResultSet
      *
-     * @param var The variable name to add
+     * @param var The variable getName to add
      */
     void addResult(String var);
 

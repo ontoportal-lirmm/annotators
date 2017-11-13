@@ -22,7 +22,7 @@ import org.sifrproject.parameters.api.ParameterRegistry;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.LIRMMPostAnnotationRegistry;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
-import org.sifrproject.util.RequestGenerator;
+import org.sifrproject.util.POSTRequestGenerator;
 import org.sifrproject.util.RestfulRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,7 +174,7 @@ public class AnnotatorServlet extends HttpServlet {
         annotatorURI = annotatorURI.trim();
 
 
-        final RequestGenerator parameters = new RequestGenerator(request, annotatorURI, serverEncoding);
+        final POSTRequestGenerator parameters = new POSTRequestGenerator(request, annotatorURI, serverEncoding);
 
         //Retrieving format parameter, json is the default output format if the format parameter is absent
         String format = parameters.getFirst(FORMAT, "json").toLowerCase();

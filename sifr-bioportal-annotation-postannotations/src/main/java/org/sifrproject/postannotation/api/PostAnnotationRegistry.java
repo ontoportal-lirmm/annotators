@@ -6,16 +6,16 @@ import org.sifrproject.annotations.api.model.Annotation;
 import java.util.List;
 
 /**
- * Specification of a registry for {@link PostAnnotator} components that allows registering and chain-applying the
+ * Specification of a registry for {@link PostAnnotationFilter} components that allows registering and chain-applying the
  * post annotators.
  */
 public interface PostAnnotationRegistry {
     /**
-     * Register a {@link PostAnnotator}
+     * Register a {@link PostAnnotationFilter}
      *
-     * @param postAnnotator The post annotator instance
+     * @param postAnnotationFilter The post annotator instance
      */
-    void registerPostAnnotator(PostAnnotator postAnnotator);
+    void registerPostAnnotator(PostAnnotationFilter postAnnotationFilter);
 
     /**
      * Apply all the registered post-annotators in their order of registration

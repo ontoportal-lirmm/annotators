@@ -8,7 +8,7 @@ import org.sifrproject.util.RequestGenerator;
 
 public class FormatParameterHandler implements ParameterHandler {
     @Override
-    public void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
+    public void processParameter(final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
         if (!parameters.containsKey("score")) {
             parameters.put("score", "cvalue");
         }

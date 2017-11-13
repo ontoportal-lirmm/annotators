@@ -7,6 +7,8 @@ import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 import org.sifrproject.annotations.output.MimeTypes;
 
+import java.util.List;
+
 
 /**
  * Generates an error output in JSON in the same way as Bioportal Annotator
@@ -14,7 +16,7 @@ import org.sifrproject.annotations.output.MimeTypes;
 public class ErrorOutputGenerator implements OutputGenerator {
 
     @Override
-    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public AnnotatorOutput generate(final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final StringBuilder stringBuilder = new StringBuilder();
         for(final Annotation annotation: annotations) {
           stringBuilder.append(annotation);

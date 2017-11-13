@@ -15,7 +15,7 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
     private final String baseURI;
     private final String apiKey;
 
-    DefaultBioPortalAnnotator(String baseURI, String apiKey) {
+    DefaultBioPortalAnnotator(final String baseURI, final String apiKey) {
         this.baseURI = baseURI;
         this.apiKey = apiKey;
     }
@@ -46,27 +46,27 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
          * Request parameters
          */
 
-        Map<String, String> requestProperties = new HashMap<>();
+        final Map<String, String> requestProperties = new HashMap<>();
         requestProperties.put("Authorization", String.format("apikey token=%s", apiKey));
         requestProperties.put("Accept", "application/rdf+xml");
 
-        RequestGenerator requestGenerator = new RequestGenerator(baseURI,"POST", requestProperties);
+        final RequestGenerator requestGenerator = new RequestGenerator(baseURI,"POST", requestProperties);
 
         requestGenerator.put("text", query.getText());
 
         requestGenerator.put("apikey", apiKey);
 
-        String ontologyString = query.generateOntologyString();
+        final String ontologyString = query.generateOntologyString();
         if (!ontologyString.isEmpty()) {
             requestGenerator.put("ontologies", ontologyString);
         }
 
-        String semanticTypesString = query.generateSemanticTypesString();
+        final String semanticTypesString = query.generateSemanticTypesString();
         if (!semanticTypesString.isEmpty()) {
             requestGenerator.put("semantic_types", semanticTypesString);
         }
 
-        String semanticGroupsString = query.generateSemanticGroupsString();
+        final String semanticGroupsString = query.generateSemanticGroupsString();
         if (!semanticGroupsString.isEmpty()) {
             requestGenerator.put("semantic_groups", semanticGroupsString);
         }
@@ -109,6 +109,10 @@ public class DefaultBioPortalAnnotator implements BioPortalAnnotator {
 
         if(query.isLemmatize()){
             requestGenerator.put("lemmatize", Boolean.toString(query.isLemmatize()));
+        }
+
+        if(query.isUniqueGroups()){
+            requestGenerator.put("unique_groups", Boolean.toString(query.isUniqueGroups()));
         }
         requestGenerator.put("format", query.getFormat());
 

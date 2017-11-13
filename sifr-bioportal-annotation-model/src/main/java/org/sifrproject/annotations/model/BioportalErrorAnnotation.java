@@ -19,53 +19,18 @@ public class BioportalErrorAnnotation implements Annotation {
      * Build an error annotation
      * @param message The message
      */
-    public BioportalErrorAnnotation(String message) {
+    public BioportalErrorAnnotation(final String message) {
         this.message = message;
     }
 
     @Override
     public AnnotatedClass getAnnotatedClass() {
-        return new AnnotatedClass() {
-            @Override
-            public String getId() {
-                return "";
-            }
-
-            @Override
-            public String getType() {
-                return "";
-            }
-
-            @Override
-            public Links getLinks() {
-                return null;
-            }
-
-            @Override
-            public String getContextVocab() {
-                return "";
-            }
-
-            @Override
-            public Set<String> getCuis() {
-                return Collections.emptySet();
-            }
-
-            @Override
-            public Set<UMLSGroup> getSemanticGroups() {
-                return Collections.emptySet();
-            }
-        };
+        return new MyAnnotatedClass();
     }
 
     @Override
     public AnnotationTokens getAnnotations() {
-        return new AnnotationTokens() {
-            @Override
-            public Iterator<AnnotationToken> iterator() {
-                return new ArrayList<AnnotationToken>().iterator();
-            }
-        };
+        return () -> new ArrayList<AnnotationToken>().iterator();
     }
 
     @Override
@@ -74,32 +39,59 @@ public class BioportalErrorAnnotation implements Annotation {
     }
 
     @Override
-    public void setScore(double score) {
+    public void setScore(final double score) {
 
     }
 
     @Override
     public Hierarchy getHierarchy() {
-        return new Hierarchy() {
-            @Override
-            public Iterator<HierarchyElement> iterator() {
-                return new ArrayList<HierarchyElement>().iterator();
-            }
-        };
+        return () -> new ArrayList<HierarchyElement>().iterator();
     }
 
     @Override
     public Mappings getMappings() {
-        return new Mappings() {
-            @Override
-            public Iterator<Mapping> iterator() {
-                return new ArrayList<Mapping>().iterator();
-            }
-        };
+        return () -> new ArrayList<Mapping>().iterator();
     }
 
     @Override
     public String toString() {
         return String.format("[{\"error\":\"%s\"}]", message);
+    }
+
+    private static class MyAnnotatedClass implements AnnotatedClass {
+        @Override
+        public String getId() {
+            return "";
+        }
+
+        @Override
+        public String getType() {
+            return "";
+        }
+
+        @Override
+        public Links getLinks() {
+            return null;
+        }
+
+        @Override
+        public String getContextVocab() {
+            return "";
+        }
+
+        @Override
+        public Set<String> getCuis() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public List<UMLSGroup> getSemanticGroups() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public void setSemanticGroups(final List<UMLSGroup> groups) {
+
+        }
     }
 }

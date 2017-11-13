@@ -33,7 +33,7 @@ public final class UMLSSemanticGroupsLoader {
      */
     @SuppressWarnings("all")
     public static UMLSGroupIndex load(InputStream stream) {
-        UMLSGroupIndex groupIndex = new UMLSGroupIndex();
+        DefaultUMLSGroupIndex groupIndex = new DefaultUMLSGroupIndex();
         if (stream == null) {
             logger.error("Invalid stream");
         } else {
@@ -44,7 +44,7 @@ public final class UMLSSemanticGroupsLoader {
                     String name = fields[0];
                     String typeString = fields[1];
                     String[] types = typeString.split(",");
-                    UMLSGroup group = new UMLSGroup(name);
+                    DefaultUMLSGroup group = new DefaultUMLSGroup(name);
                     for (String type : types) {
                         group.addType(type);
                         groupIndex.addGroupByType(type, group);

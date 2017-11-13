@@ -3,6 +3,8 @@ package org.sifrproject.annotations.api.output;
 
 import org.sifrproject.annotations.api.model.Annotation;
 
+import java.util.List;
+
 /**
  * Specification of an {@link OutputGenerator} that produces a String output from an annotation model
  */
@@ -13,5 +15,5 @@ public interface OutputGenerator {
      * @param annotations The list of annotations
      * @return The corresponding output
      */
-    AnnotatorOutput generate(Iterable<Annotation> annotations, String annotatorURI, String sourceText);
+    AnnotatorOutput generate(List<Annotation> annotations, String annotatorURI, String sourceText);
 }

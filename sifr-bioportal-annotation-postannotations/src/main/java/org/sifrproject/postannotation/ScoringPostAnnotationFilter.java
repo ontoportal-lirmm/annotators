@@ -1,7 +1,7 @@
 package org.sifrproject.postannotation;
 
 import org.sifrproject.annotations.api.model.Annotation;
-import org.sifrproject.postannotation.api.PostAnnotator;
+import org.sifrproject.postannotation.api.PostAnnotationFilter;
 import org.sifrproject.postannotation.util.ValueScale;
 import org.sifrproject.scoring.api.Scorer;
 
@@ -12,14 +12,14 @@ import java.util.List;
 /**
  * Adds score annotations
  */
-public class ScoringPostAnnotator implements PostAnnotator {
+public class ScoringPostAnnotationFilter implements PostAnnotationFilter {
     private static final double PERCENT_MAX = 100d;
     private final Scorer scorer;
     private final double score_threshold;
     private final double confidence_threshold;
 
 
-    public ScoringPostAnnotator(final Scorer scorer, final double score_threshold, final double confidence_threshold) {
+    public ScoringPostAnnotationFilter(final Scorer scorer, final double score_threshold, final double confidence_threshold) {
         this.scorer = scorer;
         this.score_threshold = score_threshold;
         this.confidence_threshold = confidence_threshold;

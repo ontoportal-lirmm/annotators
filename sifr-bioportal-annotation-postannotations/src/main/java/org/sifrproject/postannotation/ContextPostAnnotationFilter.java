@@ -8,7 +8,7 @@ import org.sifrproject.annotations.api.model.AnnotationTokens;
 import org.sifrproject.annotations.api.model.context.ExperiencerContext;
 import org.sifrproject.annotations.api.model.context.NegationContext;
 import org.sifrproject.annotations.api.model.context.TemporalityContext;
-import org.sifrproject.postannotation.api.PostAnnotator;
+import org.sifrproject.postannotation.api.PostAnnotationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,16 +21,16 @@ import java.util.List;
 /**
  * Adds negation, experiencer and temporality annotations with Context
  */
-public class ContextPostAnnotator implements PostAnnotator {
+public class ContextPostAnnotationFilter implements PostAnnotationFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ContextPostAnnotator.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContextPostAnnotationFilter.class);
 
     private final boolean includeNegation;
     private final boolean includeExperiencer;
     private final boolean includeTemporality;
     private final String language;
 
-    public ContextPostAnnotator(String language, boolean includeNegation, boolean includeExperiencer, boolean includeTemporality) {
+    public ContextPostAnnotationFilter(String language, boolean includeNegation, boolean includeExperiencer, boolean includeTemporality) {
         this.includeNegation = includeNegation;
         this.includeExperiencer = includeExperiencer;
         this.includeTemporality = includeTemporality;

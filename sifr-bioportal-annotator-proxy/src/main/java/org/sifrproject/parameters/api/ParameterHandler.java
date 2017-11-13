@@ -7,10 +7,11 @@ import org.sifrproject.util.RequestGenerator;
 
 /**
  * Handler for a parameter passed to the Proxy Servlet. A parameter handler should be registered in a {@link ParameterRegistry}.
- * Naming conversion ParameterNameParameterHandler, where ParameterName is the name of the parameter in Java style.
- * For example, for a parameter names semantic_groups the hander name should be SemanticGroupsParameterHandler.
- * For a parameter named 'context', the handler name should be ContextParameterHandler and so forth...
+ * Naming conversion ParameterNameParameterHandler, where ParameterName is the getName of the parameter in Java style.
+ * For example, for a parameter names semantic_groups the hander getName should be SemanticGroupsParameterHandler.
+ * For a parameter named 'context', the handler getName should be ContextParameterHandler and so forth...
  */
+@FunctionalInterface
 public interface ParameterHandler {
     /**
      * Callback that handles the parameter. Parameter handlers should directly register post-annotation components in

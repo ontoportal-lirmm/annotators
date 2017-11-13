@@ -15,6 +15,7 @@ import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 
@@ -57,7 +58,7 @@ public class JenaOutputGenerator implements OutputGenerator {
     }
 
     @Override
-    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public AnnotatorOutput generate(final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final Model jenaModel = ModelFactory.createOntologyModel();
         initializeModel(jenaModel, annotatorURI);
 
@@ -92,7 +93,7 @@ public class JenaOutputGenerator implements OutputGenerator {
         final Resource annotatorType2 = model.createResource("http://bioontology.org/ontologies/BiomedicalResourceOntology.owl#Data_Computation_Service");
         final Resource annotatorType3 = model.createResource("http://dbpedia.org/resource/Software");
 
-        final Property foafNameProp = model.createProperty(foafPrefix + "name");
+        final Property foafNameProp = model.createProperty(foafPrefix + "getName");
         final Property foafDescriptionProp = model.createProperty(foafPrefix + "description");
 
         final String annotatorFoafName;

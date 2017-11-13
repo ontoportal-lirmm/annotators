@@ -22,39 +22,41 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
         parameterHandlers = new HashMap<>();
     }
 
+    @SuppressWarnings("LocalVariableOfConcreteClass")
     @Override
-    public synchronized void registerParameterHandler(String name, ParameterHandler parameterHandler, boolean isOptional) {
-        Parameters currentParameters = new Parameters(name, isOptional);
+    public synchronized void registerParameterHandler(final String name, final ParameterHandler parameterHandler, final boolean isOptional) {
+        final Parameters currentParameters = new Parameters(name, isOptional);
         parameterss.add(currentParameters);
         parameterHandlers.put(currentParameters, parameterHandler);
     }
 
 
     @Override
-    public synchronized final void processParameters(RequestGenerator requestGenerator) throws InvalidParameterException {
-        if (!requestGenerator.containsKey("text")) {
+    public final synchronized void processParameters(final RequestGenerator parameters) throws InvalidParameterException {
+        if (!parameters.containsKey("text")) {
             throw new InvalidParameterException("Mandatory parameter 'text' missing");
         }
 
-        for (Parameters parameter : this.parameterss) {
-            if (!parameter.isOptional() && !requestGenerator.containsKey(parameter.getName())) {
+        for (final Parameters parameter : parameterss) {
+            if (!parameter.isOptional() && !parameters.containsKey(parameter.getName())) {
                 throw new InvalidParameterException(String.format("Mandatory parameter missing -- %s", parameter.getName()));
-            } else if (parameter.atLeastOneContained(requestGenerator)) {
-                parameterHandlers.get(parameter).processParameter(requestGenerator, postAnnotationRegistry);
+            } else if (parameter.isAtLeastOneContained(parameters)) {
+                parameterHandlers.get(parameter).processParameter(parameters, postAnnotationRegistry);
             }
         }
     }
 
     @Override
-    public synchronized void setPostAnnotationRegistry(PostAnnotationRegistry postAnnotationRegistry) {
+    public synchronized void setPostAnnotationRegistry(final PostAnnotationRegistry postAnnotationRegistry) {
         this.postAnnotationRegistry = postAnnotationRegistry;
     }
 
-    private final class Parameters {
-        private List<String> names;
-        private boolean isOptional;
+    @SuppressWarnings("SuspiciousGetterSetter")
+    private static final class Parameters {
+        private final List<String> names;
+        private final boolean isOptional;
 
-        Parameters(String names, boolean isOptional) {
+        Parameters(final String names, final boolean isOptional) {
             this.names = new ArrayList<>();
             if (names.contains("|")) {
                 Collections.addAll(this.names, names.split("\\|"));
@@ -68,13 +70,9 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
             return names.get(0);
         }
 
-        List<String> getNames() {
-            return names;
-        }
-
-        boolean atLeastOneContained(RequestGenerator parameters) {
+        boolean isAtLeastOneContained(final Map parameters) {
             boolean atLeastOne = false;
-            for (String name : names) {
+            for (final String name : names) {
                 atLeastOne = parameters.containsKey(name);
                 if (atLeastOne) break;
             }

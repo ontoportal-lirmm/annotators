@@ -7,6 +7,8 @@ import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 import org.sifrproject.annotations.output.MimeTypes;
 
+import java.util.List;
+
 /**
  * Lazy JSON generator, relies on the toString method of the Lazy model implementation, to generate JSON directly
  * through the underlying Json object
@@ -14,7 +16,7 @@ import org.sifrproject.annotations.output.MimeTypes;
 public class JSONLazyOutputGenerator implements OutputGenerator {
 
     @Override
-    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public AnnotatorOutput generate(final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final StringBuilder result = new StringBuilder();
         result.append("[");
         boolean isFirst = true;

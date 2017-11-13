@@ -32,7 +32,7 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
 
     @SuppressWarnings({"FeatureEnvy", "OverlyComplexMethod", "MethodWithMoreThanThreeNegations", "OverlyLongMethod"})
     @Override
-    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public AnnotatorOutput generate(final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = AnnotationParser.perTokenAnnotations(annotations);
         int termCounter = 0;
         final StringBuilder stringBuilder = new StringBuilder();
@@ -64,9 +64,9 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
 
             if (annotation != null) {
                 final AnnotatedClass annotatedClass = annotation.getAnnotatedClass();
-                final Set<UMLSGroup> semanticGroups = annotatedClass.getSemanticGroups();
+                final Collection<UMLSGroup> semanticGroups = new HashSet<>(annotatedClass.getSemanticGroups());
                 String group = "";
-                group += (selectSingleGroup && !semanticGroups.isEmpty()) ? semanticGroups.iterator().next().name() : buildGroupList(semanticGroups);
+                group += (selectSingleGroup && !semanticGroups.isEmpty()) ? semanticGroups.iterator().next().getName() : buildGroupList(semanticGroups);
 
                 if(!semanticGroups.isEmpty()) {
                     if(!ignoreAmbiguous || (ignoreAmbiguous && (semanticGroups.size() == 1))) {
@@ -104,7 +104,7 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
             if (!first) {
                 stringBuilder.append(",");
             }
-            stringBuilder.append(elem.name());
+            stringBuilder.append(elem.getName());
             first = false;
         }
         return stringBuilder.toString();

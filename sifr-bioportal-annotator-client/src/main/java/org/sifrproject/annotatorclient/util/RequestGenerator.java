@@ -29,7 +29,7 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
 
     HttpURLConnection createRequest() throws IOException {
         String uri = baseURI;
-        String parameterString = createParameterString();
+        final String parameterString = createParameterString();
         if (method.equals("GET")) {
             uri += "?" + parameterString;
         } else if (uri.endsWith("?")) {

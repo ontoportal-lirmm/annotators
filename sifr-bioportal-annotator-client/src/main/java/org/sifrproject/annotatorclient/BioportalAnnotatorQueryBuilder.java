@@ -12,7 +12,7 @@ public class BioportalAnnotatorQueryBuilder {
     public static final BioportalAnnotatorQueryBuilder DEFAULT = new BioportalAnnotatorQueryBuilder();
 
     private String text = "";
-    private List<String> ontologies = new ArrayList<>();
+    private final List<String> ontologies = new ArrayList<>();
     private boolean longestOnly = false;
     private boolean excludeNumbers = false;
     private boolean wholeWordOnly = true;
@@ -21,8 +21,8 @@ public class BioportalAnnotatorQueryBuilder {
     private String score = "";
     private boolean expandClassHierarchy = false;
     private int classHierarchyMaxLevel = 0;
-    private List<String> semanticTypes = new ArrayList<>();
-    private List<String> semanticGroups = new ArrayList<>();
+    private final List<String> semanticTypes = new ArrayList<>();
+    private final List<String> semanticGroups = new ArrayList<>();
     private String format = "json";
 
     private boolean negation;
@@ -30,6 +30,8 @@ public class BioportalAnnotatorQueryBuilder {
     private boolean temporality;
 
     private boolean lemmatize;
+
+    private boolean uniqueGroups;
 
     private BioportalAnnotatorQueryBuilder() {
     }
@@ -124,23 +126,28 @@ public class BioportalAnnotatorQueryBuilder {
         return this;
     }
 
-    public BioportalAnnotatorQueryBuilder experiencer(boolean experiencer){
+    public BioportalAnnotatorQueryBuilder experiencer(final boolean experiencer){
         this.experiencer=experiencer;
         return this;
     }
 
+    public BioportalAnnotatorQueryBuilder unique_groups(final boolean uniqueGroups){
+        this.uniqueGroups = uniqueGroups;
+        return this;
+    }
+
     public BioPortalAnnotatorQuery build() {
-        DefaultBioPortalAnnotatorQuery defaultBioportalAnnotatorQuery = new DefaultBioPortalAnnotatorQuery(text);
+        final DefaultBioPortalAnnotatorQuery defaultBioportalAnnotatorQuery = new DefaultBioPortalAnnotatorQuery(text);
         defaultBioportalAnnotatorQuery.setExcludeNumbers(excludeNumbers);
         defaultBioportalAnnotatorQuery.setClassHierarchyMaxLevel(classHierarchyMaxLevel);
-        for(String ontology: ontologies){
+        for(final String ontology: ontologies){
             defaultBioportalAnnotatorQuery.addOntology(ontology);
         }
-        for(String semanticType: semanticTypes){
+        for(final String semanticType: semanticTypes){
             defaultBioportalAnnotatorQuery.addSemanticType(semanticType);
         }
 
-        for(String semanticGroup: semanticGroups){
+        for(final String semanticGroup: semanticGroups){
             defaultBioportalAnnotatorQuery.addSemanticGroup(semanticGroup);
         }
         defaultBioportalAnnotatorQuery.setExcludeSynonyms(excludeSynonyms);
@@ -154,6 +161,7 @@ public class BioportalAnnotatorQueryBuilder {
         defaultBioportalAnnotatorQuery.setTemporality(temporality);
         defaultBioportalAnnotatorQuery.setExperiencer(experiencer);
         defaultBioportalAnnotatorQuery.setLemmatize(lemmatize);
+        defaultBioportalAnnotatorQuery.setUniqueGroups(uniqueGroups);
 
         ontologies.clear();
         semanticTypes.clear();
@@ -171,6 +179,7 @@ public class BioportalAnnotatorQueryBuilder {
         expandMappings = false;
         excludeSynonyms = false;
         wholeWordOnly = true;
+        uniqueGroups = false;
 
         return defaultBioportalAnnotatorQuery;
     }

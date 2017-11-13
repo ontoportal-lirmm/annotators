@@ -3,6 +3,7 @@ package org.sifrproject.annotations.api.model;
 
 import org.sifrproject.annotations.umls.UMLSGroup;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,5 +45,7 @@ public interface AnnotatedClass {
      * Get the UMLS semantic groups that correspond to this AnnotatedClass
      * @return the UMLS semantic groups that correspond to this AnnotatedClass
      */
-    Set<UMLSGroup> getSemanticGroups();
+    List<UMLSGroup> getSemanticGroups();
+
+    void setSemanticGroups(final List<UMLSGroup> groups);
 }

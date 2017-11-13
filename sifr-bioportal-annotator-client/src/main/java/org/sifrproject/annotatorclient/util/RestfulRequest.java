@@ -8,13 +8,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 
 public final class RestfulRequest {
     private static final Logger logger = LoggerFactory.getLogger(RestfulRequest.class);
 
     public static String queryAnnotator(RequestGenerator requestGenerator) throws IOException {
-
+        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         HttpURLConnection httpURLConnection = requestGenerator.createRequest();
         logger.debug("Request to NCBO Annotator: {}",httpURLConnection.getURL());
         int code = httpURLConnection.getResponseCode();

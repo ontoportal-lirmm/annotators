@@ -4,6 +4,7 @@ package org.sifrproject.annotations.api.output;
 import org.sifrproject.annotations.api.model.Annotation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,14 +29,14 @@ public class AbstractOutputGeneratorDispatcher implements OutputGeneratorDispatc
 
     @SuppressWarnings("LawOfDemeter")
     @Override
-    public final AnnotatorOutput generate(final String generatorTrigger, final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public final AnnotatorOutput generate(final String generatorTrigger, final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final OutputGenerator outputGenerator = retrieveGenerator(generatorTrigger);
         return isSupported(generatorTrigger) ? outputGenerator.generate(annotations, annotatorURI, sourceText) : generate(annotations, annotatorURI, sourceText);
     }
 
     @SuppressWarnings("LawOfDemeter")
     @Override
-    public final AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public final AnnotatorOutput generate(final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final OutputGenerator json = retrieveGenerator("json");
         return json.generate(annotations, annotatorURI,sourceText);
     }

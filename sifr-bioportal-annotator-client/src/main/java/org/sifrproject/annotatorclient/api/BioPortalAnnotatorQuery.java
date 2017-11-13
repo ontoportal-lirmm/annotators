@@ -7,9 +7,9 @@ package org.sifrproject.annotatorclient.api;
 public interface BioPortalAnnotatorQuery {
 
     /**
-     * Add an ontology by name to restrict the annotations produced. {@code ontologies} REST parameter.
+     * Add an ontology by getName to restrict the annotations produced. {@code ontologies} REST parameter.
      *
-     * @param ontologyName The name of the ontology (acronym)
+     * @param ontologyName The getName of the ontology (acronym)
      */
     void addOntology(String ontologyName);
 
@@ -92,4 +92,7 @@ public interface BioPortalAnnotatorQuery {
 
     void addSemanticGroup(String semanticGroup);
     String generateSemanticGroupsString();
+
+    void setUniqueGroups(boolean uniqueGroups);
+    boolean isUniqueGroups();
 }

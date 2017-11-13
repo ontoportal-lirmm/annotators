@@ -24,7 +24,7 @@ import static org.sifrproject.annotations.output.MimeTypes.APPLICATION_BRAT;
 @SuppressWarnings({"HardcodedLineSeparator", "LawOfDemeter"})
 public class BratOutputGenerator implements OutputGenerator {
     @Override
-    public AnnotatorOutput generate(final Iterable<Annotation> annotations, final String annotatorURI, final String sourceText) {
+    public AnnotatorOutput generate(final List<Annotation> annotations, final String annotatorURI, final String sourceText) {
         final Map<AnnotationToken, List<Annotation>> perTokenAnnotations = AnnotationParser.perTokenAnnotations(annotations);
         @SuppressWarnings("LocalVariableOfConcreteClass") final BratCounter bratCounter = new BratCounter();
         final StringBuilder stringBuilder = new StringBuilder();
@@ -37,7 +37,7 @@ public class BratOutputGenerator implements OutputGenerator {
                     final AnnotatedClass annotatedClass = annotation.getAnnotatedClass();
                     final AnnotationToken token = annotationTokenListEntry.getKey();
 
-                    final Set<UMLSGroup> semanticGroups = annotatedClass.getSemanticGroups();
+                    final List<UMLSGroup> semanticGroups = annotatedClass.getSemanticGroups();
 
                     final NegationContext negationContext = annotationTokenListEntry.getKey().getNegationContext();
                     final ExperiencerContext experiencerContext = annotationTokenListEntry.getKey().getExperiencerContext();
@@ -72,7 +72,7 @@ public class BratOutputGenerator implements OutputGenerator {
         final String surfaceForm = (sourceText.isEmpty()) ? token.getText().toLowerCase() : sourceText.substring(tokenFrom, tokenTo);
         final int tokenCount = bratCounter.getTokenBoundCounter();
         bratCounter.incrementTokenBoundCounter();
-        final String typeAnnotation = (umlsGroup == null) ? "NonUMLS" : prepareEnumName(umlsGroup.name());
+        final String typeAnnotation = (umlsGroup == null) ? "NonUMLS" : prepareEnumName(umlsGroup.getName());
         stringBuilder.append(String.format("T%d\t%s %d %d\t%s", tokenCount, typeAnnotation,
                 tokenFrom,
                 tokenTo,
