@@ -14,7 +14,6 @@ import org.sifrproject.annotations.umls.UMLSGroup;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Default lazy dereference implementation of AnnotatedClass. Cannot be constructed directly, please use the corresponding
@@ -35,6 +34,11 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     private final JsonObject jsonObject;
 
+    private boolean fetchedSemInfo = false;
+
+    private final UMLSGroupIndex umlsGroupIndex;
+    private final UMLSPropertyRetriever umlsPropertyRetriever;
+
     @Override
     public JsonValue getJSONObject() {
         return jsonObject;
@@ -43,47 +47,49 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     @SuppressWarnings("all")
     BioPortalLazyAnnotatedClass(JsonObject jsonObject, Links links, UMLSPropertyRetriever umlsPropertyRetriever, UMLSGroupIndex umlsGroupIndex) {
         this.jsonObject = jsonObject;
-        this.id = jsonObject.get("@id").asString();
-        this.type = jsonObject.get("@type").asString();
+        this.id = jsonObject
+                .get("@id")
+                .asString();
+        this.type = jsonObject
+                .get("@type")
+                .asString();
         this.links = links;
         cuis = new TreeSet<>();
         semanticGroups = new ArrayList<>();
-        UMLSPropertyRetriever semanticGroupRetriever = umlsPropertyRetriever;
-        UMLSGroupIndex umlsGroupIndex1 = umlsGroupIndex;
-        UMLSProperties properties = umlsPropertyRetriever.retrievePropertyValues(links.getSelf());
-        if (umlsPropertyRetriever != null) {
-            List<String> types = properties.getTUIs();
-            JsonArray tuiArray = new JsonArray();
-            for(String type: types){
-                final UMLSGroup group = umlsGroupIndex.getGroupByType(type);
-                if(group !=null && !semanticGroups.contains(group)) {
-                    semanticGroups.add(group);
-                }
-                tuiArray.add(type);
-            }
-            jsonObject.add("semantic_types", tuiArray);
+        this.umlsPropertyRetriever = umlsPropertyRetriever;
+        this.umlsGroupIndex = umlsGroupIndex;
 
-            cuis.addAll(properties.getCUIs());
-
-            if (!semanticGroups.isEmpty()) {
-                JsonArray guiArray = new JsonArray();
-
-                for (UMLSGroup umlsGroup : semanticGroups) {
-                    guiArray.add(umlsGroup.getName());
-                }
-                jsonObject.add("semantic_groups", guiArray);
-            }
-
-            if(!cuis.isEmpty()){
-                JsonArray cuiArray = new JsonArray();
-                for (String cui : cuis) {
-                    cuiArray.add(cui);
-                }
-                jsonObject.add("cuis", cuiArray);
-            }
-        }
     }
 
+
+    private void fetchSemanticInformation() {
+        final UMLSProperties properties = umlsPropertyRetriever.retrievePropertyValues(links.getSelf());
+
+        final List<String> types = properties.getTUIs();
+        final JsonArray tuiArray = new JsonArray();
+        final JsonArray guiArray = new JsonArray();
+        for (final String type : types) {
+            final UMLSGroup group = umlsGroupIndex.getGroupByType(type);
+            if ((group != null) && !semanticGroups.contains(group)) {
+                semanticGroups.add(group);
+                guiArray.add(group.getName());
+            }
+            tuiArray.add(type);
+        }
+        jsonObject.add("semantic_groups", guiArray);
+        jsonObject.add("semantic_types", tuiArray);
+
+        cuis.addAll(properties.getCUIs());
+
+        if (!cuis.isEmpty()) {
+            final JsonArray cuiArray = new JsonArray();
+            for (final String cui : cuis) {
+                cuiArray.add(cui);
+            }
+            jsonObject.add("cuis", cuiArray);
+        }
+        fetchedSemInfo = true;
+    }
 
 
     BioPortalLazyAnnotatedClass(final JsonObject jsonObject, final Links links) {
@@ -93,7 +99,9 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     @Override
     public String getId() {
         if (id.isEmpty()) {
-            id = jsonObject.get("@id").asString();
+            id = jsonObject
+                    .get("@id")
+                    .asString();
         }
         return id;
     }
@@ -101,7 +109,9 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     @Override
     public String getType() {
         if (type.isEmpty()) {
-            type = jsonObject.get("@type").asString();
+            type = jsonObject
+                    .get("@type")
+                    .asString();
         }
         return type;
     }
@@ -114,39 +124,37 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     @Override
     public String getContextVocab() {
         if (contextVocab.isEmpty()) {
-            contextVocab = jsonObject.get("@context").asObject().get("@vocab").asString();
+            contextVocab = jsonObject
+                    .get("@context")
+                    .asObject()
+                    .get("@vocab")
+                    .asString();
         }
         return contextVocab;
     }
 
     @Override
     public Set<String> getCuis() {
-//        if (cuis.isEmpty() && (cuiPropertyRetriever != null)) {
-//            cuis.addAll(cuiPropertyRetriever.retrievePropertyValues(getId()));
-//        }
+        if (!fetchedSemInfo) {
+            fetchSemanticInformation();
+        }
         return Collections.unmodifiableSet(cuis);
     }
 
     @Override
     public List<UMLSGroup> getSemanticGroups() {
-//        if (value!=null){
-//            final String groupString = value.asString();
-//            for(final String group: groupString.split(",")){
-//                semanticGroups.add(umlsGroupIndex.getGroupByName(group));
-//            }
-//        } else if (semanticGroups.isEmpty() && (semanticGroupRetriever != null)) {
-//            final List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
-//            for(final String type: types){
-//                semanticGroups.add(umlsGroupIndex.getGroupByType(type));
-//            }
-//        }
+        if (!fetchedSemInfo) {
+            fetchSemanticInformation();
+        }
         return Collections.unmodifiableList(semanticGroups);
     }
+
     @Override
-    public void setSemanticGroups(final List<UMLSGroup> groups){
+    public void setSemanticGroups(final List<UMLSGroup> groups) {
         semanticGroups = new ArrayList<>(groups);
-        final String groupString = groups.stream().map(UMLSGroup::getName).collect(Collectors.joining(","));
-        jsonObject.set("semantic_groups", groupString);
+        final JsonArray groupArray = new JsonArray();
+        groups.forEach(g -> groupArray.add(g.getName()));
+        jsonObject.set("semantic_groups", groupArray);
     }
 
     @Override
