@@ -8,7 +8,7 @@ import com.eclipsesource.json.JsonValue;
 import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.*;
-import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationTokens;
@@ -33,22 +33,20 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
 
 
     private final AnnotationFactory annotationFactory;
-    private final PropertyRetriever cuiRetrieval;
-    private final PropertyRetriever umlsTypeRetrieval;
+    private final UMLSPropertyRetriever umlsTypeRetrieval;
     private final UMLSGroupIndex groupIndex;
 
 
     /**
      * Create an annotation parser
      * @param annotationFactory The factory for annotation elements
-     * @param cuiRetrieval The property retriever for CUIs (may be null, see second constructor)
+
      * @param umlsTypeRetrieval The property retriever of UMLS semantic groups (may be null, see second constructor)
      * @param groupIndex The UMLS group index that maps UMLS groups to their semantic types and vice versa
      */
-    public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory, final PropertyRetriever cuiRetrieval,
-                                         final PropertyRetriever umlsTypeRetrieval, final UMLSGroupIndex groupIndex) {
+    public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory,
+                                         final UMLSPropertyRetriever umlsTypeRetrieval, final UMLSGroupIndex groupIndex) {
         this.annotationFactory = annotationFactory;
-        this.cuiRetrieval = cuiRetrieval;
         this.groupIndex = groupIndex;
         this.umlsTypeRetrieval = umlsTypeRetrieval;
     }
@@ -58,14 +56,14 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
      * @param annotationFactory The factory for annotation elements
      */
     public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory) {
-        this(annotationFactory, null, null, UMLSSemanticGroupsLoader.load());
+        this(annotationFactory, null, UMLSSemanticGroupsLoader.load());
     }
 
     @Override
     public List<Annotation> parseAnnotations(final String queryResponse) throws ParseException, NCBOAnnotatorErrorException, InvalidFormatException {
 
         final List<Annotation> annotations = new ArrayList<>();
-        try {
+//        try {
             final JsonValue rootNode = Json.parse(queryResponse);
             if (rootNode != null) {
                     if(rootNode.isObject()){
@@ -95,10 +93,10 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
             } else {
                 logger.error("Output empty!");
             }
-        } catch (RuntimeException e) {
+        /*} catch (RuntimeException e) {
             logger.error("Invalid JSON syntax:{}", e.getLocalizedMessage());
             throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
-        }
+        }*/
         return annotations;
     }
 
@@ -106,7 +104,7 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
         if (annotatedClassNode != null) {
             final Links links = parseLinks(annotatedClassNode.asObject().get("links"));
 
-            return annotationFactory.createAnnotatedClass(annotatedClassNode.asObject(), links, cuiRetrieval, umlsTypeRetrieval, groupIndex);
+            return annotationFactory.createAnnotatedClass(annotatedClassNode.asObject(), links, umlsTypeRetrieval, groupIndex);
         } else {
             return null;
         }

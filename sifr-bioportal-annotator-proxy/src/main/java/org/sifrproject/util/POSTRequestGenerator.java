@@ -8,10 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -142,5 +139,9 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
     @SuppressWarnings("all")
     public POSTRequestGenerator clone() {
         return (POSTRequestGenerator) super.clone();
+    }
+
+    public Map<String, String> getHeaders() {
+        return Collections.unmodifiableMap(headers);
     }
 }

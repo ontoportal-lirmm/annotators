@@ -1,13 +1,15 @@
 package org.sifrproject.annotations.model;
 
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.LazyModelElement;
 import org.sifrproject.annotations.api.model.Links;
-import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.api.model.retrieval.UMLSProperties;
+import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroup;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
@@ -33,48 +35,51 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     private final JsonObject jsonObject;
 
-    private final PropertyRetriever cuiPropertyRetriever;
-    private final PropertyRetriever semanticGroupRetriever;
-
-    private final UMLSGroupIndex umlsGroupIndex;
-
     @Override
     public JsonValue getJSONObject() {
         return jsonObject;
     }
 
     @SuppressWarnings("all")
-    BioPortalLazyAnnotatedClass(JsonObject jsonObject, Links links, PropertyRetriever cuiPropertyRetriever, PropertyRetriever semanticGroupRetriever, UMLSGroupIndex umlsGroupIndex) {
+    BioPortalLazyAnnotatedClass(JsonObject jsonObject, Links links, UMLSPropertyRetriever umlsPropertyRetriever, UMLSGroupIndex umlsGroupIndex) {
         this.jsonObject = jsonObject;
         this.id = jsonObject.get("@id").asString();
         this.type = jsonObject.get("@type").asString();
         this.links = links;
         cuis = new TreeSet<>();
         semanticGroups = new ArrayList<>();
-        this.cuiPropertyRetriever = cuiPropertyRetriever;
-        this.semanticGroupRetriever = semanticGroupRetriever;
-        this.umlsGroupIndex = umlsGroupIndex;
-        if (semanticGroupRetriever != null) {
-            List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
+        UMLSPropertyRetriever semanticGroupRetriever = umlsPropertyRetriever;
+        UMLSGroupIndex umlsGroupIndex1 = umlsGroupIndex;
+        UMLSProperties properties = umlsPropertyRetriever.retrievePropertyValues(links.getSelf());
+        if (umlsPropertyRetriever != null) {
+            List<String> types = properties.getTUIs();
+            JsonArray tuiArray = new JsonArray();
             for(String type: types){
                 final UMLSGroup group = umlsGroupIndex.getGroupByType(type);
-                if(!semanticGroups.contains(group)) {
+                if(group !=null && !semanticGroups.contains(group)) {
                     semanticGroups.add(group);
                 }
+                tuiArray.add(type);
             }
+            jsonObject.add("semantic_types", tuiArray);
+
+            cuis.addAll(properties.getCUIs());
 
             if (!semanticGroups.isEmpty()) {
-                StringBuilder value = new StringBuilder();
-                boolean first = true;
-                for (UMLSGroup umlsGroup : semanticGroups) {
-                    if (!first) {
-                        value.append(",");
-                    }
-                    first = false;
-                    value.append(umlsGroup.getName());
-                }
+                JsonArray guiArray = new JsonArray();
 
-                jsonObject.add("semantic_groups", value.toString());
+                for (UMLSGroup umlsGroup : semanticGroups) {
+                    guiArray.add(umlsGroup.getName());
+                }
+                jsonObject.add("semantic_groups", guiArray);
+            }
+
+            if(!cuis.isEmpty()){
+                JsonArray cuiArray = new JsonArray();
+                for (String cui : cuis) {
+                    cuiArray.add(cui);
+                }
+                jsonObject.add("cuis", cuiArray);
             }
         }
     }
@@ -82,7 +87,7 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
 
     BioPortalLazyAnnotatedClass(final JsonObject jsonObject, final Links links) {
-        this(jsonObject, links, null, null, null);
+        this(jsonObject, links, null, null);
     }
 
     @Override
@@ -116,26 +121,25 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     @Override
     public Set<String> getCuis() {
-        if (cuis.isEmpty() && (cuiPropertyRetriever != null)) {
-            cuis.addAll(cuiPropertyRetriever.retrievePropertyValues(getId()));
-        }
+//        if (cuis.isEmpty() && (cuiPropertyRetriever != null)) {
+//            cuis.addAll(cuiPropertyRetriever.retrievePropertyValues(getId()));
+//        }
         return Collections.unmodifiableSet(cuis);
     }
 
     @Override
     public List<UMLSGroup> getSemanticGroups() {
-        final JsonValue value = jsonObject.get("semantic_groups");
-        if (value!=null){
-            final String groupString = value.asString();
-            for(final String group: groupString.split(",")){
-                semanticGroups.add(umlsGroupIndex.getGroupByName(group));
-            }
-        } else if (semanticGroups.isEmpty() && (semanticGroupRetriever != null)) {
-            final List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
-            for(final String type: types){
-                semanticGroups.add(umlsGroupIndex.getGroupByType(type));
-            }
-        }
+//        if (value!=null){
+//            final String groupString = value.asString();
+//            for(final String group: groupString.split(",")){
+//                semanticGroups.add(umlsGroupIndex.getGroupByName(group));
+//            }
+//        } else if (semanticGroups.isEmpty() && (semanticGroupRetriever != null)) {
+//            final List<String> types = semanticGroupRetriever.retrievePropertyValues(getId());
+//            for(final String type: types){
+//                semanticGroups.add(umlsGroupIndex.getGroupByType(type));
+//            }
+//        }
         return Collections.unmodifiableList(semanticGroups);
     }
     @Override

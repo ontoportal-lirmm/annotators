@@ -12,22 +12,7 @@ import java.net.*;
 
 public final class RestfulRequest {
     private static final Logger logger = LoggerFactory.getLogger(RestfulRequest.class);
-
-    @SuppressWarnings("MethodParameterOfConcreteClass")
-    public static String queryAnnotator(final POSTRequestGenerator requestGenerator) throws IOException {
-        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-        final HttpURLConnection httpURLConnection = requestGenerator.createRequest();
-        logger.debug("Request to Annotator: {}", httpURLConnection.getURL());
-        final int code = httpURLConnection.getResponseCode();
-        final String message = httpURLConnection.getResponseMessage();
-        logger.info("{} - {} {}", code, message, httpURLConnection.getURL());
-        final String response = streamAsString((code == 200) ? httpURLConnection.getInputStream() : httpURLConnection.getErrorStream());
-        logger.debug(response);
-        return response;
-    }
-
-
-    @SuppressWarnings("MethodParameterOfConcreteClass")
+        @SuppressWarnings("MethodParameterOfConcreteClass")
     public static String queryClass(final String selfURL) throws IOException {
         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 

@@ -4,7 +4,7 @@ package org.sifrproject.annotations.model;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import org.sifrproject.annotations.api.model.*;
-import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class BioPortalLazyAnnotationFactory implements AnnotationFactory {
     }
 
     @Override
-    public AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links, PropertyRetriever cuiPropertyRetriever, PropertyRetriever semanticGroupPropertyRetriever, UMLSGroupIndex groupIndex) {
-        return new BioPortalLazyAnnotatedClass(jsonObject, links, cuiPropertyRetriever, semanticGroupPropertyRetriever, groupIndex);
+    public AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links, UMLSPropertyRetriever semanticGroupPropertyRetriever, UMLSGroupIndex groupIndex) {
+        return new BioPortalLazyAnnotatedClass(jsonObject, links, semanticGroupPropertyRetriever, groupIndex);
     }
 
     @Override

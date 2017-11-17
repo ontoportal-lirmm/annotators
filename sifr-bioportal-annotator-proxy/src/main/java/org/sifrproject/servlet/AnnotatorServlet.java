@@ -4,7 +4,7 @@ import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
-import org.sifrproject.annotations.api.model.retrieval.PropertyRetriever;
+import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGeneratorDispatcher;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
@@ -12,8 +12,7 @@ import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
 import org.sifrproject.annotations.model.BioportalErrorAnnotation;
-import org.sifrproject.annotations.model.retrieval.CUIPropertyRetriever;
-import org.sifrproject.annotations.model.retrieval.SemanticTypePropertyRetriever;
+import org.sifrproject.annotations.model.retrieval.APIUMLSPropertyRetriever;
 import org.sifrproject.annotations.output.LIRMMOutputGeneratorDispatcher;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
@@ -26,8 +25,6 @@ import org.sifrproject.util.POSTRequestGenerator;
 import org.sifrproject.util.RestfulRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sparqy.graph.storage.JenaRemoteSPARQLStore;
-import org.sparqy.graph.storage.StoreHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletResponse;
@@ -39,6 +36,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,26 +79,6 @@ public class AnnotatorServlet extends HttpServlet {
             final InputStream proxyPropertiesStream = AnnotatorServlet.class.getResourceAsStream("/annotatorProxy.properties");
             proxyProperties = new Properties();
             proxyProperties.load(proxyPropertiesStream);
-
-            String endPoint = sparqlServer;
-            if (proxyProperties.containsKey(SPARQL_ENDPOINT_PROPERTY)) {
-                endPoint = proxyProperties.getProperty(SPARQL_ENDPOINT_PROPERTY);
-            }
-            endPoint = endPoint.trim();
-
-            /*
-             * Instantiating annotation parser and dependencies
-             */
-
-            if(!sparqlServer.isEmpty()) {
-                StoreHandler.registerStoreInstance(new JenaRemoteSPARQLStore(endPoint));
-            }
-            final PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
-            final PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
-            final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
-            final AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
-            parser = new BioPortalJSONAnnotationParser(annotationFactory, cuiRetrieval, typeRetrieval, umlsGroupIndex);
-
 
 
             /*
@@ -197,6 +175,15 @@ public class AnnotatorServlet extends HttpServlet {
             parameterRegistry.setPostAnnotationRegistry(postAnnotationRegistry);
             parameterRegistry.processParameters(parameters);
 
+                        /*
+             * Instantiating annotation parser and dependencies
+             */
+
+            final UMLSPropertyRetriever typeRetrieval = new APIUMLSPropertyRetriever(findAPIKey(parameters,parameters.getHeaders()));
+            final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
+            final AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
+            parser = new BioPortalJSONAnnotationParser(annotationFactory, typeRetrieval, umlsGroupIndex);
+
             /*
             * Querying the bioportal annotator and building the model
             */
@@ -235,6 +222,18 @@ public class AnnotatorServlet extends HttpServlet {
         response.setContentType(String.format("%s; charset=UTF-8", annotatorOutput.getMimeType()));
         output.println(annotatorOutput.getContent());
         output.flush();
+    }
+
+    private String findAPIKey(final Map<String,String> parameters, final Map<String,String> headers){
+        final String apikey;
+        if(parameters.containsKey("apikey")){
+            apikey = parameters.get("apikey");
+        } else if (headers.containsKey("Authorization")){
+            apikey = headers.get("Authorization").split("=")[1];
+        } else {
+            apikey = "";
+        }
+        return apikey;
     }
 
 }

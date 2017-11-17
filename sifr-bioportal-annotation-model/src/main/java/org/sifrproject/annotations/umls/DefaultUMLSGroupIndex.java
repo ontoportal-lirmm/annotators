@@ -33,7 +33,14 @@ public final class DefaultUMLSGroupIndex implements UMLSGroupIndex {
 
     @Override
     public UMLSGroup getGroupByType(final String name) {
-        return typeNameIndex.get(name);
+        final String cannonicalName;
+        if(name.contains("http")){
+            final String[] components = name.split("/");
+            cannonicalName = components[components.length-1];
+        } else {
+            cannonicalName = name;
+        }
+        return typeNameIndex.get(cannonicalName);
     }
 
     @Override
