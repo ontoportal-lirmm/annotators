@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"HardcodedFileSeparator", "LocalVariableOfConcreteClass"})
 public class AnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
-    private static final String sparqlServer = "http://sparql.bioportal.lirmm.fr/sparql/";
+    private static final String sparqlServer = "";
     private static final Logger logger = LoggerFactory.getLogger(AnnotatorServlet.class);
     private static final String FORMAT = "format";
     private static final String ANNOTATOR_URI = "annotatorURI";
@@ -91,7 +91,10 @@ public class AnnotatorServlet extends HttpServlet {
             /*
              * Instantiating annotation parser and dependencies
              */
-            StoreHandler.registerStoreInstance(new JenaRemoteSPARQLStore(endPoint));
+
+            if(!sparqlServer.isEmpty()) {
+                StoreHandler.registerStoreInstance(new JenaRemoteSPARQLStore(endPoint));
+            }
             final PropertyRetriever cuiRetrieval = new CUIPropertyRetriever();
             final PropertyRetriever typeRetrieval = new SemanticTypePropertyRetriever();
             final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();

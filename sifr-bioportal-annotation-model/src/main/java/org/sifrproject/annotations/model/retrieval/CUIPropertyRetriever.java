@@ -8,6 +8,7 @@ import org.sparqy.api.Graph;
 import org.sparqy.api.queries.QueryProcessor;
 import org.sparqy.graph.DefaultGraph;
 import org.sparqy.graph.OWLTBoxModel;
+import org.sparqy.graph.storage.StoreHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,13 +25,15 @@ public final class CUIPropertyRetriever implements PropertyRetriever {
     private List<String> getFlatCUIS(String URI) {
         List<String> cuis = new ArrayList<>();
 
-        QueryProcessor<String> cuiProcessor = new GetCUIUMLSPropQueryProcessor(graph, URI);
-        cuiProcessor.runQuery();
-        cuis.addAll(cuiProcessor.processResults());
+        if (StoreHandler.getStore()!=null) {
+            QueryProcessor<String> cuiProcessor = new GetCUIUMLSPropQueryProcessor(graph, URI);
+            cuiProcessor.runQuery();
+            cuis.addAll(cuiProcessor.processResults());
 
-        QueryProcessor<String> cuiProcessorAlt = new GetCUIAltLabelQueryProcessor(graph, URI);
-        cuiProcessorAlt.runQuery();
-        cuis.addAll(cuiProcessorAlt.processResults());
+            QueryProcessor<String> cuiProcessorAlt = new GetCUIAltLabelQueryProcessor(graph, URI);
+            cuiProcessorAlt.runQuery();
+            cuis.addAll(cuiProcessorAlt.processResults());
+        }
         return cuis;
     }
 

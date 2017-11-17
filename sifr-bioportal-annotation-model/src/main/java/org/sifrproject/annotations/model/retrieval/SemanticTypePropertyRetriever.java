@@ -7,6 +7,7 @@ import org.sparqy.api.Graph;
 import org.sparqy.api.queries.QueryProcessor;
 import org.sparqy.graph.DefaultGraph;
 import org.sparqy.graph.OWLTBoxModel;
+import org.sparqy.graph.storage.StoreHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public final class SemanticTypePropertyRetriever implements PropertyRetriever {
     public List<String> retrievePropertyValues(String URI) {
         List<String> tuis = new ArrayList<>();
 
-        QueryProcessor<String> tuiProcessor = new GetUMLSTypeQueryProcessor(graph, URI);
-        tuiProcessor.runQuery();
-        tuis.addAll(tuiProcessor.processResults());
+        if (StoreHandler.getStore()!=null) {
+            QueryProcessor<String> tuiProcessor = new GetUMLSTypeQueryProcessor(graph, URI);
+            tuiProcessor.runQuery();
+            tuis.addAll(tuiProcessor.processResults());
+        }
 
         return tuis;
     }
