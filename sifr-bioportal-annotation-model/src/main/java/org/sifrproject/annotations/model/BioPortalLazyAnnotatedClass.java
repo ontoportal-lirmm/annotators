@@ -34,7 +34,7 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
 
     private final JsonObject jsonObject;
 
-    private boolean fetchedSemInfo = false;
+    private boolean fetchedSemInfo;
 
     private final UMLSGroupIndex umlsGroupIndex;
     private final UMLSPropertyRetriever umlsPropertyRetriever;

@@ -148,7 +148,7 @@ public class AnnotatorServlet extends HttpServlet {
         }
 
 
-        String serverEncoding = "iso8859";
+        String serverEncoding = "iso-8859-1";
         if(proxyProperties.containsKey(SERVER_ENCODING)) {
             serverEncoding = proxyProperties.getProperty(SERVER_ENCODING);
         }
