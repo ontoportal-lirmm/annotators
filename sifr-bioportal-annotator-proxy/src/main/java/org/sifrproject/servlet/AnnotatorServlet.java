@@ -52,17 +52,13 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"HardcodedFileSeparator", "LocalVariableOfConcreteClass"})
 public class AnnotatorServlet extends HttpServlet {
     private static final long serialVersionUID = -7313493486599524614L;
-    private static final String sparqlServer = "";
     private static final Logger logger = LoggerFactory.getLogger(AnnotatorServlet.class);
     private static final String FORMAT = "format";
     private static final String ANNOTATOR_URI = "annotatorURI";
+    private static final String ONTOLOGIES_API_URI = "ontologiesApiURI";
     private static final String CONTEXT_LANGUAGE = "context.language";
-    private static final String SPARQL_ENDPOINT_PROPERTY = "sparqlEndpoint";
     private static final String SERVER_ENCODING = "server.encoding";
-
-    private String annotatorURI;
-
-    private AnnotationParser parser;
+    private static final String HTTPS_URL_PATTERN = "^((?:https?://)?[^:]+)";
 
     private ParameterRegistry parameterRegistry;
 
@@ -126,34 +122,15 @@ public class AnnotatorServlet extends HttpServlet {
     @SuppressWarnings("LocalVariableOfConcreteClass")
     @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-        logger.info("Processing request {}", request);
         final PostAnnotationRegistry postAnnotationRegistry = new LIRMMPostAnnotationRegistry();
         /*
          * Initializing the annotator URI, from the properties if present
          * Otherwise the default behaviour is adopted, assuming the proxy runs on the same machine as the ncbo annotator
          * but on different ports (by default 80 for the proxy and 8080 for the ncbo annotator).
          */
-        if (proxyProperties.containsKey(ANNOTATOR_URI)) {
-            //To debug locally using a remote bioportal, comment matcher condition above and uncomment the line below
-            //annotatorURI = "http://services.bioportal.lirmm.fr:8080/servlet?";
-            annotatorURI = proxyProperties.getProperty(ANNOTATOR_URI);
-        } else {
-            // Extract the base url of the tomcat server and generate the servlet URL from it (the servlet have to be
-            // deployed on the same server as the servlet used)
-            final Pattern pattern = Pattern.compile("^((?:https?://)?[^:]+)");
-            final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
-            if (matcher.find()) {
-                annotatorURI = matcher.group(1) + ":8080/annotator";
-            }
-        }
-
-
-        String serverEncoding = "iso-8859-1";
-        if(proxyProperties.containsKey(SERVER_ENCODING)) {
-            serverEncoding = proxyProperties.getProperty(SERVER_ENCODING);
-        }
-        annotatorURI = annotatorURI.trim();
-
+        final String annotatorURI = getAnnotatorURI(request);
+        final String ontologiesApiURI = getOntologiesApiURI(request);
+        final String serverEncoding = getServerEncoding();
 
         final POSTRequestGenerator parameters = new POSTRequestGenerator(request, annotatorURI, serverEncoding);
 
@@ -179,16 +156,16 @@ public class AnnotatorServlet extends HttpServlet {
              * Instantiating annotation parser and dependencies
              */
 
-            final UMLSPropertyRetriever typeRetrieval = new APIUMLSPropertyRetriever(findAPIKey(parameters,parameters.getHeaders()));
+            final UMLSPropertyRetriever typeRetrieval = new APIUMLSPropertyRetriever(ontologiesApiURI, findAPIKey(parameters,parameters.getHeaders()));
             final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
             final AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
-            parser = new BioPortalJSONAnnotationParser(annotationFactory, typeRetrieval, umlsGroupIndex);
+            final AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, typeRetrieval, umlsGroupIndex);
 
             /*
             * Querying the bioportal annotator and building the model
             */
             final String queryOutput = RestfulRequest.queryAnnotator(parameters);
-            logger.debug(queryOutput);
+            logger.info("Query output: {}", queryOutput);
             annotations = parser.parseAnnotations(queryOutput);
 
         } catch (InvalidParameterException | InvalidFormatException | ParseException | IOException | NCBOAnnotatorErrorException e) {
@@ -216,6 +193,48 @@ public class AnnotatorServlet extends HttpServlet {
         final PrintWriter servletResponseWriter = response.getWriter();
         outputContent(outputGeneratorDispatcher.generate(format, annotations, annotatorURI, text), response, servletResponseWriter);
 
+    }
+
+    private String getServerEncoding() {
+        String encoding = "iso-8859-1";
+        if(proxyProperties.containsKey(SERVER_ENCODING)) {
+            encoding = proxyProperties.getProperty(SERVER_ENCODING);
+        }
+        return encoding;
+    }
+
+    private String getOntologiesApiURI(final HttpServletRequest request) {
+        String ontologiesApiURI = "";
+        if (proxyProperties.containsKey(ONTOLOGIES_API_URI)) {
+            ontologiesApiURI = proxyProperties.getProperty(ONTOLOGIES_API_URI);
+        } else {
+            // Extract the base url of the tomcat server and generate the servlet URL from it (the servlet have to be
+            // deployed on the same server as the servlet used)
+            final Pattern pattern = Pattern.compile(HTTPS_URL_PATTERN);
+            final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+            if (matcher.find()) {
+                ontologiesApiURI = matcher.group(1) + ":8080";
+            }
+        }
+        return ontologiesApiURI.trim();
+    }
+
+    private String getAnnotatorURI(final HttpServletRequest request){
+        String annotatorURI = "";
+        if (proxyProperties.containsKey(ANNOTATOR_URI)) {
+            //To debug locally using a remote bioportal, comment matcher condition above and uncomment the line below
+            //annotatorURI = "http://services.bioportal.lirmm.fr:8080/servlet?";
+            annotatorURI = proxyProperties.getProperty(ANNOTATOR_URI);
+        } else {
+            // Extract the base url of the tomcat server and generate the servlet URL from it (the servlet have to be
+            // deployed on the same server as the servlet used)
+            final Pattern pattern = Pattern.compile(HTTPS_URL_PATTERN);
+            final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+            if (matcher.find()) {
+                annotatorURI = matcher.group(1) + ":8080/annotator";
+            }
+        }
+        return annotatorURI.trim();
     }
 
     private void outputContent(final AnnotatorOutput annotatorOutput, final ServletResponse response, final PrintWriter output) {

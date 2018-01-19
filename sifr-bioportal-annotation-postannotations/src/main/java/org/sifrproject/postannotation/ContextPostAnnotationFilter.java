@@ -45,37 +45,39 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
         return builderClassConstructor.newInstance();
     }
 
-    public void postAnnotate(List<Annotation> annotations, String text) {
+    public void postAnnotate(final List<Annotation> annotations, final String text) {
         // Segment the text in sentences
-        String[] regex = text.split("\\.");
-        ArrayList<Sentence> sentences = new ArrayList<>();
-        Sentence s;
+        final String[] regex = text.split("\\.");
+        final List<Sentence> sentences = new ArrayList<>();
+
         int i = 0;
         for (String r : regex) {
-            s = new Sentence(r, i, i + r.length());
-            sentences.add(s);
-            i = i + r.length();
+
+            sentences.add(new Sentence(r, i, i + r.length()));
+            i += r.length();
         }
         // Run CoNTeXT on each concept annotation
-        ConText cxt = null;
-        try {
-            cxt = instantiateContext();
 
-            for (Annotation annotation : annotations) {
-                AnnotationTokens annotationTokens = annotation.getAnnotations();
-                for (AnnotationToken annotationToken : annotationTokens) {
-                    int indexFromConcept = annotationToken.getFrom();
-                    int indexToConcept = annotationToken.getTo();
-                    String concept = annotationToken.getText();
+        try {
+            final ConText cxt =instantiateContext();
+
+            for (final Annotation annotation : annotations) {
+                final AnnotationTokens annotationTokens = annotation.getAnnotations();
+                for (final AnnotationToken annotationToken : annotationTokens) {
+                    final int indexFromConcept = annotationToken.getFrom();
+                    final int indexToConcept = annotationToken.getTo();
+                    final String concept = annotationToken.getText();
                     // Seek the sentence corresponding to the concept
                     i = 0;
 
-                    while (i < sentences.size() && sentences.get(i).getIndexTo() < indexFromConcept) {
+                    while ((i < sentences.size()) && (sentences
+                            .get(i)
+                            .getIndexTo() < indexFromConcept)) {
                         i++;
                     }
 
                     try {
-                        List<String> results = cxt.applyContext(concept, sentences.get(i).getSentence());
+                        final List<String> results = cxt.applyContext(concept, sentences.get(i).getSentence());
                         if (includeNegation) {
                             annotationToken.setNegationContext(NegationContext.valueOf(results.get(2).toUpperCase()));
                         }
@@ -85,7 +87,7 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                         if (includeExperiencer) {
                             annotationToken.setExperiencerContext(ExperiencerContext.valueOf(results.get(4).toUpperCase()));
                         }
-                    } catch (Exception ex) {
+                    } catch (final Exception ex) {
                         logger.error(ex.getLocalizedMessage());
                     }
 
@@ -93,8 +95,7 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                 }
             }
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            logger.error("Cannot instantiate ConText, make sure context.language is set to one of the " +
-                    "supported languages (French,English) in the properties file of the annotator proxy...");
+            logger.error("Cannot instantiate ConText, make sure context.language is set to one of the supported languages (French,English) in the properties file of the annotator proxy... :{}", e.getLocalizedMessage());
         }
 
     }

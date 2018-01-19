@@ -69,9 +69,12 @@ public interface AnnotationParser {
                     if (!perTokenAnnotations.containsKey(annotationToken)) {
                         perTokenAnnotations.put(annotationToken, new ArrayList<>());
                     }
-                    perTokenAnnotations
-                            .get(annotationToken)
-                            .add(annotation);
+                    if(!perTokenAnnotations
+                            .get(annotationToken).contains(annotation)) {
+                        perTokenAnnotations
+                                .get(annotationToken)
+                                .add(annotation);
+                    }
                 }
             }
         }

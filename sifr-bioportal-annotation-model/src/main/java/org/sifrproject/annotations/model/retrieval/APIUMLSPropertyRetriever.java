@@ -10,17 +10,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("HardcodedFileSeparator")
 public final class APIUMLSPropertyRetriever implements UMLSPropertyRetriever {
     private static final Logger logger = LoggerFactory.getLogger(APIUMLSPropertyRetriever.class);
 
-    private final String apikey;
+    @SuppressWarnings("HardcodedFileSeparator")
+    private static final char URI_PATH_SEPARATOR = '/';
 
-    public APIUMLSPropertyRetriever(final String apikey) throws IOException {
+
+    private final String apikey;
+    private final String ontologiesApiURI;
+
+    public APIUMLSPropertyRetriever(final String ontologiesApiURI,final String apikey) throws IOException {
         this.apikey = apikey;
+        this.ontologiesApiURI = ontologiesApiURI;
     }
 
     @Override
@@ -29,7 +38,13 @@ public final class APIUMLSPropertyRetriever implements UMLSPropertyRetriever {
         final List<String> cuis = new ArrayList<>();
 
         try {
-            final String output = RestfulRequest.queryClass(String.format("%s?apikey=%s",URI,apikey));
+
+            final String uriPath = new URL(URI).getPath();
+
+            final String QS = ((apikey == null) || apikey.isEmpty()) ?
+                    String.format("%s%s", ontologiesApiURI, uriPath) :
+                    String.format("%s%s?apikey=%s", ontologiesApiURI, uriPath, apikey);
+            final String output = RestfulRequest.queryClass(QS);
             final JsonValue rootNode = Json.parse(output);
 
 
@@ -53,6 +68,8 @@ public final class APIUMLSPropertyRetriever implements UMLSPropertyRetriever {
                 }
             }
 
+        } catch (final MalformedURLException e) {
+            logger.error("Invalid URI {}", e.getLocalizedMessage());
         } catch (final IOException e) {
             logger.error(e.getLocalizedMessage());
         }

@@ -163,4 +163,17 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BioPortalLazyAnnotatedClass that = (BioPortalLazyAnnotatedClass) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId());
+    }
 }

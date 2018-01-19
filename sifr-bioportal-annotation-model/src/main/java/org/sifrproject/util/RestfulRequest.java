@@ -12,7 +12,11 @@ import java.net.*;
 
 public final class RestfulRequest {
     private static final Logger logger = LoggerFactory.getLogger(RestfulRequest.class);
-        @SuppressWarnings("MethodParameterOfConcreteClass")
+
+    private RestfulRequest() {
+    }
+
+    @SuppressWarnings("MethodParameterOfConcreteClass")
     public static String queryClass(final String selfURL) throws IOException {
         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
