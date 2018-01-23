@@ -19,6 +19,7 @@ import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
 import org.sifrproject.parameters.*;
 import org.sifrproject.parameters.api.ParameterRegistry;
 import org.sifrproject.parameters.exceptions.InvalidParameterException;
+import org.sifrproject.postannotation.FetchUMLSSemanticInformationPostAnnotationFilter;
 import org.sifrproject.postannotation.LIRMMPostAnnotationRegistry;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
 import org.sifrproject.util.POSTRequestGenerator;
@@ -58,6 +59,7 @@ public class AnnotatorServlet extends HttpServlet {
     private static final String ONTOLOGIES_API_URI = "ontologiesApiURI";
     private static final String CONTEXT_LANGUAGE = "context.language";
     private static final String SERVER_ENCODING = "server.encoding";
+    private static final String ALWAYS_FETCH_UMLS = "alwaysFetchUMLS";
     private static final String HTTPS_URL_PATTERN = "^((?:https?://)?[^:]+)";
 
     private ParameterRegistry parameterRegistry;
@@ -151,8 +153,12 @@ public class AnnotatorServlet extends HttpServlet {
 
             parameterRegistry.setPostAnnotationRegistry(postAnnotationRegistry);
             parameterRegistry.processParameters(parameters);
+            if(isAlwaysFetchUMLS()){
+                postAnnotationRegistry.registerPostAnnotator(new FetchUMLSSemanticInformationPostAnnotationFilter());
+            }
 
-                        /*
+
+            /*
              * Instantiating annotation parser and dependencies
              */
 
@@ -201,6 +207,14 @@ public class AnnotatorServlet extends HttpServlet {
             encoding = proxyProperties.getProperty(SERVER_ENCODING);
         }
         return encoding;
+    }
+
+    private boolean isAlwaysFetchUMLS(){
+        boolean fetchUMLS = false;
+        if(proxyProperties.containsKey(ALWAYS_FETCH_UMLS)){
+            fetchUMLS = Boolean.valueOf(proxyProperties.getProperty(ALWAYS_FETCH_UMLS));
+        }
+        return fetchUMLS;
     }
 
     private String getOntologiesApiURI(final HttpServletRequest request) {
