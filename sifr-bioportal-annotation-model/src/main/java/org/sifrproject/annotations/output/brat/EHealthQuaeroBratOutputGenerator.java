@@ -89,7 +89,7 @@ public class EHealthQuaeroBratOutputGenerator implements OutputGenerator {
         boolean first = true;
         for (final String elem : set) {
             if (!first) {
-                stringBuilder.append(",");
+                stringBuilder.append(" ");
             }
             stringBuilder.append(elem);
             first = false;
