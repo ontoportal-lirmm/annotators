@@ -33,7 +33,7 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
     private double score;
 
 
-    BioPortalLazyAnnotation(AnnotatedClass annotatedClass, Hierarchy hierarchy, AnnotationTokens annotations, Mappings mappings, JsonObject jsonObject) {
+    BioPortalLazyAnnotation(final AnnotatedClass annotatedClass, final Hierarchy hierarchy, final AnnotationTokens annotations, final Mappings mappings, final JsonObject jsonObject) {
         this.jsonObject = jsonObject;
         this.annotatedClass = annotatedClass;
         annotationTokens = annotations;
@@ -54,7 +54,7 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
     @Override
     public double getScore() {
         score = -1;
-        JsonValue score = jsonObject.get("score");
+        final JsonValue score = jsonObject.get("score");
         if (score !=null) {
             this.score =  score.asDouble();
         }
@@ -80,10 +80,10 @@ class BioPortalLazyAnnotation implements Annotation, LazyModelElement {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BioPortalLazyAnnotation that = (BioPortalLazyAnnotation) o;
+        final BioPortalLazyAnnotation that = (BioPortalLazyAnnotation) o;
         return Objects.equals(getAnnotatedClass(), that.getAnnotatedClass());
     }
 

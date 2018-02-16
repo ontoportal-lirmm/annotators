@@ -38,8 +38,8 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
             uri += "/";
         }
 
-        URL url = new URL(uri);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        final URL url = new URL(uri);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
         connection.setUseCaches(false);
         connection.setDoInput(true);
@@ -52,7 +52,7 @@ public class RequestGenerator extends LinkedHashMap<String, String> {
                     "application/x-www-form-urlencoded; charset=UTF-8");
             connection.setRequestProperty("Content-Length",
                     Integer.toString(parameterString.getBytes().length));
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            final DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.writeBytes(parameterString);
             wr.flush();
             wr.close();

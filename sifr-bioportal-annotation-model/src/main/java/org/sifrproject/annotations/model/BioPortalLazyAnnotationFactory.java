@@ -17,62 +17,62 @@ public class BioPortalLazyAnnotationFactory implements AnnotationFactory {
 
 
     @Override
-    public Annotation createAnnotation(AnnotatedClass annotatedClass, AnnotationTokens annotations, Hierarchy hierarchy, Mappings mappings, JsonObject jsonObject) {
+    public Annotation createAnnotation(final AnnotatedClass annotatedClass, final AnnotationTokens annotations, final Hierarchy hierarchy, final Mappings mappings, final JsonObject jsonObject) {
         return new BioPortalLazyAnnotation(annotatedClass, hierarchy, annotations, mappings, jsonObject);
     }
 
     @Override
-    public AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links, UMLSPropertyRetriever semanticGroupPropertyRetriever, UMLSGroupIndex groupIndex) {
+    public AnnotatedClass createAnnotatedClass(final JsonObject jsonObject, final Links links, final UMLSPropertyRetriever semanticGroupPropertyRetriever, final UMLSGroupIndex groupIndex) {
         return new BioPortalLazyAnnotatedClass(jsonObject, links, semanticGroupPropertyRetriever, groupIndex);
     }
 
     @Override
-    public AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links) {
+    public AnnotatedClass createAnnotatedClass(final JsonObject jsonObject, final Links links) {
         return new BioPortalLazyAnnotatedClass(jsonObject, links);
     }
 
     @Override
-    public AnnotationToken createAnnotationToken(JsonObject jsonObject) {
+    public AnnotationToken createAnnotationToken(final JsonObject jsonObject) {
         return new BioPortalLazyAnnotationToken(jsonObject);
     }
 
     @Override
-    public AnnotationTokens createAnnotationTokens(List<AnnotationToken> annotationTokens, JsonArray jsonObject) {
+    public AnnotationTokens createAnnotationTokens(final List<AnnotationToken> annotationTokens, final JsonArray jsonObject) {
         return new BioPortalLazyAnnotationTokens(annotationTokens, jsonObject);
     }
 
     @Override
-    public HierarchyElement createHierarchyElement(AnnotatedClass annotatedClass, JsonObject jsonObject) {
+    public HierarchyElement createHierarchyElement(final AnnotatedClass annotatedClass, final JsonObject jsonObject) {
         return new BioPortalLazyHierarchyElement(annotatedClass, jsonObject);
     }
 
     @Override
-    public HierarchyElement createHierarchyElement(AnnotatedClass annotatedClass, int distance) {
+    public HierarchyElement createHierarchyElement(final AnnotatedClass annotatedClass, final int distance) {
         return null;
     }
 
     @Override
-    public Links createLinks(LinkMetadata linksMetadata, LinkMetadata linksContextMetadata, JsonObject jsonObject) {
+    public Links createLinks(final LinkMetadata linksMetadata, final LinkMetadata linksContextMetadata, final JsonObject jsonObject) {
         return new BioPortalLazyLinks(linksMetadata, linksContextMetadata, jsonObject);
     }
 
     @Override
-    public LinkMetadata createLinkMetadata(JsonObject jsonObject) {
+    public LinkMetadata createLinkMetadata(final JsonObject jsonObject) {
         return new BioportalLazyLinkContext(jsonObject);
     }
 
     @Override
-    public Mapping createMapping(AnnotatedClass annotatedClass, JsonObject jsonObject) {
+    public Mapping createMapping(final AnnotatedClass annotatedClass, final JsonObject jsonObject) {
         return new BioPortalLazyMapping(annotatedClass, jsonObject);
     }
 
     @Override
-    public Mappings createMappings(List<Mapping> mappings, JsonArray jsonObject) {
+    public Mappings createMappings(final List<Mapping> mappings, final JsonArray jsonObject) {
         return new BioportalLazyMappings(mappings, jsonObject);
     }
 
     @Override
-    public Annotation createErrorAnnotation(String message) {
+    public Annotation createErrorAnnotation(final String message) {
         return new BioportalErrorAnnotation(message);
     }
 }

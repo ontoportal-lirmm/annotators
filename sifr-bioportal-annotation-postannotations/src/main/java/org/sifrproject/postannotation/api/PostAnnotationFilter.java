@@ -8,7 +8,7 @@ import java.util.List;
  * Appends annotations to an existing Bioportal Annotation Model.
  * The annotations in question should be supported by the annotation model
  */
-public interface PostAnnotationFilter {
+public interface    PostAnnotationFilter {
     /**
      * Perform the post-annotation
      *

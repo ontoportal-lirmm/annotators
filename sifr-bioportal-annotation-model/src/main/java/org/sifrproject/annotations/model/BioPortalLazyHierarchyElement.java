@@ -20,7 +20,7 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
 
     private JsonObject jsonObject;
 
-    BioPortalLazyHierarchyElement(AnnotatedClass annotatedClass, JsonObject jsonObject) {
+    BioPortalLazyHierarchyElement(final AnnotatedClass annotatedClass, final JsonObject jsonObject) {
         this.annotatedClass = annotatedClass;
         this.jsonObject = jsonObject;
         distance = -1;
@@ -49,7 +49,7 @@ public class BioPortalLazyHierarchyElement implements HierarchyElement, LazyMode
     @Override
     public double getScore() {
         if (score < 0) {
-            JsonValue jsonValue = jsonObject.get("score");
+            final JsonValue jsonValue = jsonObject.get("score");
             if(jsonValue == null ){
                 score = 0d;
             } else {

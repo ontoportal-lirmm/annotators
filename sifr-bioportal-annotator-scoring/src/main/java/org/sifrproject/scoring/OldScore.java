@@ -13,16 +13,16 @@ public class OldScore extends AbstractScorer {
     }
 
     @Override
-    public Map<String, ScoreableElement> compute(List<Annotation> annotations) {
-        Map<String, ScoreableElement> scores = new HashMap<>();
+    public Map<String, ScoreableElement> compute(final List<Annotation> annotations) {
+        final Map<String, ScoreableElement> scores = new HashMap<>();
 
-        for (Annotation annotation : annotations) {
+        for (final Annotation annotation : annotations) {
             double score = 0;
 
             // add score for all annotatedTerms to this annotation
-            AnnotationTokens annotatedTokens = annotation.getAnnotations();
+            final AnnotationTokens annotatedTokens = annotation.getAnnotations();
             int number = 0;
-            for (AnnotationToken token : annotatedTokens) {
+            for (final AnnotationToken token : annotatedTokens) {
                 switch (token.getMatchType()) {
                     case "PREF":
                         score += 10;
@@ -38,9 +38,9 @@ public class OldScore extends AbstractScorer {
 
 
             // add score to hierarchical concepts
-            Hierarchy hierarchy = annotation.getHierarchy();
-            for (HierarchyElement hierarchyElement : hierarchy) {
-                int distance = hierarchyElement.getDistance();
+            final Hierarchy hierarchy = annotation.getHierarchy();
+            for (final HierarchyElement hierarchyElement : hierarchy) {
+                final int distance = hierarchyElement.getDistance();
 
                 double factor = 1;
                 if (distance <= 12)
@@ -51,8 +51,8 @@ public class OldScore extends AbstractScorer {
             }
 
             // add score to mappings
-            Mappings mappings = annotation.getMappings();
-            for (Mapping mapping : mappings) {
+            final Mappings mappings = annotation.getMappings();
+            for (final Mapping mapping : mappings) {
                 addScore(mapping, 7);
                 scores.put(mapping.getAnnotatedClass().getId(), mapping);
             }

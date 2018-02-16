@@ -5,17 +5,17 @@ public class PairImpl<U, V> implements Pair<U, V> {
     private U first;
     private V second;
 
-    public PairImpl(U first, V second) {
+    public PairImpl(final U first, final V second) {
         this.first = first;
         this.second = second;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PairImpl<?, ?> pair = (PairImpl<?, ?>) o;
+        final PairImpl<?, ?> pair = (PairImpl<?, ?>) o;
 
         return first != null ? first.equals(pair.first) : pair.first == null &&
                 !(second != null ? !second.equals(pair.second) : pair.second != null);

@@ -3,7 +3,7 @@ package org.sifrproject.parameters.exceptions;
 
 public class InvalidParameterException extends Exception {
 
-    public InvalidParameterException(String message) {
+    public InvalidParameterException(final String message) {
         super(message);
     }
 

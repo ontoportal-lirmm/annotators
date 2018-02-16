@@ -20,7 +20,7 @@ public class BioportalLazyMappings implements Mappings, LazyModelElement {
 
     private JsonArray jsonObject;
 
-     public BioportalLazyMappings(List<Mapping> mappings, JsonArray jsonObject) {
+     public BioportalLazyMappings(final List<Mapping> mappings, final JsonArray jsonObject) {
         this.mappings = mappings;
         this.jsonObject = jsonObject;
     }

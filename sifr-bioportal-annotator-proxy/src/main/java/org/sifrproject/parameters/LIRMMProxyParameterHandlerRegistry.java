@@ -9,7 +9,7 @@ import org.sifrproject.util.RequestGenerator;
 
 import java.util.*;
 
-public class LIRMMProxyParameterRegistry implements ParameterRegistry {
+public class LIRMMProxyParameterHandlerRegistry implements ParameterRegistry {
 
 
     private final List<Parameters> parameterss;
@@ -17,7 +17,7 @@ public class LIRMMProxyParameterRegistry implements ParameterRegistry {
 
     private PostAnnotationRegistry postAnnotationRegistry;
 
-    public LIRMMProxyParameterRegistry() {
+    public LIRMMProxyParameterHandlerRegistry() {
         parameterss = new ArrayList<>();
         parameterHandlers = new HashMap<>();
     }

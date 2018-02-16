@@ -26,7 +26,7 @@ public class BioportalLazyLinkContext implements LinkContext, LazyModelElement {
 
     private JsonObject jsonObject;
 
-    BioportalLazyLinkContext(JsonObject jsonObject) {
+    BioportalLazyLinkContext(final JsonObject jsonObject) {
         this.jsonObject = jsonObject;
         self = "";
         ontology = "";

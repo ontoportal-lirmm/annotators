@@ -35,7 +35,7 @@ public class BioPortalLazyLinks implements Links, LazyModelElement {
         return jsonObject;
     }
 
-    BioPortalLazyLinks(LinkMetadata linksMetadata, LinkMetadata linksContextMetadata, JsonObject jsonObject) {
+    BioPortalLazyLinks(final LinkMetadata linksMetadata, final LinkMetadata linksContextMetadata, final JsonObject jsonObject) {
         this.linksContextMetadata = linksContextMetadata;
         self = linksMetadata.getSelf();
         ontology = linksContextMetadata.getOntology();

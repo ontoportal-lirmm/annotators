@@ -22,7 +22,7 @@ public class BioportalLazyHierarchy implements Hierarchy, LazyModelElement {
 
     private JsonValue jsonObject;
 
-    public BioportalLazyHierarchy(List<HierarchyElement> hierarchyList, JsonArray jsonObject) {
+    public BioportalLazyHierarchy(final List<HierarchyElement> hierarchyList, final JsonArray jsonObject) {
         this.hierarchyList = hierarchyList;
         this.jsonObject = jsonObject;
     }

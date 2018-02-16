@@ -15,13 +15,13 @@ public class LIRMMPostAnnotationRegistry implements PostAnnotationRegistry {
     private final List<PostAnnotationFilter> postAnnotationFilters = new ArrayList<>();
 
     @Override
-    public void registerPostAnnotator(PostAnnotationFilter postAnnotationFilter) {
+    public void registerPostAnnotator(final PostAnnotationFilter postAnnotationFilter) {
         postAnnotationFilters.add(postAnnotationFilter);
     }
 
     @Override
-    public void apply(List<Annotation> annotations, String sourceText) {
-        for (PostAnnotationFilter postAnnotationFilter : postAnnotationFilters){
+    public void apply(final List<Annotation> annotations, final String sourceText) {
+        for (final PostAnnotationFilter postAnnotationFilter : postAnnotationFilters){
             postAnnotationFilter.postAnnotate(annotations, sourceText);
         }
     }

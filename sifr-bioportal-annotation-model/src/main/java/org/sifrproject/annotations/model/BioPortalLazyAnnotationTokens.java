@@ -21,7 +21,7 @@ public class BioPortalLazyAnnotationTokens implements AnnotationTokens, LazyMode
 
     private JsonArray jsonObject;
 
-    public BioPortalLazyAnnotationTokens(List<AnnotationToken> annotationTokens, JsonArray jsonObject) {
+    public BioPortalLazyAnnotationTokens(final List<AnnotationToken> annotationTokens, final JsonArray jsonObject) {
         this.annotationTokens = annotationTokens;
         this.jsonObject = jsonObject;
     }

@@ -87,7 +87,7 @@ public class AnnotatorServlet extends HttpServlet {
             //to the annotations produced by the BioPortal annotator
             //This needs to be initialized here, as parameter handler will need and instance of the registry
             //in order to directly register post-annotation components depending on the values of the parameters
-            parameterRegistry = new LIRMMProxyParameterRegistry();
+            parameterRegistry = new LIRMMProxyParameterHandlerRegistry();
 
             /*
              * Registering parameter handlers

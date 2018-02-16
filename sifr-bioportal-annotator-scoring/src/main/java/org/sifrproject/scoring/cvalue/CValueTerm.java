@@ -10,14 +10,14 @@ public class CValueTerm {
 
     private double cvalue;
 
-    public CValueTerm(String term) {
+    public CValueTerm(final String term) {
         this.term = term;
         this.frequency = 1;
         this.wordNumber = term.split(" ").length;
     }
 
-    public boolean contains(CValueTerm subTerm){
-        String word = subTerm.getTerm();
+    public boolean contains(final CValueTerm subTerm){
+        final String word = subTerm.getTerm();
         return term.contains(" "+word+" ") ||  term.startsWith(word+" ") || term.endsWith(" "+word);
     }
 
@@ -39,7 +39,7 @@ public class CValueTerm {
     public double getCValue() {
         return cvalue;
     }
-    public void setCValue(double cvalue) {
+    public void setCValue(final double cvalue) {
         this.cvalue = cvalue;
     }
 
@@ -48,7 +48,7 @@ public class CValueTerm {
     // -----------
     public static final Comparator<CValueTerm> wordNumberComparator = new Comparator<CValueTerm>() {
         @Override
-        public int compare(CValueTerm o1, CValueTerm o2) {
+        public int compare(final CValueTerm o1, final CValueTerm o2) {
             if (o2.getWordNumber() > o1.getWordNumber()) return 1;
             else if (o2.getWordNumber() < o1.getWordNumber()) return -1;
             else if (o2.getTerm().compareTo(o1.getTerm()) < 0) return 1;
@@ -59,7 +59,7 @@ public class CValueTerm {
 
     public static final Comparator<CValueTerm> importanceComparator = new Comparator<CValueTerm>() {
         @Override
-        public int compare(CValueTerm o1, CValueTerm o2) {
+        public int compare(final CValueTerm o1, final CValueTerm o2) {
             if (o2.getCValue() > o1.getCValue()) return 1;
             else if (o2.getCValue() < o1.getCValue()) return -1;
             else {

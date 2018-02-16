@@ -16,14 +16,14 @@ import java.net.HttpURLConnection;
 public final class RestfulRequest {
     private static final Logger logger = LoggerFactory.getLogger(RestfulRequest.class);
 
-    public static String queryAnnotator(RequestGenerator requestGenerator) throws IOException {
+    public static String queryAnnotator(final RequestGenerator requestGenerator) throws IOException {
         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-        HttpURLConnection httpURLConnection = requestGenerator.createRequest();
+        final HttpURLConnection httpURLConnection = requestGenerator.createRequest();
         logger.debug("Request to NCBO Annotator: {}",httpURLConnection.getURL());
-        int code = httpURLConnection.getResponseCode();
-        String message = httpURLConnection.getResponseMessage();
+        final int code = httpURLConnection.getResponseCode();
+        final String message = httpURLConnection.getResponseMessage();
         logger.debug("{} - {}", code, message);
-        String response;
+        final String response;
         if(code==400){
             response = streamAsString(httpURLConnection.getErrorStream());
         } else {
@@ -33,16 +33,16 @@ public final class RestfulRequest {
         return response;
     }
 
-    private static String streamAsString(InputStream stream){
+    private static String streamAsString(final InputStream stream){
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream,"UTF-8"))) {
-            StringBuilder stringBuilder = new StringBuilder();
+            final StringBuilder stringBuilder = new StringBuilder();
             String line = bufferedReader.readLine();
             while (line != null && !line.isEmpty()) {
                 stringBuilder.append(line).append("\n");
                 line = bufferedReader.readLine();
             }
             return stringBuilder.toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return e.getLocalizedMessage();
         }
     }

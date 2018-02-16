@@ -8,13 +8,13 @@ public class CValueEvaluator {
     private ArrayList<CValueTerm> terms;
     private static final int MIN_FREQUENCY = 1;
 
-    public CValueEvaluator(List<String> terms){
+    public CValueEvaluator(final List<String> terms){
         this.terms = new ArrayList<>(terms.size());
-        HashMap<String, Integer> index = new HashMap<>(terms.size());
+        final HashMap<String, Integer> index = new HashMap<>(terms.size());
 
         // fill this.terms
-        for (String term : terms) {
-            String normalizeTerm = normalizeTerm(term);
+        for (final String term : terms) {
+            final String normalizeTerm = normalizeTerm(term);
 
             // add the term if not already in the list,
             // otherwise increase its frequency
@@ -22,13 +22,13 @@ public class CValueEvaluator {
                 index.put(normalizeTerm,this.terms.size());
                 this.terms.add(new CValueTerm(normalizeTerm));
             }else {
-                int i = index.get(normalizeTerm);
+                final int i = index.get(normalizeTerm);
                 this.terms.get(i).incFrequency();
             }
         }
 
         // filter EvaluatedTerm with too low frequency
-        for (Iterator<CValueTerm> it=this.terms.iterator(); it.hasNext();)
+        for (final Iterator<CValueTerm> it = this.terms.iterator(); it.hasNext();)
             if (it.next().getFrequency() < MIN_FREQUENCY)
                 it.remove();
 
@@ -36,19 +36,19 @@ public class CValueEvaluator {
         this.compute();
     }
     
-    public static String normalizeTerm(String term){
+    public static String normalizeTerm(final String term){
     	return term.trim().toLowerCase();
     }
 
 
     private void compute(){
-        double ln2 = Math.log(2.);
+        final double ln2 = Math.log(2.);
 
         // sort terms by word number
         Collections.sort(terms,CValueTerm.wordNumberComparator);
 
         for(int i=0;i<terms.size();i++) {
-            CValueTerm term = terms.get(i);
+            final CValueTerm term = terms.get(i);
 
             // find other term containing this one
             double containerSum = 0;
@@ -70,12 +70,12 @@ public class CValueEvaluator {
             if (containerCount>0)
                     factor -= containerSum/containerCount;
 
-            double cvalue = Math.log(term.getWordNumber()) / ln2 * factor;  // rm log(... <+1> )
+            final double cvalue = Math.log(term.getWordNumber()) / ln2 * factor;  // rm log(... <+1> )
             term.setCValue(cvalue);
         }
     }
 
-    public List<CValueTerm> getTerms(boolean sort){
+    public List<CValueTerm> getTerms(final boolean sort){
         if(sort) {
             Collections.sort(terms, CValueTerm.importanceComparator);
         }

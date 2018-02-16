@@ -22,10 +22,10 @@ public class BioPortalLazyMapping implements Mapping, LazyModelElement {
         return jsonObject;
     }
 
-    BioPortalLazyMapping(AnnotatedClass annotatedClass, JsonObject jsonObject) {
+    BioPortalLazyMapping(final AnnotatedClass annotatedClass, final JsonObject jsonObject) {
         this.annotatedClass = annotatedClass;
         this.score = -1;
-        JsonValue scoreObj = jsonObject.get("score");
+        final JsonValue scoreObj = jsonObject.get("score");
         if (scoreObj!=null) {
             score = scoreObj.asDouble();
         }
@@ -40,7 +40,7 @@ public class BioPortalLazyMapping implements Mapping, LazyModelElement {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(final double score) {
         this.score = score;
         jsonObject.add("score",score);
     }

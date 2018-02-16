@@ -17,25 +17,25 @@ public class CValueScore extends AbstractScorer {
      *                    found in hierarchy and mappings, this is the default cvalue score.
      *                    If false, this AbstractScorer compute the cvalueH score
      */
-    public CValueScore(boolean propagate) {
+    public CValueScore(final boolean propagate) {
         super();
         this.propagate = propagate; // false => cvalueH
     }
 
     @Override
-    public Map<String, ScoreableElement> compute(List<Annotation> annotations) {
+    public Map<String, ScoreableElement> compute(final List<Annotation> annotations) {
         // Compute old score
-        AbstractScorer oldScoreScorer = new OldScore();
-        Map<String, ScoreableElement> scoreableElementMap = oldScoreScorer.compute(annotations);
+        final AbstractScorer oldScoreScorer = new OldScore();
+        final Map<String, ScoreableElement> scoreableElementMap = oldScoreScorer.compute(annotations);
 
         // compute cvalue
-        Map<String, Double> termCValues = computeTermCValues(annotations);
-        Map<String, Double> annoCValues = computeAnnotationCValues(termCValues, annotations);
+        final Map<String, Double> termCValues = computeTermCValues(annotations);
+        final Map<String, Double> annoCValues = computeAnnotationCValues(termCValues, annotations);
 
         // compute cvalue score
-        HashMap<String, Double> scores = new HashMap<>();
-        double log2 = Math.log(2);
-        for (String id : scoreableElementMap.keySet()) {
+        final HashMap<String, Double> scores = new HashMap<>();
+        final double log2 = Math.log(2);
+        for (final String id : scoreableElementMap.keySet()) {
             Double score = Math.log(scoreableElementMap.get(id).getScore()) / log2;
 
             if (annoCValues.containsKey(id))
@@ -45,7 +45,7 @@ public class CValueScore extends AbstractScorer {
 
         Collections.sort(annotations, new Comparator<Annotation>() {
             @Override
-            public int compare(Annotation o1, Annotation o2) {
+            public int compare(final Annotation o1, final Annotation o2) {
                 return Double.compare(o1.getScore(),o2.getScore());
             }
         });
@@ -55,16 +55,16 @@ public class CValueScore extends AbstractScorer {
     /**
      * Compute cvalue of all terms annotated in all annotation concepts
      */
-    private Map<String, Double> computeTermCValues(List<Annotation> annotations) {
+    private Map<String, Double> computeTermCValues(final List<Annotation> annotations) {
         // Retrieve all annotated terms
-        ArrayList<String> terms = new ArrayList<>();
-        for (Annotation annotation : annotations)
-            for (AnnotationToken annotationToken : annotation.getAnnotations())
+        final ArrayList<String> terms = new ArrayList<>();
+        for (final Annotation annotation : annotations)
+            for (final AnnotationToken annotationToken : annotation.getAnnotations())
                 terms.add(annotationToken.getText());
 
         // compute cvalues scores, for each term
-        HashMap<String, Double> cvalues = new HashMap<>();
-        for (CValueTerm candidat : new CValueEvaluator(terms).getTerms(true)) {
+        final HashMap<String, Double> cvalues = new HashMap<>();
+        for (final CValueTerm candidat : new CValueEvaluator(terms).getTerms(true)) {
             addValue(cvalues, candidat.getTerm(), candidat.getCValue());
         }
 
@@ -74,19 +74,19 @@ public class CValueScore extends AbstractScorer {
     /**
      * Compute cvalues of annotation concept using {@code cvalues} of terms
      */
-    private Map<String, Double> computeAnnotationCValues(Map<String, Double> cvalues, List<Annotation> annotations) {
-        HashMap<String, Double> annotationCValues = new HashMap<>();
+    private Map<String, Double> computeAnnotationCValues(final Map<String, Double> cvalues, final List<Annotation> annotations) {
+        final HashMap<String, Double> annotationCValues = new HashMap<>();
 
-        for (Annotation annotation : annotations) {
+        for (final Annotation annotation : annotations) {
             Double annotationCValue = 0.0;
 
-            String id = annotation.getAnnotatedClass().getId();
+            final String id = annotation.getAnnotatedClass().getId();
 
             // sum cvalues of all annotated terms
-            HashSet<String> matchedTerm = new HashSet<>();
-            for (AnnotationToken annotationToken : annotation.getAnnotations())
+            final HashSet<String> matchedTerm = new HashSet<>();
+            for (final AnnotationToken annotationToken : annotation.getAnnotations())
                 matchedTerm.add(CValueEvaluator.normalizeTerm(annotationToken.getText()));
-            for (String term : matchedTerm) {
+            for (final String term : matchedTerm) {
                 if (cvalues.containsKey(term)) {
                     annotationCValue += cvalues.get(term);
                 }
@@ -98,11 +98,11 @@ public class CValueScore extends AbstractScorer {
 
                 if (propagate) {
                     // propagate to all hierarchy
-                    for (HierarchyElement hierarchyElement : annotation.getHierarchy())
+                    for (final HierarchyElement hierarchyElement : annotation.getHierarchy())
                         addValue(annotationCValues, hierarchyElement.getAnnotatedClass().getId(), annotationCValue);
 
                     // propagate to all mapping
-                    for (Mapping mapping : annotation.getMappings())
+                    for (final Mapping mapping : annotation.getMappings())
                         addValue(annotationCValues, mapping.getAnnotatedClass().getId(), annotationCValue);
                 }
             }
@@ -111,7 +111,7 @@ public class CValueScore extends AbstractScorer {
         return annotationCValues;
     }
 
-    private void addValue(Map<String, Double> cvalues, String id, Double value) {
+    private void addValue(final Map<String, Double> cvalues, final String id, final Double value) {
         if (cvalues.containsKey(id)) cvalues.put(id, cvalues.get(id) + value);
         else cvalues.put(id, value);
     }

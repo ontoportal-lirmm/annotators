@@ -9,8 +9,8 @@ abstract class AbstractScorer implements Scorer {
     AbstractScorer() {
     }
 
-    final void addScore(ScoreableElement scoreableElement, double value) {
-        double initialScore = scoreableElement.getScore();
+    final void addScore(final ScoreableElement scoreableElement, final double value) {
+        final double initialScore = scoreableElement.getScore();
         if (initialScore < 0) {
             scoreableElement.setScore(value);
         } else {

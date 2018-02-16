@@ -120,27 +120,27 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
         }
     }
 
-    private LinkMetadata parseLinkMetadata(JsonValue metadataNode) {
+    private LinkMetadata parseLinkMetadata(final JsonValue metadataNode) {
         return annotationFactory.createLinkMetadata(metadataNode.asObject());
     }
 
-    private AnnotationTokens parseAnnotations(JsonArray annotationsNode) {
+    private AnnotationTokens parseAnnotations(final JsonArray annotationsNode) {
 
-        List<AnnotationToken> tokens = new ArrayList<>();
-        for (JsonValue tokenNodeObject : annotationsNode) {
+        final List<AnnotationToken> tokens = new ArrayList<>();
+        for (final JsonValue tokenNodeObject : annotationsNode) {
             tokens.add(annotationFactory.createAnnotationToken(tokenNodeObject.asObject()));
         }
         return new BioPortalLazyAnnotationTokens(tokens, annotationsNode);
     }
 
-    private Hierarchy parseHierarchy(JsonArray hierarchyNode) throws InvalidFormatException {
+    private Hierarchy parseHierarchy(final JsonArray hierarchyNode) throws InvalidFormatException {
         if (hierarchyNode != null) {
-            List<HierarchyElement> hierarchyElements = new ArrayList<>();
-            for (JsonValue hierarchyElementNodeObject : hierarchyNode) {
+            final List<HierarchyElement> hierarchyElements = new ArrayList<>();
+            for (final JsonValue hierarchyElementNodeObject : hierarchyNode) {
 
-                JsonObject hierarchyElementNode = hierarchyElementNodeObject.asObject();
+                final JsonObject hierarchyElementNode = hierarchyElementNodeObject.asObject();
 
-                AnnotatedClass annotatedClass = parseAnnotatedClass((hierarchyElementNode.get("annotatedClass")));
+                final AnnotatedClass annotatedClass = parseAnnotatedClass((hierarchyElementNode.get("annotatedClass")));
                 hierarchyElements.add(annotationFactory.createHierarchyElement(annotatedClass, hierarchyElementNode));
             }
             return new BioportalLazyHierarchy(hierarchyElements, hierarchyNode);
@@ -149,11 +149,11 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
         }
     }
 
-    private Mappings parseMappings(JsonArray mappingsNode) throws InvalidFormatException {
-        List<Mapping> mappings = new ArrayList<>();
-        for (JsonValue mappingNodeObject : mappingsNode) {
-            JsonObject mappingNode = mappingNodeObject.asObject();
-            AnnotatedClass annotatedClass = parseAnnotatedClass(mappingNode.get("annotatedClass"));
+    private Mappings parseMappings(final JsonArray mappingsNode) throws InvalidFormatException {
+        final List<Mapping> mappings = new ArrayList<>();
+        for (final JsonValue mappingNodeObject : mappingsNode) {
+            final JsonObject mappingNode = mappingNodeObject.asObject();
+            final AnnotatedClass annotatedClass = parseAnnotatedClass(mappingNode.get("annotatedClass"));
 
             mappings.add(annotationFactory.createMapping(annotatedClass, mappingNode));
         }
