@@ -111,9 +111,6 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
             }
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             logger.error("Cannot instantiate ConText, make sure context.language is set to one of the supported languages (French,English) in the properties file of the annotator proxy... :{}", e.getLocalizedMessage());
-        } catch (@SuppressWarnings("all") final Exception e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
         }
 
     }
