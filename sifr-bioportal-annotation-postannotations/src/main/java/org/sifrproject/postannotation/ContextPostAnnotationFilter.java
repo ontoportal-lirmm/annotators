@@ -77,16 +77,14 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                     // Seek the sentence corresponding to the concept
                     i = 0;
 
-                    int currentSentenceTo = sentences
-                            .get(i)
-                            .getIndexTo();
+                    int currentSentenceTo = 0;
                     while (((i < (sentences.size() - 1)) &&
                             (currentSentenceTo < currentConceptFrom) && (currentConceptTo > currentSentenceTo)) ||
                             ((i == (sentences.size() - 1)) && (currentSentenceTo > currentConceptTo))) {
-                        i++;
                         currentSentenceTo = sentences
                                 .get(i)
                                 .getIndexTo();
+                        i++;
                     }
 
                     final List<String> results = cxt.applyContext(concept, sentences
