@@ -55,11 +55,12 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
         final String[] regex = text.split("\\.");
         final List<Sentence> sentences = new ArrayList<>();
 
-        int i = 0;
+        int i = 1;
         for (final String r : regex) {
 
-            sentences.add(new Sentence(r, i, i + r.length()));
-            i += r.length();
+            sentences.add(new Sentence(r.trim(), i, i + r
+                    .length()));
+            i += r.length() + 1;
         }
         // Run CoNTeXT on each concept annotation
 
@@ -69,7 +70,9 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
             for (final Annotation annotation : annotations) {
                 final AnnotationTokens annotationTokens = annotation.getAnnotations();
                 for (final AnnotationToken annotationToken : annotationTokens) {
-                    final int currentConceptFrom = annotationToken.getFrom();
+                    final int currentConceptFrom = (annotationToken
+                            .getText()
+                            .endsWith(" ")) ? (annotationToken.getFrom() - 1) : annotationToken.getFrom();
                     final int currentConceptTo = annotationToken.getTo();
                     final String concept = annotationToken
                             .getText()
@@ -77,18 +80,17 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                     // Seek the sentence corresponding to the concept
                     i = 0;
 
-                    int currentSentenceTo = 0;
-                    while (((i < (sentences.size() - 1)) &&
-                            (currentSentenceTo < currentConceptFrom) && (currentConceptTo > currentSentenceTo)) ||
-                            ((i == (sentences.size() - 1)) && (currentSentenceTo > currentConceptTo))) {
+                    int currentSentenceTo;
+                    do {
                         currentSentenceTo = sentences
                                 .get(i)
-                                .getIndexTo();
+                                .getIndexTo() + 1;
                         i++;
-                    }
+                    } while (((i < (sentences.size() - 1)) &&
+                            (currentSentenceTo < currentConceptFrom) && (currentConceptTo > currentSentenceTo)));
 
                     final List<String> results = cxt.applyContext(concept, sentences
-                            .get(i)
+                            .get(i - 1)
                             .getSentence());
                     if (includeNegation) {
                         annotationToken.setNegationContext(NegationContext.valueOf(results
