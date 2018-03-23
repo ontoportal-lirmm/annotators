@@ -5,6 +5,7 @@ import org.sifrproject.postannotation.api.PostAnnotationRegistry;
 import org.sifrproject.postannotation.api.PostAnnotationFilter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class LIRMMPostAnnotationRegistry implements PostAnnotationRegistry {
 
-    private final List<PostAnnotationFilter> postAnnotationFilters = new ArrayList<>();
+    private final Collection<PostAnnotationFilter> postAnnotationFilters = new ArrayList<>();
 
     @Override
     public void registerPostAnnotator(final PostAnnotationFilter postAnnotationFilter) {
@@ -20,9 +21,9 @@ public class LIRMMPostAnnotationRegistry implements PostAnnotationRegistry {
     }
 
     @Override
-    public void apply(final List<Annotation> annotations, final String sourceText) {
+    public void apply(final List<Annotation> annotations, final String text) {
         for (final PostAnnotationFilter postAnnotationFilter : postAnnotationFilters){
-            postAnnotationFilter.postAnnotate(annotations, sourceText);
+            postAnnotationFilter.postAnnotate(annotations, text);
         }
     }
 

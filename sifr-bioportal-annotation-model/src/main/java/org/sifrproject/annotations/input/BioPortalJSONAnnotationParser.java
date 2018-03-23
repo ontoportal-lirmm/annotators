@@ -8,7 +8,6 @@ import com.eclipsesource.json.JsonValue;
 import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.*;
-import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
 import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationTokens;
@@ -33,30 +32,29 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
 
 
     private final AnnotationFactory annotationFactory;
-    private final UMLSPropertyRetriever umlsTypeRetrieval;
     private final UMLSGroupIndex groupIndex;
 
 
     /**
      * Create an annotation parser
+     *
      * @param annotationFactory The factory for annotation elements
 
-     * @param umlsTypeRetrieval The property retriever of UMLS semantic groups (may be null, see second constructor)
-     * @param groupIndex The UMLS group index that maps UMLS groups to their semantic types and vice versa
+     * @param groupIndex        The UMLS group index that maps UMLS groups to their semantic types and vice versa
      */
     public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory,
-                                         final UMLSPropertyRetriever umlsTypeRetrieval, final UMLSGroupIndex groupIndex) {
+                                         final UMLSGroupIndex groupIndex) {
         this.annotationFactory = annotationFactory;
         this.groupIndex = groupIndex;
-        this.umlsTypeRetrieval = umlsTypeRetrieval;
     }
 
     /**
      * Create an annotation parser
+     *
      * @param annotationFactory The factory for annotation elements
      */
     public BioPortalJSONAnnotationParser(final AnnotationFactory annotationFactory) {
-        this(annotationFactory, null, UMLSSemanticGroupsLoader.load());
+        this(annotationFactory, UMLSSemanticGroupsLoader.load());
     }
 
     @Override
@@ -64,35 +62,34 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
 
         final List<Annotation> annotations = new ArrayList<>();
 //        try {
-            final JsonValue rootNode = Json.parse(queryResponse);
-            if (rootNode != null) {
-                    if(rootNode.isObject()){
-                        throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
-                    }
-                    for (final JsonValue childObject : rootNode.asArray()) {
-                        final JsonObject child = childObject.asObject();
-                        final JsonValue annotatedClassNode = child.get("annotatedClass");
-                        final JsonValue annotationsNode = child.get("annotations");
-                        final JsonValue hierarchyNode = child.get("hierarchy");
-                        final JsonValue mappingsNode = child.get("mappings");
-                        if ((annotatedClassNode != null) && (annotationsNode != null) && (mappingsNode != null)) {
-
-
-
-                            annotations.add(annotationFactory.createAnnotation(
-                                    parseAnnotatedClass(annotatedClassNode),
-                                    parseAnnotations(annotationsNode.asArray()),
-                                    parseHierarchy(hierarchyNode.asArray()), parseMappings(mappingsNode.asArray()), child));
-
-                        } else {
-                            throw new InvalidFormatException("Invalid annotation structure, one of annotatedClass, annotations, mappings, missing");
-                        }
-
-                    }
-
-            } else {
-                logger.error("Output empty!");
+        final JsonValue rootNode = Json.parse(queryResponse);
+        if (rootNode != null) {
+            if (rootNode.isObject()) {
+                throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
             }
+            for (final JsonValue childObject : rootNode.asArray()) {
+                final JsonObject child = childObject.asObject();
+                final JsonValue annotatedClassNode = child.get("annotatedClass");
+                final JsonValue annotationsNode = child.get("annotations");
+                final JsonValue hierarchyNode = child.get("hierarchy");
+                final JsonValue mappingsNode = child.get("mappings");
+                if ((annotatedClassNode != null) && (annotationsNode != null) && (mappingsNode != null)) {
+
+
+                    annotations.add(annotationFactory.createAnnotation(
+                            parseAnnotatedClass(annotatedClassNode),
+                            parseAnnotations(annotationsNode.asArray()),
+                            parseHierarchy(hierarchyNode.asArray()), parseMappings(mappingsNode.asArray()), child));
+
+                } else {
+                    throw new InvalidFormatException("Invalid annotation structure, one of annotatedClass, annotations, mappings, missing");
+                }
+
+            }
+
+        } else {
+            logger.error("Output empty!");
+        }
         /*} catch (RuntimeException e) {
             logger.error("Invalid JSON syntax:{}", e.getLocalizedMessage());
             throw new NCBOAnnotatorErrorException(String.format("%s", queryResponse));
@@ -102,9 +99,11 @@ public class BioPortalJSONAnnotationParser implements AnnotationParser {
 
     private AnnotatedClass parseAnnotatedClass(final JsonValue annotatedClassNode) throws InvalidFormatException {
         if (annotatedClassNode != null) {
-            final Links links = parseLinks(annotatedClassNode.asObject().get("links"));
+            final Links links = parseLinks(annotatedClassNode
+                    .asObject()
+                    .get("links"));
 
-            return annotationFactory.createAnnotatedClass(annotatedClassNode.asObject(), links, umlsTypeRetrieval, groupIndex);
+            return annotationFactory.createAnnotatedClass(annotatedClassNode.asObject(), links, groupIndex);
         } else {
             return null;
         }

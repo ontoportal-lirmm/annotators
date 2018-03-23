@@ -4,7 +4,6 @@ import org.json.simple.parser.ParseException;
 import org.sifrproject.annotations.api.input.AnnotationParser;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationFactory;
-import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.api.output.AnnotatorOutput;
 import org.sifrproject.annotations.api.output.OutputGeneratorDispatcher;
 import org.sifrproject.annotations.exceptions.InvalidFormatException;
@@ -12,7 +11,6 @@ import org.sifrproject.annotations.exceptions.NCBOAnnotatorErrorException;
 import org.sifrproject.annotations.input.BioPortalJSONAnnotationParser;
 import org.sifrproject.annotations.model.BioPortalLazyAnnotationFactory;
 import org.sifrproject.annotations.model.BioportalErrorAnnotation;
-import org.sifrproject.annotations.model.retrieval.APIUMLSPropertyRetriever;
 import org.sifrproject.annotations.output.LIRMMOutputGeneratorDispatcher;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 import org.sifrproject.annotations.umls.UMLSSemanticGroupsLoader;
@@ -72,8 +70,8 @@ public class AnnotatorServlet extends HttpServlet {
     public AnnotatorServlet() {
         try {
             /*
-            * Loading configuration properties
-            */
+             * Loading configuration properties
+             */
             final InputStream proxyPropertiesStream = AnnotatorServlet.class.getResourceAsStream("/annotatorProxy.properties");
             proxyProperties = new Properties();
             proxyProperties.load(proxyPropertiesStream);
@@ -137,7 +135,9 @@ public class AnnotatorServlet extends HttpServlet {
         final POSTRequestGenerator parameters = new POSTRequestGenerator(request, annotatorURI, serverEncoding);
 
         //Retrieving format parameter, json is the default output format if the format parameter is absent
-        String format = parameters.getFirst(FORMAT, "json").toLowerCase();
+        String format = parameters
+                .getFirst(FORMAT, "json")
+                .toLowerCase();
         parameters.remove(FORMAT);
 
         //Retrieving the source text parameter
@@ -153,7 +153,7 @@ public class AnnotatorServlet extends HttpServlet {
 
             parameterRegistry.setPostAnnotationRegistry(postAnnotationRegistry);
             parameterRegistry.processParameters(parameters);
-            if(isAlwaysFetchUMLS()){
+            if (isAlwaysFetchUMLS()) {
                 postAnnotationRegistry.registerPostAnnotator(new FetchUMLSSemanticInformationPostAnnotationFilter());
             }
 
@@ -162,14 +162,13 @@ public class AnnotatorServlet extends HttpServlet {
              * Instantiating annotation parser and dependencies
              */
 
-            final UMLSPropertyRetriever typeRetrieval = new APIUMLSPropertyRetriever(ontologiesApiURI, findAPIKey(parameters,parameters.getHeaders()));
             final UMLSGroupIndex umlsGroupIndex = UMLSSemanticGroupsLoader.load();
             final AnnotationFactory annotationFactory = new BioPortalLazyAnnotationFactory();
-            final AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, typeRetrieval, umlsGroupIndex);
+            final AnnotationParser parser = new BioPortalJSONAnnotationParser(annotationFactory, umlsGroupIndex);
 
             /*
-            * Querying the bioportal annotator and building the model
-            */
+             * Querying the bioportal annotator and building the model
+             */
             final String queryOutput = RestfulRequest.queryAnnotator(parameters);
             logger.info("Query output: {}", queryOutput);
             annotations = parser.parseAnnotations(queryOutput);
@@ -186,8 +185,8 @@ public class AnnotatorServlet extends HttpServlet {
         }
 
         /*
-        *Applying post-processors
-        */
+         *Applying post-processors
+         */
         postAnnotationRegistry.apply(annotations, text);
         postAnnotationRegistry.clear();
 
@@ -203,15 +202,15 @@ public class AnnotatorServlet extends HttpServlet {
 
     private String getServerEncoding() {
         String encoding = "iso-8859-1";
-        if(proxyProperties.containsKey(SERVER_ENCODING)) {
+        if (proxyProperties.containsKey(SERVER_ENCODING)) {
             encoding = proxyProperties.getProperty(SERVER_ENCODING);
         }
         return encoding;
     }
 
-    private boolean isAlwaysFetchUMLS(){
+    private boolean isAlwaysFetchUMLS() {
         boolean fetchUMLS = false;
-        if(proxyProperties.containsKey(ALWAYS_FETCH_UMLS)){
+        if (proxyProperties.containsKey(ALWAYS_FETCH_UMLS)) {
             fetchUMLS = Boolean.valueOf(proxyProperties.getProperty(ALWAYS_FETCH_UMLS));
         }
         return fetchUMLS;
@@ -225,7 +224,9 @@ public class AnnotatorServlet extends HttpServlet {
             // Extract the base url of the tomcat server and generate the servlet URL from it (the servlet have to be
             // deployed on the same server as the servlet used)
             final Pattern pattern = Pattern.compile(HTTPS_URL_PATTERN);
-            final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+            final Matcher matcher = pattern.matcher(request
+                    .getRequestURL()
+                    .toString());
             if (matcher.find()) {
                 ontologiesApiURI = matcher.group(1) + ":8080";
             }
@@ -233,7 +234,7 @@ public class AnnotatorServlet extends HttpServlet {
         return ontologiesApiURI.trim();
     }
 
-    private String getAnnotatorURI(final HttpServletRequest request){
+    private String getAnnotatorURI(final HttpServletRequest request) {
         String annotatorURI = "";
         if (proxyProperties.containsKey(ANNOTATOR_URI)) {
             //To debug locally using a remote bioportal, comment matcher condition above and uncomment the line below
@@ -243,7 +244,9 @@ public class AnnotatorServlet extends HttpServlet {
             // Extract the base url of the tomcat server and generate the servlet URL from it (the servlet have to be
             // deployed on the same server as the servlet used)
             final Pattern pattern = Pattern.compile(HTTPS_URL_PATTERN);
-            final Matcher matcher = pattern.matcher(request.getRequestURL().toString());
+            final Matcher matcher = pattern.matcher(request
+                    .getRequestURL()
+                    .toString());
             if (matcher.find()) {
                 annotatorURI = matcher.group(1) + ":8080/annotator";
             }
@@ -257,12 +260,14 @@ public class AnnotatorServlet extends HttpServlet {
         output.flush();
     }
 
-    private String findAPIKey(final Map<String,String> parameters, final Map<String,String> headers){
+    private String findAPIKey(final Map<String, String> parameters, final Map<String, String> headers) {
         final String apikey;
-        if(parameters.containsKey("apikey")){
+        if (parameters.containsKey("apikey")) {
             apikey = parameters.get("apikey");
-        } else if (headers.containsKey("Authorization")){
-            apikey = headers.get("Authorization").split("=")[1];
+        } else if (headers.containsKey("Authorization")) {
+            apikey = headers
+                    .get("Authorization")
+                    .split("=")[1];
         } else {
             apikey = "";
         }

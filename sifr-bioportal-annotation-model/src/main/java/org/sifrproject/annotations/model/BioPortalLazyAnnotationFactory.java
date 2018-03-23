@@ -22,8 +22,8 @@ public class BioPortalLazyAnnotationFactory implements AnnotationFactory {
     }
 
     @Override
-    public AnnotatedClass createAnnotatedClass(final JsonObject jsonObject, final Links links, final UMLSPropertyRetriever semanticGroupPropertyRetriever, final UMLSGroupIndex groupIndex) {
-        return new BioPortalLazyAnnotatedClass(jsonObject, links, semanticGroupPropertyRetriever, groupIndex);
+    public AnnotatedClass createAnnotatedClass(final JsonObject jsonObject, final Links links, final UMLSGroupIndex groupIndex) {
+        return new BioPortalLazyAnnotatedClass(jsonObject, links, groupIndex);
     }
 
     @Override

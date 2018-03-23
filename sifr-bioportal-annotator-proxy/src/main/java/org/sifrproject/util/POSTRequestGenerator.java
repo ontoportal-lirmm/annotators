@@ -50,6 +50,7 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
                     .getBytes(Charset.forName(serverEncoding.toUpperCase())), "utf-8");
             put(paramName, paramValue);
         }
+        put("display","cui,semanticType");
         headers = new HashMap<>();
         final Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {

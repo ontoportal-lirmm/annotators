@@ -2,7 +2,6 @@ package org.sifrproject.annotations.api.model;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import org.sifrproject.annotations.api.model.retrieval.UMLSPropertyRetriever;
 import org.sifrproject.annotations.umls.UMLSGroupIndex;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public interface AnnotationFactory {
     Annotation createAnnotation(AnnotatedClass annotatedClass, AnnotationTokens annotations, Hierarchy hierarchy, Mappings mappings, JsonObject jsonObject);
 
 
-    AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links, UMLSPropertyRetriever semanticGroupRetriever, UMLSGroupIndex umlsGroupIndex);
+    AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links, UMLSGroupIndex umlsGroupIndex);
 
     AnnotatedClass createAnnotatedClass(JsonObject jsonObject, Links links);
 
