@@ -85,12 +85,14 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                         currentSentenceTo = sentences
                                 .get(i)
                                 .getIndexTo() + 1;
-                        i++;
+                        if(currentSentenceTo < currentConceptTo) {
+                            i++;
+                        }
                     } while (((i < (sentences.size() - 1)) &&
                             (currentSentenceTo < currentConceptFrom) && (currentConceptTo > currentSentenceTo)));
 
                     final List<String> results = cxt.applyContext(concept, sentences
-                            .get(i - 1)
+                            .get(i)
                             .getSentence());
                     if (includeNegation) {
                         annotationToken.setNegationContext(NegationContext.valueOf(results
