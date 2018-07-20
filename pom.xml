@@ -5,7 +5,7 @@
     <artifactId>sifr-bioportal-annotator</artifactId>
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>sifr-bioportal-annotator</name>
+    <name>sifrbioportal-bioportal-annotator</name>
     <url>https://github.com/sifrproject/annotators</url>
 
     <modules>

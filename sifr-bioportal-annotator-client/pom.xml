@@ -4,7 +4,7 @@
     <artifactId>sifr-bioportal-annotator-client</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>sifr-bioportal-annotator-client</name>
+    <name>sifr-bioportal--annotator-client</name>
     <url>https://github.com/sifrproject/annotators</url>
 
     <parent>

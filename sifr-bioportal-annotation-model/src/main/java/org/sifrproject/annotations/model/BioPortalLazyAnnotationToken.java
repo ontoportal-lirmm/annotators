@@ -66,7 +66,7 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public String getText() {
-        if (text.isEmpty()) {
+        if (text.isEmpty() && !jsonObject.get("text").isNull()) {
             text = jsonObject.get("text").asString();
         }
         return text;

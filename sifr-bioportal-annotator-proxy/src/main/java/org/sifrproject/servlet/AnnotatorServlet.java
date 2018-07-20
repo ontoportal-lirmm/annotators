@@ -142,6 +142,7 @@ public class AnnotatorServlet extends HttpServlet {
 
         //Retrieving the source text parameter
         final String text = parameters.getFirst("text", "");
+        logger.info("Annotating: {}", text);
 
         //Create annotation list to hold the annotation model
         List<Annotation> annotations;

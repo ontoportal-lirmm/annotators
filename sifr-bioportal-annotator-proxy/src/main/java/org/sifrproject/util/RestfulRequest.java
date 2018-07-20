@@ -13,6 +13,9 @@ import java.net.*;
 public final class RestfulRequest {
     private static final Logger logger = LoggerFactory.getLogger(RestfulRequest.class);
 
+    private RestfulRequest() {
+    }
+
     @SuppressWarnings("MethodParameterOfConcreteClass")
     public static String queryAnnotator(final POSTRequestGenerator requestGenerator) throws IOException {
         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));

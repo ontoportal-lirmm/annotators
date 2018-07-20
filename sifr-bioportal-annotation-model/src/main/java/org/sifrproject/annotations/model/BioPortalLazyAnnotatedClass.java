@@ -54,7 +54,7 @@ public class BioPortalLazyAnnotatedClass implements AnnotatedClass, LazyModelEle
         cuis = new TreeSet<>();
         semanticGroups = new ArrayList<>();
 
-        JsonValue cuisValue = jsonObject.get("cuis");
+        JsonValue cuisValue = jsonObject.get("cui");
         if(cuisValue!=null && cuisValue.isArray()){
             for(JsonValue value: cuisValue.asArray()){
                 cuis.add(value.asString());

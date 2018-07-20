@@ -4,7 +4,7 @@
     <artifactId>sifr-bioportal-annotator-proxy</artifactId>
     <packaging>war</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>sifr-bioportal-annotator-proxy</name>
+    <name>sifr-bioportal-bioportal-annotator-proxy</name>
     <url>https://github.com/sifrproject/annotators</url>
 
     <parent>
@@ -35,6 +35,75 @@
         </plugins>
         <finalName>annotator</finalName>
     </build>
+
+    <profiles>
+        <profile>
+            <id>agroportal</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/agroportal</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>sifrbioportal</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/sifrbioportal</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>localdev</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/localdev</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>stageportal</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/stageportal</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>ncboannotatorplus</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/ncboannotatorplus</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.java</groupId>

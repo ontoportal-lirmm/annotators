@@ -23,8 +23,8 @@ it is therefore advisable to use Eclipse or IntelliJ.
 
 *Local dependencies*
 
-Local dependencies are required and can be found in the [local-dep](local-dep) folder.
-Before building this project, it should be installed in the local maven repository, 
+Local dependencies are required and can be found in the [localdev-dep](local-dep) folder.
+Before building this project, it should be installed in the localdev maven repository, 
 which can be done by executing `maven_install`, from the same folder.
 
 Note that, in eclipse, it is necessary to update the project:

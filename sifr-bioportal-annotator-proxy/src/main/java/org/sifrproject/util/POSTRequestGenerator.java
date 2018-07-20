@@ -7,8 +7,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -26,13 +28,14 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
     private static final String ACCEPTED_MIMES = "text/xml, application/json, text/html, text/plain";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String USER_AGENT_HEADER = "User-agent";
-    private static final Pattern NORMALIZE_ENCODING = Pattern.compile("-");
+    private static final char PERCENT = '%';
+    private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
     private final String baseURI;
     private final Map<String, String> headers;
     private final HttpServletRequest httpServletRequest;
 
 
-    public POSTRequestGenerator(final HttpServletRequest request, final String annotatorURI, final String serverEncoding) throws UnsupportedEncodingException {
+    public POSTRequestGenerator(final HttpServletRequest request, final String annotatorURI, final String serverEncoding) {
         httpServletRequest = request;
         baseURI = annotatorURI;
         final Enumeration<String> parameterNames = request.getParameterNames();
@@ -45,12 +48,11 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
             } else {
                 paramValue = request.getParameter(paramName);
             }*/
-            final String paramValue = new String(request
-                    .getParameter(paramName)
-                    .getBytes(Charset.forName(serverEncoding.toUpperCase())), "utf-8");
+            final String paramValue = request
+                    .getParameter(paramName);
             put(paramName, paramValue);
         }
-        put("display","cui,semanticType");
+        put("include","cui,semanticType,definition,prefLabel,synonym");
         headers = new HashMap<>();
         final Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -62,8 +64,10 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
 
     @SuppressWarnings("HardcodedFileSeparator")
     HttpURLConnection createRequest() throws IOException {
+        final String parameterString = httpServletRequest
+                .getMethod()
+                .equals("GET") ? createGETParameterString() : createPOSTParameterString();
         String uri = baseURI;
-        final String parameterString = createParameterString();
         if (!uri.endsWith("/")) {
             uri += "/";
         }
@@ -72,7 +76,6 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
         } else if (uri.endsWith("?")) {
             uri = uri.substring(0, uri.length() - 1) + "/";
         }
-
         final URL url = new URL(uri);
         final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(httpServletRequest.getMethod());
@@ -99,7 +102,7 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
         return connection;
     }
 
-    private String createParameterString() throws UnsupportedEncodingException {
+    private String createGETParameterString() {
         final StringBuilder parameterString = new StringBuilder();
         boolean first = true;
         for (final String paramName : keySet()) {
@@ -107,7 +110,22 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
                 parameterString.append("&");
             }
             first = false;
-            parameterString.append(paramName).append("=").append(URLEncoder.encode(get(paramName), "UTF-8"));
+            parameterString.append(paramName).append("=").append(SPACE_PATTERN
+                    .matcher(get(paramName))
+                    .replaceAll("%20"));
+        }
+        return parameterString.toString();
+    }
+
+    private String createPOSTParameterString() throws UnsupportedEncodingException {
+        final StringBuilder parameterString = new StringBuilder();
+        boolean first = true;
+        for (final String paramName : keySet()) {
+            if (!first) {
+                parameterString.append("&");
+            }
+            first = false;
+            parameterString.append(paramName).append("=").append(URLEncoder.encode(get(paramName),"UTF-8"));
         }
         return parameterString.toString();
     }
@@ -115,6 +133,8 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
     private void transferHeaders(final HttpURLConnection connection) {
         if (headers.containsKey(AUTHORIZATION_HEADER.toLowerCase())) {
             connection.setRequestProperty(AUTHORIZATION_HEADER, headers.get(AUTHORIZATION_HEADER.toLowerCase()));
+        } else if(containsKey("apikey")){
+            connection.setRequestProperty(AUTHORIZATION_HEADER, get("apikey"));
         }
         if (headers.containsKey(USER_AGENT_HEADER.toLowerCase())) {
             connection.setRequestProperty(USER_AGENT_HEADER, headers.get(USER_AGENT_HEADER.toLowerCase()));
@@ -142,7 +162,30 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
         return (POSTRequestGenerator) super.clone();
     }
 
-    public Map<String, String> getHeaders() {
-        return Collections.unmodifiableMap(headers);
+    @SuppressWarnings("all")
+    private static String encode(final String input) {
+        final StringBuilder resultStr = new StringBuilder();
+        for (final char ch : input.toCharArray()) {
+            if (isUnsafe(ch)) {
+                resultStr.append(PERCENT);
+                resultStr.append(toHex(ch / 16));
+                resultStr.append(toHex(ch % 16));
+            } else {
+                resultStr.append(ch);
+            }
+        }
+        return resultStr.toString();
+    }
+
+    @SuppressWarnings("all")
+    private static char toHex(int ch) {
+        return (char) (ch < 10 ? '0' + ch : 'A' + ch - 10);
+    }
+
+    @SuppressWarnings("all")
+    private static boolean isUnsafe(char ch) {
+        if (ch > 128 || ch < 0)
+            return true;
+        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
     }
 }
