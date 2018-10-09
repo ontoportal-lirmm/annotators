@@ -6,5 +6,6 @@ target
 *.ipr
 .settings
 local-dep
+*.DS_Store
 .DS_Store
 annotatorProxy.properties
