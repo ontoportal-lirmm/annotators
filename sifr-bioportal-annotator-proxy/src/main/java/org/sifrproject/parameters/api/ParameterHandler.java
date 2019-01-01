@@ -5,6 +5,8 @@ import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
 import org.sifrproject.util.RequestGenerator;
 
+import java.io.IOException;
+
 /**
  * Handler for a parameter passed to the Proxy Servlet. A parameter handler should be registered in a {@link ParameterRegistry}.
  * Naming conversion ParameterNameParameterHandler, where ParameterName is the getName of the parameter in Java style.
@@ -22,5 +24,5 @@ public interface ParameterHandler {
      * @throws InvalidParameterException This exception must be thrown, if the format of the parameter or its options
      *                                   are incorrect or ill-formed.
      */
-    void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException;
+    void processParameter(RequestGenerator parameters, PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException, IOException;
 }

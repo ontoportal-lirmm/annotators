@@ -7,6 +7,7 @@ import org.sifrproject.parameters.exceptions.InvalidParameterException;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
 import org.sifrproject.util.RequestGenerator;
 
+import java.io.IOException;
 import java.util.*;
 
 public class LIRMMProxyParameterHandlerRegistry implements ParameterRegistry {
@@ -32,7 +33,7 @@ public class LIRMMProxyParameterHandlerRegistry implements ParameterRegistry {
 
 
     @Override
-    public final synchronized void processParameters(final RequestGenerator parameters) throws InvalidParameterException {
+    public final synchronized void processParameters(final RequestGenerator parameters) throws InvalidParameterException, IOException {
         if (!parameters.containsKey("text")) {
             throw new InvalidParameterException("Mandatory parameter 'text' missing");
         }

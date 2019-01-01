@@ -1,0 +1,804 @@
+#   ******************************************************************************
+#   * Copyright  2017  Department of Biomedical Informatics, University of Utah
+#   * <p>
+#   * Licensed under the Apache License, Version 2.0 (the "License");
+#   * you may not use this file except in compliance with the License.
+#   * You may obtain a copy of the License at
+#   * <p>
+#   * http://www.apache.org/licenses/LICENSE-2.0
+#   * <p>
+#   * Unless required by applicable law or agreed to in writing, software
+#   * distributed under the License is distributed on an "AS IS" BASIS,
+#   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   * See the License for the specific language governing permissions and
+#   * limitations under the License.
+#   ******************************************************************************
+#   Special thanks to Olga Patterson and Guy Divita for contributing rules as part of this rule set
+
+
+#Define which features will be assigned values in an annotation type ("Concept" in this case)
+@CONCEPT_FEATURES|Concept|Negation|Certainty|Temporality|Experiencer
+#Define the values that a feature can have, the 1st value is the default value
+#The following definitions will be used as an index for FastContext to find the corresponding Feature to assign the modifier
+#value, once a modifier value is available.
+#In this case the "Negation" feature has two values: "affirm" and "negated", "affirm" is the default value.
+@FEATURE_VALUES|Negation|affirm|negated
+@FEATURE_VALUES|Certainty|certain|uncertain
+@FEATURE_VALUES|Temporality|present|historical|hypothetical
+@FEATURE_VALUES|Experiencer|patient|nonpatient
+
+
+
+#rule string|direction|trigger type|modifier|window size
+\> 0 -mois de|forward|trigger|historical|30
+\> 0 -années de|forward|trigger|historical|30
+\> 0 -année de|forward|trigger|historical|30
+\> 0 -an de|forward|trigger|historical|30
+il y a \> 0 mois|backward|trigger|historical|30
+\> 0 mois de|forward|trigger|historical|30
+
+il y a \> 0 ans|backward|trigger|historical|30
+il y a \> 0 années|backward|trigger|historical|30
+
+\> 0 an de|forward|trigger|historical|30
+\> 0 ans de|forward|trigger|historical|30
+\> 0 années de|forward|trigger|historical|30
+
+\> 1 -semaine de|forward|trigger|historical|30
+\> 1 -semaines de|forward|trigger|historical|30
+il y a \> 1 semaine|backward|trigger|historical|30
+il y a \> 1 semaines|backward|trigger|historical|30
+
+\> 13 -jour of|forward|trigger|historical|30
+\> 13 -jours of|forward|trigger|historical|30
+\> 13 jour de|forward|trigger|historical|30
+\> 13 jours de|forward|trigger|historical|30
+
+\> 13 - jour de|forward|trigger|historical|30
+\> 13 - jours de|forward|trigger|historical|30
+\> 0 - mois de|forward|trigger|historical|30
+\> 0 - ans de|forward|trigger|historical|30
+\> 0 - an de|forward|trigger|historical|30
+\> 0 - années de|forward|trigger|historical|30
+\> 0 - année de|forward|trigger|historical|30
+\> 1 -semaine de|forward|trigger|historical|30
+\> 1 -semaines de|forward|trigger|historical|30
+
+: non|backward|trigger|negated|10
+: aucun|backward|trigger|negated|10
+: négatif|backward|trigger|negated|10
+: negatif|backward|trigger|negated|10
+: neg|backward|trigger|negated|10
+: aucun signe|backward|trigger|negated|10
+\w+ non|forward|trigger|negated|10
+
+les \> 0 dernier mois|backward|trigger|historical|30
+la \> 0 dernière année|backward|trigger|historical|30
+les \> 0 dernières années|backward|trigger|historical|30
+l'an dernier|backward|trigger|historical|30
+
+
+les \> 1 dernières semaines|backward|trigger|historical|30
+la \> 1 dernière semaine|backward|trigger|historical|30
+
+adéquat pour l'écarter|forward|trigger|negated|10
+adéquat pour l'éliminer|forward|trigger|negated|10
+suffisant pour l'écarter|forward|trigger|negated|10
+suffisant pour l'exclure|forward|trigger|negated|10
+suffisant pour l'éliminer|forward|trigger|negated|10
+suffisants pour l'écarter|forward|trigger|negated|10
+suffisants pour l'exclure|forward|trigger|negated|10
+suffisants pour l'éliminer|forward|trigger|negated|10
+suffisante pour l'écarter|forward|trigger|negated|10
+suffisante pour l'éliminer|forward|trigger|negated|10
+suffisante pour l'exclure|forward|trigger|negated|10
+suffisantes pour l'écarter|forward|trigger|negated|10
+suffisantes pour l'éliminer|forward|trigger|negated|10
+suffisantes pour l'exclure|forward|trigger|negated|10
+adéquat pour écarter|forward|trigger|negated|10
+adéquat pour éliminer|forward|trigger|negated|10
+suffisant pour écarter|forward|trigger|negated|10
+suffisant pour exclure|forward|trigger|negated|10
+suffisant pour éliminer|forward|trigger|negated|10
+suffisants pour écarter|forward|trigger|negated|10
+suffisants pour exclure|forward|trigger|negated|10
+suffisants pour éliminer|forward|trigger|negated|10
+suffisante pour écarter|forward|trigger|negated|10
+suffisante pour éliminer|forward|trigger|negated|10
+suffisante pour exclure|forward|trigger|negated|10
+suffisantes pour écarter|forward|trigger|negated|10
+suffisantes pour éliminer|forward|trigger|negated|10
+suffisantes pour exclure|forward|trigger|negated|10
+bien que|forward|termination|negated|10
+quoique|forward|termination|negated|10
+bien qu'|forward|termination|negated|10
+quoiqu'|forward|termination|negated|10
+mais|forward|termination|negated|10
+tout autre|forward|trigger|negated|10
+n'importe quel autre|forward|trigger|negated|10
+en dehors de|both|termination|negated|10
+hormis|both|termination|negated|10
+hors|forward|termination|negated|10
+sauf|both|termination|negated|10
+à part|both|termination|negated|10
+outre que|both|termination|negated|10
+sont exclus|forward|trigger|negated|10
+sont exclues|forward|trigger|negated|10
+comme cause de|forward|termination|negated|10
+comme cause d'|forward|termination|negated|10
+comme une cause de|forward|termination|negated|10
+comme une cause d'|forward|termination|negated|10
+comme étiologie pour|forward|termination|negated|10
+comme étiologie de|forward|termination|negated|10
+comme une étiologie de|forward|termination|negated|10
+comme conséquence de|forward|termination|negated|10
+comme une conséquence de|forward|termination|negated|10
+comme étiologie d'|forward|termination|negated|10
+comme une étiologie d'e '|forward|termination|negated|10
+comme conséquence d'|forward|termination|negated|10
+comme une conséquence d|forward|termination|negated|10
+comme raison pour|forward|termination|negated|10
+comme une raison de|forward|termination|negated|10
+en raison de|both|termination|negated|10
+comme une raison d'|forward|termination|negated|10
+en raison d'|both|termination|negated|10
+comme cause secondaire de|forward|termination|negated|10
+comme une cause secondaire de|forward|termination|negated|10
+comme cause secondaire d'|forward|termination|negated|10
+comme une cause secondaire d'|forward|termination|negated|10
+comme étiologie secondaire pour|forward|termination|negated|10
+comme conséquence secondaire de|forward|termination|negated|10
+comme une étiologie secondaire de|forward|termination|negated|10
+comme une conséquence secondaire de|forward|termination|negated|10
+comme conséquence secondaire d'|forward|termination|negated|10
+comme une étiologie secondaire d'|forward|termination|negated|10
+comme une conséquence secondaire d'|forward|termination|negated|10
+comme origine secondaire pour|forward|termination|negated|10
+comme une origine secondaire pour|forward|termination|negated|10
+comme une origine secondaire de|forward|termination|negated|10
+comme origine secondaire de|forward|termination|negated|10
+comme une origine secondaire d'|forward|termination|negated|10
+comme origine secondaire d'|forward|termination|negated|10
+comme une raison secondaire pour|forward|termination|negated|10
+comme raison secondaire pour|forward|termination|negated|10
+comme une raison secondaire de|forward|termination|negated|10
+comme une raison secondaire d'|forward|termination|negated|10
+comme source secondaire pour|forward|termination|negated|10
+comme une source secondaire de|forward|termination|negated|10
+comme une source secondaire d'|forward|termination|negated|10
+comme source secondaire de|forward|termination|negated|10
+comme source de|forward|termination|negated|10
+comme une source de|forward|termination|negated|10
+comme une source d'|forward|termination|negated|10
+comme origine pour|forward|termination|negated|10
+comme une origine pour|forward|termination|negated|10
+comme une origine de|forward|termination|negated|10
+comme une origine d'|forward|termination|negated|10
+comme origine de|forward|termination|negated|10
+comme une raison pour|forward|termination|negated|10
+comme une étiologie secondaire pour|forward|termination|negated|10
+comme une conséquence secondaire pour|forward|termination|negated|10
+comme conséquence secondaire pour|forward|termination|negated|10
+comme une source secondaire pour|forward|termination|negated|10
+comme source pour|forward|termination|negated|10
+comme requis|forward|trigger|hypothetical|10
+comme cause pour|forward|termination|negated|10
+ne cause pas|both|pseudo|negated|10
+ne causent pas|both|pseudo|negated|10
+comme une cause pour|forward|termination|negated|10
+comme l'étiologie de|forward|termination|negated|10
+comme l'étiologie d'|forward|termination|negated|10
+comme l'étiologie pour|forward|termination|negated|10
+comme l'origine pour|forward|termination|negated|10
+comme l'origine de|forward|termination|negated|10
+comme l'origine d'|forward|termination|negated|10
+comme la raison pour|forward|termination|negated|10
+comme la raison de|forward|termination|negated|10
+comme la raison d'|forward|termination|negated|10
+comme la cause secondaire pour|forward|termination|negated|10
+comme la cause secondaire de|forward|termination|negated|10
+comme la cause secondaire d'|forward|termination|negated|10
+comme l'étiologie secondaire pour|forward|termination|negated|10
+comme l'étiologie secondaire de|forward|termination|negated|10
+comme l'étiologie secondaire d'|forward|termination|negated|10
+comme l'origine secondaire pour|forward|termination|negated|10
+comme l'origine secondaire de|forward|termination|negated|10
+comme l'origine secondaire d'|forward|termination|negated|10
+comme la raison secondaire pour|forward|termination|negated|10
+comme la raison secondaire de|forward|termination|negated|10
+comme la raison secondaire d'|forward|termination|negated|10
+comme la source secondaire pour|forward|termination|negated|10
+comme la source secondaire de|forward|termination|negated|10
+comme la source secondaire d'|forward|termination|negated|10
+comme la source pour|forward|termination|negated|10
+comme la cause de|forward|termination|negated|10
+comme la cause d'|forward|termination|negated|10
+comme la source de|forward|termination|negated|10
+comme la source d'|forward|termination|negated|10
+excepté|both|termination|negated|10
+tante|forward|trigger|nonpatient|10
+grand-tante|forward|trigger|nonpatient|10
+être écarté|forward|trigger|uncertain|30
+être écartée|forward|trigger|uncertain|30
+être écartés|forward|trigger|uncertain|30
+être écartées|forward|trigger|uncertain|30
+être éliminé|forward|trigger|uncertain|30
+être éliminée|forward|trigger|uncertain|30
+être éliminés|forward|trigger|uncertain|30
+être éliminées|forward|trigger|uncertain|30
+être infirmé|forward|trigger|uncertain|30
+être infirmée|forward|trigger|uncertain|30
+être infirmés|forward|trigger|uncertain|30
+être infirmées|forward|trigger|uncertain|30
+être exclu|forward|trigger|uncertain|30
+être exclue|forward|trigger|uncertain|30
+être exclus|forward|trigger|uncertain|30
+être exclues|forward|trigger|uncertain|30
+être exclue pour|forward|trigger|uncertain|30
+être exclu pour|forward|trigger|uncertain|30
+être exclues pour|forward|trigger|uncertain|30
+être exclus pour|forward|trigger|uncertain|30
+être écarté pour|forward|trigger|uncertain|30
+être écartée pour|forward|trigger|uncertain|30
+être écartés pour|forward|trigger|uncertain|30
+être écartées pour|forward|trigger|uncertain|30
+être éliminé pour|forward|trigger|uncertain|30
+être éliminée pour|forward|trigger|uncertain|30
+être éliminés pour|forward|trigger|uncertain|30
+être éliminées pour|forward|trigger|uncertain|30
+car|forward|termination|hypothetical|10
+parce que|forward|termination|hypothetical|10
+car|forward|termination|negated|10
+parce que|forward|termination|negated|10
+du fait que|both|termination|hypothetical|10
+à cause de|both|termination|hypothetical|10
+à cause d|both|termination|hypothetical|10
+étant exclue|forward|trigger|uncertain|30
+étant exclu|forward|trigger|uncertain|30
+étant exclues|forward|trigger|uncertain|30
+étant exclus|forward|trigger|uncertain|30
+étant écarté|forward|trigger|uncertain|30
+étant écartée|forward|trigger|uncertain|30
+étant écartés|forward|trigger|uncertain|30
+étant écartées|forward|trigger|uncertain|30
+étant éliminé|forward|trigger|uncertain|30
+étant éliminée|forward|trigger|uncertain|30
+étant éliminés|forward|trigger|uncertain|30
+étant éliminées|forward|trigger|uncertain|30
+frère|forward|trigger|nonpatient|10
+frères|forward|trigger|nonpatient|10
+frere|forward|trigger|nonpatient|10
+freres|forward|trigger|nonpatient|10
+cousin|forward|trigger|nonpatient|10
+cousins|forward|trigger|nonpatient|10
+peut être écarté|forward|trigger|uncertain|30
+peut être exclu|forward|trigger|uncertain|30
+peut être exclue|forward|trigger|uncertain|30
+peut être exclues|forward|trigger|uncertain|30
+peut être exclus|forward|trigger|uncertain|30
+peut être écartée|forward|trigger|uncertain|30
+peut être écartés|forward|trigger|uncertain|30
+peut être écartées|forward|trigger|uncertain|30
+peut être éliminé|forward|trigger|uncertain|30
+peut être éliminée|forward|trigger|uncertain|30
+peut être éliminés|forward|trigger|uncertain|30
+peut être éliminées|forward|trigger|uncertain|30
+peut être écarté pour|forward|trigger|uncertain|30
+peut être éliminé pour|forward|trigger|uncertain|30
+peut être exclu pour|forward|trigger|uncertain|30
+peut être écartée pour|forward|trigger|uncertain|30
+peut être éliminée pour|forward|trigger|uncertain|30
+peut être exclue pour|forward|trigger|uncertain|30
+peuvent être écartés pour|forward|trigger|uncertain|30
+peuvent être éliminés pour|forward|trigger|uncertain|30
+peuvent être exclus pour|forward|trigger|uncertain|30
+peuvent être écartées pour|forward|trigger|uncertain|30
+peuvent être éliminées pour|forward|trigger|uncertain|30
+peuvent être exclues pour|forward|trigger|uncertain|30
+peut l'exclure|forward|trigger|negated|10
+peut l'éliminer|forward|trigger|negated|10
+peut l'écarter|forward|trigger|negated|10
+peuvent l'exclure|forward|trigger|negated|10
+peuvent l'éliminer|forward|trigger|negated|10
+peuvent l'écarter|forward|trigger|negated|10
+peut l'exclure contre|forward|trigger|negated|10
+peut l'éliminer contre|forward|trigger|negated|10
+peut l'écarter contre|forward|trigger|negated|10
+peuvent l'exclure contre|forward|trigger|negated|10
+peuvent l'éliminer contre|forward|trigger|negated|10
+peuvent l'écarter contre|forward|trigger|negated|10
+peut exclure|forward|trigger|negated|10
+peut éliminer|forward|trigger|negated|10
+peut écarter|forward|trigger|negated|10
+peuvent exclure|forward|trigger|negated|10
+peuvent éliminer|forward|trigger|negated|10
+peuvent écarter|forward|trigger|negated|10
+ne peut pas|forward|trigger|negated|10
+ne pouvons pas|forward|trigger|negated|10
+ne peuvent pas|forward|trigger|negated|10
+cause pour|forward|termination|negated|10
+cause de|forward|termination|negated|10
+cause d'|forward|termination|negated|10
+causes pour|forward|termination|negated|10
+causes de|forward|termination|negated|10
+causes d'|forward|termination|negated|10
+libre de|forward|trigger|negated|10
+revenir pour|forward|trigger|hypothetical|10
+revenir à|forward|trigger|hypothetical|10
+se plaint|forward|termination|nonpatient|10
+pourrait être écarté|forward|trigger|uncertain|30
+pourrait être écartée|forward|trigger|uncertain|30
+pourraient être écartés|forward|trigger|uncertain|30
+pourraient être écartées|forward|trigger|uncertain|30
+pourrait être éliminé|forward|trigger|uncertain|30
+pourrait être éliminée|forward|trigger|uncertain|30
+pourraient être éliminés|forward|trigger|uncertain|30
+pourraient être éliminées|forward|trigger|uncertain|30
+pourrait être exclu|forward|trigger|uncertain|30
+pourrait être exclue|forward|trigger|uncertain|30
+pourraient être exclus|forward|trigger|uncertain|30
+pourraient être exclues|forward|trigger|uncertain|30
+pourrait être écarté pour|forward|trigger|uncertain|30
+pourrait être écartée pour|forward|trigger|uncertain|30
+pourraient être écartés pour|forward|trigger|uncertain|30
+pourraient être écartées pour|forward|trigger|uncertain|30
+pourrait être éliminé pour|forward|trigger|uncertain|30
+pourrait être éliminée pour|forward|trigger|uncertain|30
+pourraient être éliminés pour|forward|trigger|uncertain|30
+pourraient être éliminées pour|forward|trigger|uncertain|30
+pourrait être exclu pour|forward|trigger|uncertain|30
+pourrait être exclue pour|forward|trigger|uncertain|30
+pourraient être exclus pour|forward|trigger|uncertain|30
+pourraient être exclues pour|forward|trigger|uncertain|30
+actuellement|both|termination|historical|10
+en ce moment|both|termination|historical|10
+maintenant|both|termination|historical|10
+papa|forward|trigger|nonpatient|10
+refusé|forward|trigger|negated|10
+décliné|forward|trigger|negated|10
+décline|forward|trigger|negated|10
+refuse|forward|trigger|negated|10
+nié|forward|trigger|negated|10
+nie|forward|trigger|negated|10
+a nié|forward|trigger|negated|10
+nier|forward|trigger|negated|10
+niant|forward|trigger|negated|10
+n'a pas exclu|forward|trigger|uncertain|30
+n'a pas écarté|forward|trigger|uncertain|30
+n'a pas éliminé|forward|trigger|uncertain|30
+l'a exclue|forward|trigger|negated|10
+l'a exclu|forward|trigger|negated|10
+l'a écarté|forward|trigger|negated|10
+l'a écartée|forward|trigger|negated|10
+l'a éliminé|forward|trigger|negated|10
+l'a éliminée|forward|trigger|negated|10
+a exclu|forward|trigger|negated|10
+a écarté|forward|trigger|negated|10
+a éliminé|forward|trigger|negated|10
+a exclu le patient|forward|trigger|negated|10
+a éliminé le patient|forward|trigger|negated|10
+a écarté le patient|forward|trigger|negated|10
+ne ressemble pas|forward|trigger|negated|10
+ne ressemblent pas|forward|trigger|negated|10
+ed|forward|termination|historical|10
+département d'urgence|forward|termination|historical|10
+service d'urgence|forward|termination|historical|10
+département d'urgences|forward|termination|historical|10
+service d'urgences|forward|termination|historical|10
+urgences|forward|termination|historical|10
+étiologie pour|forward|termination|negated|10
+étiologie de|forward|termination|negated|10
+étiologie d'|forward|termination|negated|10
+etiologie de|forward|termination|negated|10
+etiologie d'|forward|termination|negated|10
+évaluer pour|forward|trigger|negated|10
+à l'exception de|both|termination|negated|10
+à l'exception d'|both|termination|negated|10
+ne révèle pas|forward|trigger|negated|10
+ne révèlent pas|forward|trigger|negated|10
+ne parvient pas à révéler|forward|trigger|negated|10
+jamais présenté|forward|trigger|negated|10
+ne voit pas|forward|trigger|negated|10
+famille|forward|trigger|nonpatient|10
+familial|forward|trigger|nonpatient|10
+familiaux|forward|trigger|nonpatient|10
+familiale|forward|trigger|nonpatient|10
+familiales|forward|trigger|nonpatient|10
+fam hx|forward|trigger|nonpatient|10
+père|forward|trigger|nonpatient|10
+paternel|forward|trigger|nonpatient|10
+pères|forward|trigger|nonpatient|10
+ne contient pas|forward|trigger|negated|10
+ne contiennent pas|forward|trigger|negated|10
+sans|forward|trigger|negated|10
+libre de|forward|trigger|negated|10
+grand-père|forward|trigger|nonpatient|10
+grand père|forward|trigger|nonpatient|10
+grand pere|forward|trigger|nonpatient|10
+pere|forward|trigger|nonpatient|10
+grands-pères|forward|trigger|nonpatient|10
+grand-mère|forward|trigger|nonpatient|10
+grand mère|forward|trigger|nonpatient|10
+grand mere|forward|trigger|nonpatient|10
+mere|forward|trigger|nonpatient|10
+neveu|forward|trigger|nonpatient|10
+nièce|forward|trigger|nonpatient|10
+niece|forward|trigger|nonpatient|10
+grand parent|forward|trigger|nonpatient|10
+grands parents|forward|trigger|nonpatient|10
+a été négatif|forward|trigger|negated|10
+a été négative|forward|trigger|negated|10
+a été écartée|forward|trigger|negated|10
+a été infirmée|forward|trigger|negated|10
+a été exclue|forward|trigger|negated|10
+a été éliminée|forward|trigger|negated|10
+a été écarté|forward|trigger|negated|10
+a été infirmé|forward|trigger|negated|10
+a été exclu|forward|trigger|negated|10
+a été éliminé|forward|trigger|negated|10
+ont été écartées|forward|trigger|negated|10
+ont été infirmées|forward|trigger|negated|10
+ont été écartés|forward|trigger|negated|10
+ont été infirmés|forward|trigger|negated|10
+ont été éliminés|forward|trigger|negated|10
+ont été éliminées|forward|trigger|negated|10
+ont été exclus|forward|trigger|negated|10
+ont été exclues|forward|trigger|negated|10
+sa|both|termination|nonpatient|10
+son|both|termination|nonpatient|10
+histoire|forward|trigger|historical|10
+antécédents|forward|trigger|historical|10
+antécédent|forward|trigger|historical|10
+pas d'antécédent|both|pseudo|historical|10
+pas d'antécédents|both|pseudo|historical|10
+absence d'antécédent|both|pseudo|historical|10
+absence d'antécédents|both|pseudo|historical|10
+toutefois|both|termination|negated|10
+cependant|both|termination|negated|10
+pourtant|forward|termination|negated|10
+si|forward|trigger|hypothetical|10
+à condition|forward|trigger|hypothetical|10
+si négatif|both|pseudo|hypothetical|10
+si négative|both|pseudo|hypothetical|10
+incompatible avec|forward|trigger|negated|10
+incohérent avec|forward|trigger|negated|10
+en contradiction avec|forward|trigger|negated|10
+n'est pas|forward|trigger|negated|10
+est exclue|forward|trigger|negated|10
+est écarté|forward|trigger|negated|10
+est infirmé|forward|trigger|negated|10
+est écartée|forward|trigger|negated|10
+est infirmée|forward|trigger|negated|10
+est éliminé|forward|trigger|negated|10
+est éliminés|forward|trigger|negated|10
+est exclu|forward|trigger|negated|10
+est à exclure|forward|trigger|uncertain|30
+est à écarter|forward|trigger|uncertain|30
+est à éliminer|forward|trigger|uncertain|30
+manque de|forward|trigger|negated|10
+absence de|forward|trigger|negated|10
+absence d'|forward|trigger|negated|10
+manquait|forward|trigger|negated|10
+maman|forward|trigger|nonpatient|10
+mère|forward|trigger|nonpatient|10
+maternel|forward|trigger|nonpatient|10
+négatif pour|forward|trigger|negated|10
+négative pour|forward|trigger|negated|10
+jamais développé|forward|trigger|negated|10
+pas développé|forward|trigger|negated|10
+jamais eu|forward|trigger|negated|10
+pas eu|forward|trigger|negated|10
+néanmoins|both|termination|negated|10
+non|forward|trigger|negated|10
+aucun|forward|trigger|negated|10
+aucune|forward|trigger|negated|10
+pas de|forward|trigger|negated|10
+pas d'|forward|trigger|negated|10
+pas de cause de|forward|trigger|negated|10
+aucune cause de|forward|trigger|negated|10
+pas de changement|both|pseudo|negated|10
+aucune plainte de|forward|trigger|negated|10
+pas de plainte de|forward|trigger|negated|10
+aucune preuve|forward|trigger|negated|10
+pas de preuve|forward|trigger|negated|10
+pas de preuves|forward|trigger|negated|10
+aucune constatation de|forward|trigger|negated|10
+aucune constatation pour indiquer|forward|trigger|negated|10
+pas d'augmentation|both|pseudo|negated|10
+n'est plus présent|forward|trigger|negated|10
+n'est plus visible|forward|trigger|negated|10
+n'est pas présent|forward|trigger|negated|10
+n'est pas visible|forward|trigger|negated|10
+aucune preuve mammographique de|forward|trigger|negated|10
+pas de nouveau|forward|trigger|negated|10
+aucun nouvel|forward|trigger|negated|10
+aucune nouvelle|forward|trigger|negated|10
+aucune autre preuve|forward|trigger|negated|10
+aucun autre signe|forward|trigger|negated|10
+aucune preuve radiographique de|forward|trigger|negated|10
+aucun signe|forward|trigger|negated|10
+aucun signe de|forward|trigger|negated|10
+non significatif|forward|trigger|negated|10
+non significative|forward|trigger|negated|10
+pas significatif|forward|trigger|negated|10
+pas significative|forward|trigger|negated|10
+pas de suggestion de|forward|trigger|negated|10
+aucun changement suspect|both|pseudo|negated|10
+pas de changements|both|pseudo|negated|10
+non diagnostique|forward|trigger|negated|10
+pas été diagnostiqué|forward|trigger|negated|10
+pas été diagnostiquée|forward|trigger|negated|10
+pas été diagnostiqués|forward|trigger|negated|10
+pas été diagnostiquées|forward|trigger|negated|10
+ne pas|forward|trigger|negated|10
+pas|forward|trigger|negated|10
+nullement|forward|trigger|negated|10
+ne pas apparaître|forward|trigger|negated|10
+pas apparu|forward|trigger|negated|10
+pas apparue|forward|trigger|negated|10
+pas apparus|forward|trigger|negated|10
+pas apparues|forward|trigger|negated|10
+ne pas apprécier|forward|trigger|negated|10
+non associé à|forward|trigger|negated|10
+non associée à|forward|trigger|negated|10
+non associés à|forward|trigger|negated|10
+non associées à|forward|trigger|negated|10
+non associé avec|forward|trigger|negated|10
+non associée avec|forward|trigger|negated|10
+non associés avec|forward|trigger|negated|10
+non associées avec|forward|trigger|negated|10
+pas associé à|forward|trigger|negated|10
+pas associée à|forward|trigger|negated|10
+pas associés à|forward|trigger|negated|10
+pas associées à|forward|trigger|negated|10
+pas associé avec|forward|trigger|negated|10
+pas associée avec|forward|trigger|negated|10
+pas associés avec|forward|trigger|negated|10
+pas associées avec|forward|trigger|negated|10
+pas été exclue|forward|trigger|uncertain|30
+pas été exclu|forward|trigger|uncertain|30
+pas été exclus|forward|trigger|uncertain|30
+pas été exclues|forward|trigger|uncertain|30
+pas certain si|both|pseudo|negated|10
+ne pas se plaindre|forward|trigger|negated|10
+pas se plaindre|forward|trigger|negated|10
+se plaint pas|forward|trigger|negated|10
+ne pas démontrer|forward|trigger|negated|10
+ne démontre pas|forward|trigger|negated|10
+ne manifeste pas|forward|trigger|negated|10
+ne présente pas|forward|trigger|negated|10
+n'avait pas|forward|trigger|negated|10
+ne démontrent pas|forward|trigger|negated|10
+ne pas ressentir|forward|trigger|negated|10
+ne ressent pas|forward|trigger|negated|10
+ne pas avoir|forward|trigger|negated|10
+n'a pas|forward|trigger|negated|10
+pas de preuves de|forward|trigger|negated|10
+pas de preuve de|forward|trigger|negated|10
+pas de signe de|forward|trigger|negated|10
+pas de signe d'|forward|trigger|negated|10
+pas de risque de|forward|trigger|negated|10
+pas de risque d'|forward|trigger|negated|10
+pas de signes de|forward|trigger|negated|10
+pas de signes d'|forward|trigger|negated|10
+pas de risques de|forward|trigger|negated|10
+pas de risques d'|forward|trigger|negated|10
+ne sais pas|forward|trigger|negated|10
+pas connu pour avoir|forward|trigger|negated|10
+pas connue pour avoir|forward|trigger|negated|10
+pas connus pour avoir|forward|trigger|negated|10
+pas connues pour avoir|forward|trigger|negated|10
+pas nécessairement|both|pseudo|negated|10
+pas sur|both|pseudo|negated|10
+pas certain|both|pseudo|negated|10
+pas seulement|both|pseudo|negated|10
+non seulement|both|pseudo|negated|10
+ne pas révéler|forward|trigger|negated|10
+révéle pas|forward|trigger|negated|10
+révélent pas|forward|trigger|negated|10
+montre pas|forward|trigger|negated|10
+montrent pas|forward|trigger|negated|10
+pas exclue|forward|trigger|uncertain|30
+pas exclu|forward|trigger|uncertain|30
+pas exclus|forward|trigger|uncertain|30
+pas exclues|forward|trigger|uncertain|30
+pas écarté|forward|trigger|uncertain|30
+pas écartée|forward|trigger|uncertain|30
+pas écartées|forward|trigger|uncertain|30
+pas écartés|forward|trigger|uncertain|30
+pas éliminé|forward|trigger|uncertain|30
+pas éliminés|forward|trigger|uncertain|30
+pas éliminée|forward|trigger|uncertain|30
+pas éliminées|forward|trigger|uncertain|30
+pas vu|forward|trigger|negated|10
+ne pas être|forward|trigger|negated|10
+pas être|forward|trigger|negated|10
+ noté|both|termination|nonpatient|10
+maintenant résolu|forward|trigger|negated|10
+maintenant résolue|forward|trigger|negated|10
+maintenant résolus|forward|trigger|negated|10
+maintenant résolues|forward|trigger|negated|10
+origine pour|forward|termination|negated|10
+origine de|forward|termination|negated|10
+origines pour|forward|termination|negated|10
+origines de|forward|termination|negated|10
+origines d'|forward|termination|negated|10
+autres possibilités de|forward|termination|negated|10
+autres possibilités d'|forward|termination|negated|10
+antécédents médicaux|forward|trigger|historical|10
+antécédent médical|forward|trigger|historical|10
+patient|forward|termination|nonpatient|10
+patient n'était pas|forward|trigger|negated|10
+aucuns|forward|trigger|negated|10
+aucunes|forward|trigger|negated|10
+oriente pas vers|forward|trigger|negated|10
+orientent pas vers|forward|trigger|negated|10
+sans indice|forward|trigger|negated|10
+pas d'indice|forward|trigger|negated|10
+pas d'indices|forward|trigger|negated|10
+pas de \w+ indice|forward|trigger|negated|10
+pas de \w+ preuve|forward|trigger|negated|10
+pas \w+ preuve|forward|trigger|negated|10
+pas d'argument \w+ en faveur de|forward|trigger|negated|10
+pas le moindre|forward|trigger|negated|10
+pas la moindre|forward|trigger|negated|10
+ni de|forward|trigger|negated|10
+ni d'|forward|trigger|negated|10
+ni|forward|trigger|negated|10
+n'apparaît pas|forward|trigger|negated|10
+n'apparaîssent pas|forward|trigger|negated|10
+peu d'antécédent|both|pseudo|historical|10
+peu d'antécédents|both|pseudo|historical|10
+présentant|forward|termination|nonpatient|10
+présente|forward|termination|nonpatient|10
+précédent|forward|trigger|historical|10
+précédents|forward|trigger|historical|10
+prophylaxie|forward|trigger|negated|10
+prévenir|forward|trigger|negated|10
+prévention|forward|trigger|negated|10
+r/o|forward|trigger|uncertain|30
+plutôt que|forward|trigger|negated|10
+raison pour|forward|termination|negated|10
+raison de|forward|termination|negated|10
+raison d'|forward|termination|negated|10
+raisons pour|forward|termination|negated|10
+raisons de|forward|termination|negated|10
+raisons d'|forward|termination|negated|10
+signalé|backward|termination|nonpatient|10
+signalée|backward|termination|nonpatient|10
+signalés|backward|termination|nonpatient|10
+signalées|backward|termination|nonpatient|10
+rapporté|backward|termination|nonpatient|10
+rapportée|backward|termination|nonpatient|10
+rapportés|backward|termination|nonpatient|10
+rapportées|backward|termination|nonpatient|10
+rapporte|both|termination|nonpatient|10
+signale|both|termination|nonpatient|10
+rapportent|forward|termination|nonpatient|10
+signalent|both|termination|nonpatient|10
+résolu|forward|trigger|negated|10
+résoluent|forward|trigger|negated|10
+retourne|forward|trigger|hypothetical|10
+l'éliminer|forward|trigger|uncertain|30
+l'exclure|forward|trigger|uncertain|30
+éliminer|forward|trigger|uncertain|30
+exclure|forward|trigger|uncertain|30
+écarter|forward|trigger|negated|10
+écarter le patient|forward|trigger|uncertain|30
+écarte|forward|trigger|negated|10
+écartent|forward|trigger|negated|10
+élimine|forward|trigger|negated|10
+éliminent|forward|trigger|negated|10
+excluent|forward|trigger|negated|10
+secondaire|forward|termination|negated|10
+auxiliaire|forward|termination|negated|10
+secondaires|forward|termination|negated|10
+auxiliaires|forward|termination|negated|10
+devrait-il|forward|trigger|hypothetical|10
+devrait elle|forward|trigger|hypothetical|10
+devrait-il y avoir|forward|trigger|hypothetical|10
+depuis|forward|termination|hypothetical|10
+dès|forward|termination|hypothetical|10
+sœur|forward|trigger|nonpatient|10
+soeur|forward|trigger|nonpatient|10
+sœurs|forward|trigger|nonpatient|10
+soeurs|forward|trigger|nonpatient|10
+source pour|forward|termination|negated|10
+source de|forward|termination|negated|10
+source d'|forward|termination|negated|10
+sources pour|forward|termination|negated|10
+sources de|forward|termination|negated|10
+sources d'|forward|termination|negated|10
+stipule|forward|termination|nonpatient|10
+malgré|both|termination|negated|10
+exclure|forward|trigger|negated|10
+aujourd'hui|both|termination|historical|10
+événement déclencheur pour|forward|termination|negated|10
+oncle|forward|trigger|nonpatient|10
+tonton|forward|trigger|nonpatient|10
+improbable|forward|trigger|negated|10
+peu probable|forward|trigger|negated|10
+pas remarquable pour|forward|trigger|negated|10
+a été trouvé|forward|termination|nonpatient|10
+a été trouvée|forward|termination|nonpatient|10
+était négatif|forward|trigger|negated|10
+étaient négatifs|forward|trigger|negated|10
+était négative|forward|trigger|negated|10
+étaient négatives|forward|trigger|negated|10
+n'était pas|forward|trigger|negated|10
+n'étaient pas|forward|trigger|negated|10
+lequel|both|termination|nonpatient|10
+que|both|termination|nonpatient|10
+qui|both|termination|nonpatient|10
+sans pour autant|forward|trigger|negated|10
+sans aucune preuve de|forward|trigger|negated|10
+sans peine|both|pseudo|negated|10
+sans difficulté|both|pseudo|negated|10
+sans preuve|forward|trigger|negated|10
+sans preuves|forward|trigger|negated|10
+sans indication de|forward|trigger|negated|10
+sans indication d'|forward|trigger|negated|10
+sans signe|forward|trigger|negated|10
+éliminons|forward|trigger|negated|10
+écartons|forward|trigger|negated|10
+avait éliminé|forward|trigger|negated|10
+avons éliminé|forward|trigger|negated|10
+avions éliminé|forward|trigger|negated|10
+avait infirmé|forward|trigger|negated|10
+avons infirmé|forward|trigger|negated|10
+avions infirmé|forward|trigger|negated|10
+avait écarté|forward|trigger|negated|10
+avons écarté|forward|trigger|negated|10
+avions écarté|forward|trigger|negated|10
+avait exclu|forward|trigger|negated|10
+avons exclu|forward|trigger|negated|10
+avions exclu|forward|trigger|negated|10
+éliminons|forward|trigger|negated|10
+écartons|forward|trigger|uncertain|30
+excluons|forward|trigger|uncertain|30
+sont écartées|forward|trigger|negated|10
+est éliminée|forward|trigger|negated|10
+sont éliminés|forward|trigger|negated|10
+sont éliminées|forward|trigger|negated|10
+pas été écartée|forward|trigger|uncertain|30
+pas été écartées|forward|trigger|uncertain|30
+pas été écarté|forward|trigger|uncertain|30
+pas été écartés|forward|trigger|uncertain|30
+pas été éliminée|forward|trigger|uncertain|30
+pas été éliminées|forward|trigger|uncertain|30
+pas été éliminé|forward|trigger|uncertain|30
+pas été éliminés|forward|trigger|uncertain|30
+sera écartée|forward|trigger|uncertain|30
+sera écarté|forward|trigger|uncertain|30
+sera éliminée|forward|trigger|uncertain|30
+sera éliminé|forward|trigger|uncertain|30
+seront écartées|forward|trigger|uncertain|30
+seront écartés|forward|trigger|uncertain|30
+seront éliminées|forward|trigger|uncertain|30
+seront éliminés|forward|trigger|uncertain|30
+évènement déclencheur de|forward|termination|negated|10
+évènement déclencheur d'|forward|termination|negated|10
+origine d'|forward|termination|negated|10
+origin de|forward|termination|negated|10
+origin d'|forward|termination|negated|10
+encore|forward|termination|negated|10
+infirme|forward|trigger|negated|10
+infirment|forward|trigger|negated|10
+infirmer|forward|trigger|negated|10
+
+
+#with \w+ dad|both|termination|historical|30
+#with \w+ dad|both|termination|nonpatient|30
+#with \w+ daughter|both|termination|historical|30
+#with \w+ daughter|both|termination|nonpatient|30
+#with \w+ father|both|termination|historical|30
+#with \w+ father|both|termination|nonpatient|30
+#with \w+ mom|both|termination|historical|30
+#with \w+ mom|both|termination|nonpatient|30
+#with \w+ mother|both|termination|historical|30
+#with \w+ mother|both|termination|nonpatient|30
+#with \w+ son|both|termination|historical|30
+#with \w+ son|both|termination|nonpatient|30
+
+
+

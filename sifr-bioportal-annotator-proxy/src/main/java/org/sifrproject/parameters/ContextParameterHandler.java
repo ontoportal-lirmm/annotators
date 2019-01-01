@@ -6,6 +6,8 @@ import org.sifrproject.postannotation.ContextPostAnnotationFilter;
 import org.sifrproject.postannotation.api.PostAnnotationRegistry;
 import org.sifrproject.util.RequestGenerator;
 
+import java.io.IOException;
+
 
 public class ContextParameterHandler implements ParameterHandler {
 
@@ -16,7 +18,7 @@ public class ContextParameterHandler implements ParameterHandler {
 
     @SuppressWarnings("FeatureEnvy")
     @Override
-    public void processParameter(@SuppressWarnings("MethodParameterOfConcreteClass") final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException {
+    public void processParameter(@SuppressWarnings("MethodParameterOfConcreteClass") final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException, IOException {
         final boolean negation = Boolean.valueOf(parameters.getFirst("negation", "false"));
         final boolean temporality = Boolean.valueOf(parameters.getFirst("temporality", "false"));
         final boolean experiencer = Boolean.valueOf(parameters.getFirst("experiencer", "false"));
