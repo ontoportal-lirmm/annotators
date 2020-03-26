@@ -138,7 +138,9 @@ public class AnnotatorServlet extends HttpServlet {
         String format = parameters
                 .getFirst(FORMAT, "json")
                 .toLowerCase();
-        parameters.remove(FORMAT);
+        if (!format.equals("xml")) {
+            parameters.remove(FORMAT);
+        }
 
         //Retrieving the source text parameter
         final String text = parameters.getFirst("text", "");

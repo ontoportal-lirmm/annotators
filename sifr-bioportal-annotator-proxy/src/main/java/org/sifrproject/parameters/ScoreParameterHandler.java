@@ -22,7 +22,7 @@ public class ScoreParameterHandler implements ParameterHandler {
             final String score = parameters.get("score");
             parameters.remove("score");
 
-            final Scorer scorer = instanciateScorer(score);
+            final Scorer scorer = instantiateScorer(score);
 
             double score_threshold = -1d;
             if(parameters.containsKey("score_threshold")){
@@ -48,7 +48,7 @@ public class ScoreParameterHandler implements ParameterHandler {
         }
     }
 
-    private Scorer instanciateScorer( final String score) throws InvalidParameterException {
+    private Scorer instantiateScorer(final String score) throws InvalidParameterException {
         final Scorer scorer;
         switch (score) {
             case "old":
