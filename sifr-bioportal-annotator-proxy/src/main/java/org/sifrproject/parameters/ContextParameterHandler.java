@@ -12,6 +12,7 @@ import java.io.IOException;
 public class ContextParameterHandler implements ParameterHandler {
 
     private final String language;
+
     public ContextParameterHandler(final String language) {
         this.language = language;
     }
@@ -19,12 +20,10 @@ public class ContextParameterHandler implements ParameterHandler {
     @SuppressWarnings("FeatureEnvy")
     @Override
     public void processParameter(@SuppressWarnings("MethodParameterOfConcreteClass") final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException, IOException {
-        final boolean negation = Boolean.valueOf(parameters.getFirst("negation", "false"));
-        final boolean temporality = Boolean.valueOf(parameters.getFirst("temporality", "false"));
-        final boolean experiencer = Boolean.valueOf(parameters.getFirst("experiencer", "false"));
+        final boolean fastContext = Boolean.parseBoolean(parameters.getFirst("fastContext", "false"));
 
-        if (negation || temporality || experiencer) {
-            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotationFilter(language, negation, experiencer, temporality));
+        if (fastContext) {
+            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotationFilter(language));
         }
     }
 }

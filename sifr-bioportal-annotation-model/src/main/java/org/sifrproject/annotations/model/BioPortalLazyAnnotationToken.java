@@ -6,6 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 import org.sifrproject.annotations.api.model.AnnotationToken;
 import org.sifrproject.annotations.api.model.LazyModelElement;
+import org.sifrproject.annotations.api.model.context.CertaintyContext;
 import org.sifrproject.annotations.api.model.context.ExperiencerContext;
 import org.sifrproject.annotations.api.model.context.NegationContext;
 import org.sifrproject.annotations.api.model.context.TemporalityContext;
@@ -15,22 +16,15 @@ import org.sifrproject.annotations.api.model.context.TemporalityContext;
  * factory, {@link BioPortalLazyAnnotationFactory}
  */
 public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelElement {
+    private final JsonObject jsonObject;
     private int from;
     private int to;
     private String matchType;
     private String text;
-
     private NegationContext negationContext;
     private ExperiencerContext experiencerContext;
     private TemporalityContext temporalityContext;
-
-    private final JsonObject jsonObject;
-
-    @Override
-    public JsonValue getJSONObject() {
-        return jsonObject;
-    }
-
+    private CertaintyContext certaintyContext;
 
     BioPortalLazyAnnotationToken(final JsonObject jsonObject) {
         to = -1;
@@ -38,6 +32,11 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
         text = "";
         matchType = "";
         this.jsonObject = jsonObject;
+    }
+
+    @Override
+    public JsonValue getJSONObject() {
+        return jsonObject;
     }
 
     @Override
@@ -104,7 +103,7 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public NegationContext getNegationContext() {
-        if(jsonObject.get("negationContext")!=null) {
+        if (jsonObject.get("negationContext") != null) {
             final String negContext = jsonObject.get("negationContext").asString();
             if ((negationContext == null) && (negContext != null)) {
                 negationContext = NegationContext.valueOf(negContext);
@@ -116,13 +115,13 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     @SuppressWarnings("All")
     @Override
     public void setNegationContext(NegationContext negationContext) {
-            this.negationContext = negationContext;
-            jsonObject.add("negationContext", negationContext.name());
+        this.negationContext = negationContext;
+        jsonObject.add("negationContext", negationContext.name());
     }
 
     @Override
     public ExperiencerContext getExperiencerContext() {
-        if(jsonObject.get("experiencerContext")!=null) {
+        if (jsonObject.get("experiencerContext") != null) {
             final String expeContext = jsonObject.get("experiencerContext").asString();
             if ((experiencerContext == null) && (expeContext != null)) {
                 experiencerContext = ExperiencerContext.valueOf(expeContext);
@@ -141,7 +140,7 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
 
     @Override
     public TemporalityContext getTemporalityContext() {
-        if(jsonObject.get("temporalityContext")!=null) {
+        if (jsonObject.get("temporalityContext") != null) {
             final String tempoContext = jsonObject.get("temporalityContext").asString();
             if ((temporalityContext == null) && (tempoContext != null)) {
                 temporalityContext = TemporalityContext.valueOf(tempoContext);
@@ -155,5 +154,22 @@ public class BioPortalLazyAnnotationToken implements AnnotationToken, LazyModelE
     public void setTemporalityContext(TemporalityContext temporalityContext) {
         this.temporalityContext = temporalityContext;
         jsonObject.add("temporalityContext", temporalityContext.name());
+    }
+
+    @Override
+    public CertaintyContext getCertaintyContext() {
+        if (jsonObject.get("certaintyContext") != null) {
+            final String certaintyContext = jsonObject.get("certaintyContext").asString();
+            if ((this.certaintyContext == null) && (certaintyContext != null)) {
+                this.certaintyContext = CertaintyContext.valueOf(certaintyContext);
+            }
+        }
+        return certaintyContext;
+    }
+
+    @Override
+    public void setCertaintyContext(final CertaintyContext certaintyContext) {
+        this.certaintyContext = certaintyContext;
+        jsonObject.add("certaintyContext", certaintyContext.name());
     }
 }

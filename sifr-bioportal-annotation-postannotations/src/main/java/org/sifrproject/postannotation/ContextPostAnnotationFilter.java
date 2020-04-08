@@ -8,6 +8,7 @@ import org.apache.commons.io.IOUtils;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
 import org.sifrproject.annotations.api.model.AnnotationTokens;
+import org.sifrproject.annotations.api.model.context.CertaintyContext;
 import org.sifrproject.annotations.api.model.context.ExperiencerContext;
 import org.sifrproject.annotations.api.model.context.NegationContext;
 import org.sifrproject.annotations.api.model.context.TemporalityContext;
@@ -26,15 +27,9 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
 
 //    private static final Logger logger = LoggerFactory.getLogger(ContextPostAnnotationFilter.class);
 
-    private final boolean includeNegation;
-    private final boolean includeExperiencer;
-    private final boolean includeTemporality;
     private final FastContext context;
 
-    public ContextPostAnnotationFilter(final String language, final boolean includeNegation, final boolean includeExperiencer, final boolean includeTemporality) throws IOException {
-        this.includeNegation = includeNegation;
-        this.includeExperiencer = includeExperiencer;
-        this.includeTemporality = includeTemporality;
+    public ContextPostAnnotationFilter(final String language) throws IOException {
         final String ruleSetFileName = language.toLowerCase() + "_context.tsv";
         final ClassLoader classLoader = getClass().getClassLoader();
         final StringBuilder contents = new StringBuilder();
@@ -83,32 +78,38 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
 
                 final List<String> results = context.processContext(textTokens, tokenStartIndex, tokenEndIndex, text, 30);
 
+                final int uncertainty_index = results.indexOf("uncertain");
+                if (uncertainty_index >= 0) {
+                    annotationToken.setCertaintyContext(CertaintyContext.valueOf(results
+                            .get(uncertainty_index)
+                            .toUpperCase()));
+                }
 
-                if (includeNegation) {
-                    final int index = results.indexOf("negated");
-                    if (index >= 0) {
-                        annotationToken.setNegationContext(NegationContext.valueOf(results
-                                .get(index)
-                                .toUpperCase()));
-                    }
+
+                final int negation_index = results.indexOf("negated");
+                if (negation_index >= 0) {
+                    annotationToken.setNegationContext(NegationContext.valueOf(results
+                            .get(negation_index)
+                            .toUpperCase()));
                 }
-                if (includeTemporality) {
-                    int index = results.indexOf("historical");
-                    if (index == -1) {
-                        index = results.indexOf("hypothetical");
-                    }
-                    if (index >= 0) {
-                        annotationToken.setTemporalityContext(TemporalityContext.valueOf(results
-                                .get(index)
-                                .toUpperCase()));
-                    }
+
+
+                int temporality_index = results.indexOf("historical");
+                if (temporality_index == -1) {
+                    temporality_index = results.indexOf("hypothetical");
                 }
-                if (includeExperiencer) {
-                    final int index = results.indexOf("nonpatient");
-                    if (index > -1) {
-                        annotationToken.setExperiencerContext(ExperiencerContext.OTHER);
-                    }
+                if (temporality_index >= 0) {
+                    annotationToken.setTemporalityContext(TemporalityContext.valueOf(results
+                            .get(temporality_index)
+                            .toUpperCase()));
                 }
+
+
+                final int experiencer_index = results.indexOf("nonpatient");
+                if (experiencer_index > -1) {
+                    annotationToken.setExperiencerContext(ExperiencerContext.NONPATIENT);
+                }
+
             }
         }
 
