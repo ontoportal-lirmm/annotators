@@ -83,6 +83,8 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                     annotationToken.setCertaintyContext(CertaintyContext.valueOf(results
                             .get(uncertainty_index)
                             .toUpperCase()));
+                } else {
+                    annotationToken.setCertaintyContext(CertaintyContext.CERTAIN);
                 }
 
 
@@ -91,6 +93,8 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                     annotationToken.setNegationContext(NegationContext.valueOf(results
                             .get(negation_index)
                             .toUpperCase()));
+                } else {
+                    annotationToken.setNegationContext(NegationContext.AFFIRMED);
                 }
 
 
@@ -102,12 +106,16 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
                     annotationToken.setTemporalityContext(TemporalityContext.valueOf(results
                             .get(temporality_index)
                             .toUpperCase()));
+                } else {
+                    annotationToken.setTemporalityContext(TemporalityContext.RECENT);
                 }
 
 
                 final int experiencer_index = results.indexOf("nonpatient");
                 if (experiencer_index > -1) {
                     annotationToken.setExperiencerContext(ExperiencerContext.NONPATIENT);
+                } else {
+                    annotationToken.setExperiencerContext(ExperiencerContext.PATIENT);
                 }
 
             }

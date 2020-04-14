@@ -99,7 +99,7 @@ public class AnnotatorServlet extends HttpServlet {
             if (proxyProperties.containsKey(CONTEXT_LANGUAGE)) {
                 contextLanguage = proxyProperties.getProperty(CONTEXT_LANGUAGE);
             }
-            parameterRegistry.registerParameterHandler("negation|experiencer|temporality", new ContextParameterHandler(contextLanguage), true);
+            parameterRegistry.registerParameterHandler("fastContext", new ContextParameterHandler(contextLanguage), true);
 
 
             /*
