@@ -28,11 +28,31 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
 //    private static final Logger logger = LoggerFactory.getLogger(ContextPostAnnotationFilter.class);
 
     private final FastContext context;
+    private final boolean negation;
+    private final boolean experiencer;
+    private final boolean temporality;
+    private final boolean certainty;
 
-    public ContextPostAnnotationFilter(final String language) throws IOException {
-        final String ruleSetFileName = language.toLowerCase() + "_context.tsv";
+    public ContextPostAnnotationFilter(final String language, final boolean fastContext, final boolean negation,
+                                       final boolean experiencer, final boolean temporality, final boolean certainty)
+            throws IOException {
         final ClassLoader classLoader = getClass().getClassLoader();
         final StringBuilder contents = new StringBuilder();
+
+        if (fastContext) {
+            this.negation = true;
+            this.certainty = true;
+            this.experiencer = true;
+            this.temporality = true;
+        } else {
+            this.negation = negation;
+            this.certainty = certainty;
+            this.experiencer = experiencer;
+            this.temporality = temporality;
+        }
+
+
+        final String ruleSetFileName = language.toLowerCase() + "_context.tsv";
         try (final InputStream ruleSteam = classLoader.getResourceAsStream(ruleSetFileName)) {
             if (ruleSteam != null) {
                 contents.append(IOUtils.toString(ruleSteam, "utf-8"));
@@ -78,44 +98,51 @@ public class ContextPostAnnotationFilter implements PostAnnotationFilter {
 
                 final List<String> results = context.processContext(textTokens, tokenStartIndex, tokenEndIndex, text, 30);
 
-                final int uncertainty_index = results.indexOf("uncertain");
-                if (uncertainty_index >= 0) {
-                    annotationToken.setCertaintyContext(CertaintyContext.valueOf(results
-                            .get(uncertainty_index)
-                            .toUpperCase()));
-                } else {
-                    annotationToken.setCertaintyContext(CertaintyContext.CERTAIN);
+                if (certainty) {
+                    final int uncertainty_index = results.indexOf("uncertain");
+                    if (uncertainty_index >= 0) {
+                        annotationToken.setCertaintyContext(CertaintyContext.valueOf(results
+                                .get(uncertainty_index)
+                                .toUpperCase()));
+                    } else {
+                        annotationToken.setCertaintyContext(CertaintyContext.CERTAIN);
+                    }
                 }
 
 
-                final int negation_index = results.indexOf("negated");
-                if (negation_index >= 0) {
-                    annotationToken.setNegationContext(NegationContext.valueOf(results
-                            .get(negation_index)
-                            .toUpperCase()));
-                } else {
-                    annotationToken.setNegationContext(NegationContext.AFFIRMED);
+                if (negation) {
+                    final int negation_index = results.indexOf("negated");
+                    if (negation_index >= 0) {
+                        annotationToken.setNegationContext(NegationContext.valueOf(results
+                                .get(negation_index)
+                                .toUpperCase()));
+                    } else {
+                        annotationToken.setNegationContext(NegationContext.AFFIRMED);
+                    }
+                }
+
+                if (temporality) {
+                    int temporality_index = results.indexOf("historical");
+                    if (temporality_index == -1) {
+                        temporality_index = results.indexOf("hypothetical");
+                    }
+                    if (temporality_index >= 0) {
+                        annotationToken.setTemporalityContext(TemporalityContext.valueOf(results
+                                .get(temporality_index)
+                                .toUpperCase()));
+                    } else {
+                        annotationToken.setTemporalityContext(TemporalityContext.RECENT);
+                    }
                 }
 
 
-                int temporality_index = results.indexOf("historical");
-                if (temporality_index == -1) {
-                    temporality_index = results.indexOf("hypothetical");
-                }
-                if (temporality_index >= 0) {
-                    annotationToken.setTemporalityContext(TemporalityContext.valueOf(results
-                            .get(temporality_index)
-                            .toUpperCase()));
-                } else {
-                    annotationToken.setTemporalityContext(TemporalityContext.RECENT);
-                }
-
-
-                final int experiencer_index = results.indexOf("nonpatient");
-                if (experiencer_index > -1) {
-                    annotationToken.setExperiencerContext(ExperiencerContext.NONPATIENT);
-                } else {
-                    annotationToken.setExperiencerContext(ExperiencerContext.PATIENT);
+                if (experiencer) {
+                    final int experiencer_index = results.indexOf("nonpatient");
+                    if (experiencer_index > -1) {
+                        annotationToken.setExperiencerContext(ExperiencerContext.NONPATIENT);
+                    } else {
+                        annotationToken.setExperiencerContext(ExperiencerContext.PATIENT);
+                    }
                 }
 
             }

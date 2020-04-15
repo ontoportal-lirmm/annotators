@@ -20,10 +20,13 @@ public class ContextParameterHandler implements ParameterHandler {
     @SuppressWarnings("FeatureEnvy")
     @Override
     public void processParameter(@SuppressWarnings("MethodParameterOfConcreteClass") final RequestGenerator parameters, final PostAnnotationRegistry postAnnotationRegistry) throws InvalidParameterException, IOException {
-        final boolean fastContext = Boolean.parseBoolean(parameters.getFirst("fastContext", "false"));
-
-        if (fastContext) {
-            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotationFilter(language));
+        final boolean fastContext = Boolean.parseBoolean(parameters.getFirst("fast_context", "false"));
+        final boolean negation = Boolean.parseBoolean(parameters.getFirst("negation", "false"));
+        final boolean experiencer = Boolean.parseBoolean(parameters.getFirst("experiencer", "false"));
+        final boolean temporality = Boolean.parseBoolean(parameters.getFirst("temporality", "false"));
+        final boolean certainty = Boolean.parseBoolean(parameters.getFirst("certainty", "false"));
+        if (fastContext || negation || experiencer || certainty || temporality) {
+            postAnnotationRegistry.registerPostAnnotator(new ContextPostAnnotationFilter(language, fastContext, negation, experiencer, temporality, certainty));
         }
     }
 }
