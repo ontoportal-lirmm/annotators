@@ -113,6 +113,7 @@
                         <directory>src/main/resources/ncboannotatorplus</directory>
                     </resource>
                 </resources>
+                <finalName>ncbo_annotatorplus</finalName>
             </build>
         </profile>
     </profiles>
