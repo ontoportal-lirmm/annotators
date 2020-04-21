@@ -5,6 +5,7 @@ import org.sifrproject.annotations.api.model.AnnotatedClass;
 import org.sifrproject.annotations.api.model.Annotation;
 import org.sifrproject.annotations.api.model.AnnotationToken;
 import org.sifrproject.annotations.api.model.ScoreableElement;
+import org.sifrproject.annotations.api.model.context.CertaintyContext;
 import org.sifrproject.annotations.api.model.context.ExperiencerContext;
 import org.sifrproject.annotations.api.model.context.NegationContext;
 import org.sifrproject.annotations.api.model.context.TemporalityContext;
@@ -13,7 +14,9 @@ import org.sifrproject.annotations.api.output.OutputGenerator;
 import org.sifrproject.annotations.output.LIRMMAnnotatorOutput;
 import org.sifrproject.annotations.umls.UMLSGroup;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import static org.sifrproject.annotations.output.MimeTypes.APPLICATION_BRAT;
 
@@ -42,16 +45,17 @@ public class BratOutputGenerator implements OutputGenerator {
                     final NegationContext negationContext = annotationTokenListEntry.getKey().getNegationContext();
                     final ExperiencerContext experiencerContext = annotationTokenListEntry.getKey().getExperiencerContext();
                     final TemporalityContext temporalityContext = annotationTokenListEntry.getKey().getTemporalityContext();
+                    final CertaintyContext certaintyContext = annotationTokenListEntry.getKey().getCertaintyContext();
 
                     if (semanticGroups.isEmpty()) {
                         generateAnnotationForGroup(stringBuilder, sourceText, bratCounter,
                                 annotatedClass, token, null, negationContext, experiencerContext,
-                                temporalityContext);
+                                temporalityContext, certaintyContext);
                     } else {
                         for (final UMLSGroup group : semanticGroups) {
                             generateAnnotationForGroup(stringBuilder, sourceText, bratCounter,
                                     annotatedClass, token, group, negationContext, experiencerContext,
-                                    temporalityContext);
+                                    temporalityContext, certaintyContext);
                         }
                     }
                 }
@@ -65,7 +69,7 @@ public class BratOutputGenerator implements OutputGenerator {
     private int generateAnnotationForGroup(final StringBuilder stringBuilder, final String sourceText,
                                            final BratCounter bratCounter, final AnnotatedClass annotatedClass, final AnnotationToken token,
                                            final UMLSGroup umlsGroup, final NegationContext negationContext, final ExperiencerContext experiencerContext,
-                                           final TemporalityContext temporalityContext) {
+                                           final TemporalityContext temporalityContext, final CertaintyContext certaintyContext) {
         final int tokenFrom = token.getFrom();
         final int tokenTo = token.getTo();
 
@@ -84,7 +88,7 @@ public class BratOutputGenerator implements OutputGenerator {
 
 
         if (negationContext != null) {
-            final String negationValue = "Negation-"+prepareEnumName(negationContext.name());
+            final String negationValue = "Negation-" + prepareEnumName(negationContext.name());
             if (negationValue.contains("Negated") || negationValue.contains("Possible")) {
                 stringBuilder.append(String.format("A%d\t%s T%d\n", bratCounter.getAttributeCounter(), negationValue, tokenCount));
                 bratCounter.incrementAttributeCounter();
@@ -92,20 +96,28 @@ public class BratOutputGenerator implements OutputGenerator {
         }
 
         if (experiencerContext != null) {
-            final String experiencerValue = "Experiencer-"+prepareEnumName(experiencerContext.name());
-            if (experiencerValue.contains("Other")) {
+            final String experiencerValue = "Experiencer-" + prepareEnumName(experiencerContext.name());
+            if (experiencerValue.contains("Nonpatient")) {
                 stringBuilder.append(String.format("A%d\t%s T%d\n", bratCounter.getAttributeCounter(), experiencerValue, tokenCount));
                 bratCounter.incrementAttributeCounter();
             }
         }
-
         if (temporalityContext != null) {
-            final String temporalityValue = "Temporality-"+prepareEnumName(temporalityContext.name());
+            final String temporalityValue = "Temporality-" + prepareEnumName(temporalityContext.name());
             if (temporalityValue.contains("Historical") || temporalityValue.contains("Hypothetical")) {
                 stringBuilder.append(String.format("A%d\t%s T%d\n", bratCounter.getAttributeCounter(), temporalityValue, tokenCount));
                 bratCounter.incrementAttributeCounter();
             }
         }
+
+        if (certaintyContext != null) {
+            final String certaintyValue = "Certainty-" + prepareEnumName(certaintyContext.name());
+            if (certaintyValue.contains("Uncertain")) {
+                stringBuilder.append(String.format("A%d\t%s T%d\n", bratCounter.getAttributeCounter(), certaintyValue, tokenCount));
+                bratCounter.incrementAttributeCounter();
+            }
+        }
+
 
         return 0;
     }
