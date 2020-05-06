@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -30,14 +31,16 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
     private static final String USER_AGENT_HEADER = "User-agent";
     private static final char PERCENT = '%';
     private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
+    private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n", Pattern.LITERAL);
     private final String baseURI;
     private final Map<String, String> headers;
     private final HttpServletRequest httpServletRequest;
-
+    private final String serverEncoding;
 
     public POSTRequestGenerator(final HttpServletRequest request, final String annotatorURI, final String serverEncoding) {
         httpServletRequest = request;
         baseURI = annotatorURI;
+        this.serverEncoding = serverEncoding;
         final Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             final String paramName = parameterNames.nextElement();
@@ -52,7 +55,7 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
                     .getParameter(paramName);
             put(paramName, paramValue);
         }
-        put("include","cui,semanticType,definition,prefLabel,synonym");
+        put("include", "cui,semanticType,definition,prefLabel,synonym");
         headers = new HashMap<>();
         final Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -60,6 +63,33 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
             final String value = request.getHeader(headerName).toLowerCase();
             headers.put(headerName, value);
         }
+    }
+
+    @SuppressWarnings("all")
+    private static String encode(final String input) {
+        final StringBuilder resultStr = new StringBuilder();
+        for (final char ch : input.toCharArray()) {
+            if (isUnsafe(ch)) {
+                resultStr.append(PERCENT);
+                resultStr.append(toHex(ch / 16));
+                resultStr.append(toHex(ch % 16));
+            } else {
+                resultStr.append(ch);
+            }
+        }
+        return resultStr.toString();
+    }
+
+    @SuppressWarnings("all")
+    private static char toHex(int ch) {
+        return (char) (ch < 10 ? '0' + ch : 'A' + ch - 10);
+    }
+
+    @SuppressWarnings("all")
+    private static boolean isUnsafe(char ch) {
+        if (ch > 128 || ch < 0)
+            return true;
+        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
     }
 
     @SuppressWarnings("HardcodedFileSeparator")
@@ -110,9 +140,13 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
                 parameterString.append("&");
             }
             first = false;
-            parameterString.append(paramName).append("=").append(SPACE_PATTERN
-                    .matcher(get(paramName))
-                    .replaceAll("%20"));
+
+            String paramValue = get(paramName);
+
+            paramValue = NEWLINE_PATTERN.matcher(paramValue).replaceAll(Matcher.quoteReplacement(" "));
+            paramValue = SPACE_PATTERN.matcher(paramValue).replaceAll("%20");
+            parameterString.append(paramName).append("=").append(paramValue);
+
         }
         return parameterString.toString();
     }
@@ -125,7 +159,11 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
                 parameterString.append("&");
             }
             first = false;
-            parameterString.append(paramName).append("=").append(URLEncoder.encode(get(paramName),"UTF-8"));
+            String paramValue = get(paramName);
+            if (paramName.equals("text")) {
+                paramValue = NEWLINE_PATTERN.matcher(paramValue).replaceAll(Matcher.quoteReplacement(" "));
+            }
+            parameterString.append(paramName).append("=").append(paramValue);
         }
         return parameterString.toString();
     }
@@ -133,7 +171,7 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
     private void transferHeaders(final HttpURLConnection connection) {
         if (headers.containsKey(AUTHORIZATION_HEADER.toLowerCase())) {
             connection.setRequestProperty(AUTHORIZATION_HEADER, headers.get(AUTHORIZATION_HEADER.toLowerCase()));
-        } else if(containsKey("apikey")){
+        } else if (containsKey("apikey")) {
             connection.setRequestProperty(AUTHORIZATION_HEADER, get("apikey"));
         }
         if (headers.containsKey(USER_AGENT_HEADER.toLowerCase())) {
@@ -160,32 +198,5 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
     @SuppressWarnings("all")
     public POSTRequestGenerator clone() {
         return (POSTRequestGenerator) super.clone();
-    }
-
-    @SuppressWarnings("all")
-    private static String encode(final String input) {
-        final StringBuilder resultStr = new StringBuilder();
-        for (final char ch : input.toCharArray()) {
-            if (isUnsafe(ch)) {
-                resultStr.append(PERCENT);
-                resultStr.append(toHex(ch / 16));
-                resultStr.append(toHex(ch % 16));
-            } else {
-                resultStr.append(ch);
-            }
-        }
-        return resultStr.toString();
-    }
-
-    @SuppressWarnings("all")
-    private static char toHex(int ch) {
-        return (char) (ch < 10 ? '0' + ch : 'A' + ch - 10);
-    }
-
-    @SuppressWarnings("all")
-    private static boolean isUnsafe(char ch) {
-        if (ch > 128 || ch < 0)
-            return true;
-        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
     }
 }
