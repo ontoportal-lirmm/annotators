@@ -1,4 +1,4 @@
-#Rules created by Clement Jonquet and Mehdi Mirzapour
+#Rules(V2.0) created by Clement Jonquet and Mehdi Mirzapour
 
 @CONCEPT_FEATURES|Concept|Negation|Certainty|Temporality|Experiencer
 
@@ -32,6 +32,10 @@ aucune constatation pour indiquer|forward|trigger|negated|30
 aucune nouvelle|forward|trigger|negated|30
 aucunes|forward|trigger|negated|5
 aucuns|forward|trigger|negated|5
+ne \w+ d'aucun|forward|trigger|negated|30
+ne \w+ d'aucun \w+ comme cause|forward|trigger|negated|30
+ne \w+ d'aucun \w+ \w+ comme cause de|forward|trigger|negated|30
+ne \w+ d'aucun \w+ \w+ comme cause d'|forward|trigger|negated|30
 autres possibilités d'|both|termination|negated|30
 autres possibilités de|both|termination|negated|30
 auxiliaire|both|termination|negated|30
@@ -9756,49 +9760,49 @@ a été interrompu|forward|termination|negated|10
 a été interrompue|backward|trigger|negated|10
 a été interrompue|forward|termination|negated|10
 ont été arrêtés|backward|trigger|negated|10
-ont été arrêtés forward|termination|negated|10
+ont été arrêtés|forward|termination|negated|10
 ont été arrêtées|backward|trigger|negated|10
-ont été arrêtées forward|termination|negated|10
+ont été arrêtées|forward|termination|negated|10
 ont été stoppés|backward|trigger|negated|10
-ont été stoppés forward|termination|negated|10
+ont été stoppés|forward|termination|negated|10
 ont été stoppées|backward|trigger|negated|10
-ont été stoppées forward|termination|negated|10
+ont été stoppées|forward|termination|negated|10
 ont été enrayés|backward|trigger|negated|10
-ont été enrayés forward|termination|negated|10
+ont été enrayés|forward|termination|negated|10
 ont été enrayées|backward|trigger|negated|10
-ont été enrayées forward|termination|negated|10
+ont été enrayées|forward|termination|negated|10
 ont été contenus|backward|trigger|negated|10
-ont été contenus forward|termination|negated|10
+ont été contenus|forward|termination|negated|10
 ont été contenues|backward|trigger|negated|10
-ont été contenues forward|termination|negated|10
+ont été contenues|forward|termination|negated|10
 ont été suspendus|backward|trigger|negated|10
-ont été suspendus forward|termination|negated|10
+ont été suspendus|forward|termination|negated|10
 ont été suspendues|backward|trigger|negated|10
-ont été suspendues forward|termination|negated|10
+ont été suspendues|forward|termination|negated|10
 ont été jugulés|backward|trigger|negated|10
-ont été jugulés forward|termination|negated|10
+ont été jugulés|forward|termination|negated|10
 ont été jugulées|backward|trigger|negated|10
-ont été jugulées forward|termination|negated|10
+ont été jugulées|forward|termination|negated|10
 ont été terminés|backward|trigger|negated|10
-ont été terminés forward|termination|negated|10
+ont été terminés|forward|termination|negated|10
 ont été terminées|backward|trigger|negated|10
-ont été terminées forward|termination|negated|10
+ont été terminées|forward|termination|negated|10
 ont été finis|backward|trigger|negated|10
-ont été finis forward|termination|negated|10
+ont été finis|forward|termination|negated|10
 ont été finies|backward|trigger|negated|10
-ont été finies forward|termination|negated|10
+ont été finies|forward|termination|negated|10
 ont été endigués|backward|trigger|negated|10
-ont été endigués forward|termination|negated|10
+ont été endigués|forward|termination|negated|10
 ont été endiguées|backward|trigger|negated|10
-ont été endiguées forward|termination|negated|10
+ont été endiguées|forward|termination|negated|10
 ont été cesseés|backward|trigger|negated|10
-ont été cesseés forward|termination|negated|10
+ont été cesseés|forward|termination|negated|10
 ont été cesseées|backward|trigger|negated|10
-ont été cesseées forward|termination|negated|10
+ont été cesseées|forward|termination|negated|10
 ont été interrompus|backward|trigger|negated|10
-ont été interrompus forward|termination|negated|10
+ont été interrompus|forward|termination|negated|10
 ont été interrompues|backward|trigger|negated|10
-ont été interrompues forward|termination|negated|10
+ont été interrompues|forward|termination|negated|10
 a été arrêté en raison de|forward|termination|negated|10
 a été arrêtée en raison de|forward|termination|negated|10
 a été stoppé en raison de|forward|termination|negated|10
@@ -10150,4 +10154,3 @@ risque élevé pour|forward|trigger|negated|20
 surveillé pour|forward|trigger|conditional|30
 examiné pour|forward|trigger|conditional|30
 suivi pour|forward|trigger|conditional|30
-
