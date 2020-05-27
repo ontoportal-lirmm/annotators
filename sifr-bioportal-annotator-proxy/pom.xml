@@ -116,6 +116,19 @@
                 <finalName>ncbo_annotatorplus</finalName>
             </build>
         </profile>
+        <profile>
+            <id>ontoportal-3.0.0</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/ontoportal-3.0.0</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
     </profiles>
 
     <dependencies>
