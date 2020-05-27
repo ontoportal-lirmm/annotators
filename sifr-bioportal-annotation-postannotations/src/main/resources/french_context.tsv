@@ -1,4 +1,4 @@
-#Rules(V2.0) created by Clement Jonquet and Mehdi Mirzapour
+#Rules created by Clement Jonquet and Mehdi Mirzapour
 
 @CONCEPT_FEATURES|Concept|Negation|Certainty|Temporality|Experiencer
 
@@ -3706,6 +3706,22 @@ pas le moindre|forward|trigger|negated|2
 pas été diagnostiquées|backward|trigger|negated|4
 pas|forward|trigger|negated|2
 paternel|forward|trigger|nonpatient|2
+père ait des antecedents|both|trigger|nonpatient|30
+père ait des antecedents|both|trigger|historical|30
+père a des antecedents|both|trigger|nonpatient|30
+père a des antecedents|both|trigger|historical|30
+pere ait des antecedents|both|trigger|nonpatient|30
+pere ait des antecedents|both|trigger|historical|30
+pere a des antecedents|both|trigger|nonpatient|30
+pere a des antecedents|both|trigger|historical|30
+mère ait des antecedents|both|trigger|nonpatient|30
+mère ait des antecedents|both|trigger|historical|30
+mère a des antecedents|both|trigger|nonpatient|30
+mère a des antecedents|both|trigger|historical|30
+mere ait des antecedents|both|trigger|nonpatient|30
+mere ait des antecedents|both|trigger|historical|30
+mere a des antecedents|both|trigger|nonpatient|30
+mere a des antecedents|both|trigger|historical|30
 pere|forward|trigger|nonpatient|30
 père|forward|trigger|nonpatient|4
 révéle pas|forward|trigger|negated|2
