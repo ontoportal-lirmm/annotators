@@ -3684,14 +3684,14 @@ aucune|forward|trigger|negated|5
 aucun|forward|trigger|negated|5
 dès|both|termination|conditional|2
 en contradiction avec|forward|trigger|negated|4
-familiale|forward|trigger|nonpatient|2
-familial|forward|trigger|nonpatient|4
-familiaux|forward|trigger|nonpatient|4
-famille|forward|trigger|nonpatient|5
-frère|forward|trigger|nonpatient|5
+familiale|forward|trigger|nonpatient|30
+familial|forward|trigger|nonpatient|30
+familiaux|forward|trigger|nonpatient|30
+famille|forward|trigger|nonpatient|30
+frère|forward|trigger|nonpatient|30
 histoire|forward|trigger|historical|6
 libre de|forward|trigger|negated|2
-maman|forward|trigger|nonpatient|4
+maman|forward|trigger|nonpatient|30
 manque de|forward|trigger|negated|5
 maternelle abondante|both|trigger|nonpatient|30
 ni de|forward|trigger|negated|5
@@ -3705,25 +3705,24 @@ pas de|forward|trigger|negated|4
 pas le moindre|forward|trigger|negated|2
 pas été diagnostiquées|backward|trigger|negated|4
 pas|forward|trigger|negated|2
-paternel|forward|trigger|nonpatient|2
-père ait des antecedents|both|trigger|nonpatient|30
-père ait des antecedents|both|trigger|historical|30
-père a des antecedents|both|trigger|nonpatient|30
-père a des antecedents|both|trigger|historical|30
-pere ait des antecedents|both|trigger|nonpatient|30
-pere ait des antecedents|both|trigger|historical|30
-pere a des antecedents|both|trigger|nonpatient|30
-pere a des antecedents|both|trigger|historical|30
-mère ait des antecedents|both|trigger|nonpatient|30
-mère ait des antecedents|both|trigger|historical|30
-mère a des antecedents|both|trigger|nonpatient|30
-mère a des antecedents|both|trigger|historical|30
-mere ait des antecedents|both|trigger|nonpatient|30
-mere ait des antecedents|both|trigger|historical|30
-mere a des antecedents|both|trigger|nonpatient|30
-mere a des antecedents|both|trigger|historical|30
+paternel|forward|trigger|nonpatient|30
+père ait des antécédents|both|trigger|nonpatient|30
+père ait des antécédents|both|trigger|historical|30
+père a des antécédents|both|trigger|nonpatient|30
+père a des antécédents|both|trigger|historical|30
+pere ait des antécédents|both|trigger|nonpatient|30
+pere ait des antécédents|both|trigger|historical|30
+pere a des antécédents|both|trigger|nonpatient|30
+pere a des antécédents|both|trigger|historical|30
+mère ait des antécédents|both|trigger|nonpatient|30
+mère ait des antécédents|both|trigger|historical|30
+mère a des antécédents|both|trigger|nonpatient|30
+mère a des antécédents|both|trigger|historical|30
+mere ait des antécédents|both|trigger|nonpatient|30
+mere ait des antécédents|both|trigger|historical|30
+mere a des antécédents|both|trigger|nonpatient|30
+mere a des antécédents|both|trigger|historical|30
 pere|forward|trigger|nonpatient|30
-père|forward|trigger|nonpatient|4
 révéle pas|forward|trigger|negated|2
 sans indication de|forward|trigger|negated|5
 sans signe|forward|trigger|negated|30
@@ -8410,7 +8409,6 @@ apparemment|forward|trigger|uncertain|30
 plausiblement|forward|trigger|uncertain|30
 possiblement|forward|trigger|uncertain|30
 sans doute|forward|trigger|uncertain|30
-sûrement|forward|trigger|uncertain|30
 présumé|forward|trigger|uncertain|30
 présumés|forward|trigger|uncertain|30
 présumée|forward|trigger|uncertain|30
