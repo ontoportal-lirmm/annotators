@@ -116,6 +116,19 @@
             </build>
         </profile>
         <profile>
+            <id>stageportal20</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/stageportal20</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
             <id>ncboannotatorplus</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
