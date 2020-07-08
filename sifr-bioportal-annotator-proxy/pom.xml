@@ -64,6 +64,19 @@
             </build>
         </profile>
         <profile>
+            <id>bioportal20</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/bioportal20</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
             <id>sifrbioportal</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
