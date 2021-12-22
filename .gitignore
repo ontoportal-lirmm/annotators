@@ -9,3 +9,6 @@ local-dep
 .DS_Store
 *.DS_Store
 annotatorProxy.properties
+*/.classpath
+*/.project
+
