@@ -50,32 +50,7 @@
                 </resources>
             </build>
         </profile>
-        <profile>
-            <id>agroportal20</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources/agroportal20</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>bioportal20</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources/bioportal20</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
+
         <profile>
             <id>sifrbioportal</id>
             <activation>
@@ -124,19 +99,6 @@
                 <resources>
                     <resource>
                         <directory>src/main/resources/stageportal</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>stageportal20</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources/stageportal20</directory>
                     </resource>
                 </resources>
             </build>
