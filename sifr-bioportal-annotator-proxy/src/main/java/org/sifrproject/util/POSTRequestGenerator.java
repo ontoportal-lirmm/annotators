@@ -98,9 +98,9 @@ public class POSTRequestGenerator extends LinkedHashMap<String, String> implemen
                 .getMethod()
                 .equals("GET") ? createGETParameterString() : createPOSTParameterString();
         String uri = baseURI;
-        if (!uri.endsWith("/")) {
-            uri += "/";
-        }
+//        if (!uri.endsWith("/")) {
+//            uri += "/";
+//        }
         if (httpServletRequest.getMethod().equals("GET")) {
             uri += "?" + parameterString;
         } else if (uri.endsWith("?")) {
